@@ -1,5 +1,7 @@
 package me.simplicitee.projectaddons.ability.earth;
 
+import java.util.Arrays;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,8 +20,17 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 	private int repairAmount;
 	private long repairCooldown;
 
+	private Material[] metal_tools = new Material[] {
+			Material.IRON_AXE, Material.IRON_BOOTS, Material.IRON_CHESTPLATE,
+			Material.IRON_HELMET, Material.IRON_HOE, Material.IRON_LEGGINGS,
+			Material.IRON_PICKAXE, Material.IRON_SHOVEL, Material.IRON_SWORD};
+
 	public MetalRepair(Player player, ItemStack item) {
 		super(player);
+		
+		if (!Arrays.asList(metal_tools).contains(item.getType())) {
+			return;
+		}
 		
 		this.item = item;
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.MetalRepair.Cooldown");
@@ -36,7 +47,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 
 	@Override
 	public Location getLocation() {
-		return null;
+		return player.getLocation();
 	}
 
 	@Override
@@ -123,4 +134,8 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 	@Override
 	public void stop() {}
 
+	@Override
+	public boolean isEnabled() {
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.MetalRepair.Enabled");
+	}
 }

@@ -139,7 +139,7 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 		}
 		
 		ParticleEffect.CRIT.display(nugget.getLocation(), 1);
-		playMetalbendingSound(nugget.getLocation());
+		player.getWorld().playSound(nugget.getLocation(), Sound.ITEM_TRIDENT_HIT, 0.2f, 1f);
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(nugget.getLocation(), 1.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {

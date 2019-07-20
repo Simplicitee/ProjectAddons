@@ -38,6 +38,7 @@ import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
 import me.simplicitee.projectaddons.ability.earth.LavaFlux;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
+import me.simplicitee.projectaddons.ability.earth.MetalRepair;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
 import me.simplicitee.projectaddons.ability.fire.Explode;
@@ -147,6 +148,8 @@ public class MainListener implements Listener {
 			new Explode(player);
 		} else if (canBend(player, "LavaSurge")) {
 			new LavaSurge(player);
+		} else if (canBend(player, "MetalRepair")) {
+			new MetalRepair(player, player.getInventory().getItemInMainHand());
 		}
 	}
 	
