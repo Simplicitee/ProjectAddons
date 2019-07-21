@@ -29,12 +29,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 	public MetalRepair(Player player, ItemStack item) {
 		super(player);
 		
-		if (!(item instanceof Damageable)) {
-			return;
-		}
-		
-		if (!((Damageable) item).hasDamage()) {
-			remove();
+		if (item.getDurability() <= -249) {
 			return;
 		}
 		
@@ -96,22 +91,15 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 			return;
 		}
 		
-		if (!((Damageable) item).hasDamage()) {
-			remove();
-			return;
-		}
-		
 		if (player.getInventory().containsAtLeast(new ItemStack(Material.IRON_INGOT), 1)) {
-			Damageable dmg = (Damageable) item;
-			
 			player.getInventory().removeItem(new ItemStack(Material.IRON_INGOT, 1));
-			int val = dmg.getDamage() - repairAmount;
+			int val = item.getDurability() - repairAmount;
 			if (val < -250) {
 				val = -249;
 			}
 			
 			bPlayer.addCooldown("MetalRepair Interval", repairCooldown);
-			dmg.setDamage(val);
+			item.setDurability((short) val);
 			player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 		} else {
 			remove();
