@@ -120,7 +120,10 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 		}
 		
 		if (shot) {
-			for (FallingBlock fb : blocks) {
+			Iterator<FallingBlock> iter = blocks.iterator();
+			
+			while (iter.hasNext()) {
+				FallingBlock fb = iter.next();
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 1.5)) {
 					if (e instanceof LivingEntity) {
 						DamageHandler.damageEntity(e, damage, this);
@@ -128,6 +131,9 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 						if (burn) {
 							((LivingEntity) e).setFireTicks((int) (burnTime/1000 * 20));
 						}
+						
+						iter.remove();
+						fb.remove();
 					}
 				}
 			}
@@ -211,10 +217,11 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 		
 		for (Block b : source) {
 			FallingBlock fb = GeneralMethods.spawnFallingBlock(sourceCenter.clone().add(0, 1, 0), Material.MAGMA_BLOCK);
-			Vector v = direction.clone().add(new Vector(randomOffset(), 0.14, randomOffset())).normalize().multiply(speed);
+			Vector v = direction.clone().add(new Vector(randomOffset(), 0.07, randomOffset())).normalize().multiply(speed);
 			
 			fb.setMetadata("lavasurge", new FixedMetadataValue(ProjectAddons.instance, this));
 			fb.setVelocity(v);
+			fb.setDropItem(false);
 			
 			blocks.add(fb);
 			
@@ -260,6 +267,6 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	}
 	
 	private double randomOffset() {
-		return (Math.random() - 0.5) / 2;
+		return (Math.random() - 0.5) / 4;
 	}
 }

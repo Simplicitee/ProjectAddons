@@ -33,7 +33,7 @@ public class ProjectAddons extends JavaPlugin {
 		this.setupConfig();
 		
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.projectaddons.ability");
-		String[] abils = {"LavaFlux", "Shrapnel", "EarthKick", "Jab", "NinjaStance", "FireDisc", "MetalRepair", "Explode", "LavaSurge"};
+		String[] abils = {"MagmaSlap", "Shrapnel", "EarthKick", "Jab", "NinjaStance", "FireDisc", "MetalRepair", "Explode", "LavaSurge", "RazorLeaf"};
 		String[] combos = {"FlameBreath", "WeakeningJab", "FlyingKick", "ChiblockJab"};
 		
 		for (String abil : abils) {
@@ -101,10 +101,10 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.LavaSurge.Enabled", true);
 		c.addDefault("Abilities.LavaSurge.Cooldown", 4000);
 		c.addDefault("Abilities.LavaSurge.Damage", 2);
-		c.addDefault("Abilities.LavaSurge.Speed", 1.85);
+		c.addDefault("Abilities.LavaSurge.Speed", 1.25);
 		c.addDefault("Abilities.LavaSurge.SelectRange", 5);
 		c.addDefault("Abilities.LavaSurge.SourceRadius", 3);
-		c.addDefault("Abilities.LavaSurge.MaxBlocks", 8);
+		c.addDefault("Abilities.LavaSurge.MaxBlocks", 12);
 		c.addDefault("Abilities.LavaSurge.Burn.Enabled", true);
 		c.addDefault("Abilities.LavaSurge.Burn.Duration", 3000);
 		
@@ -148,14 +148,14 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.FlameBreath.Burn.Entities", true);
 		c.addDefault("Combos.FlameBreath.Rainbow", true);
 		
-		//LavaFlux
-		c.addDefault("Abilities.LavaFlux.Enabled", true);
-		c.addDefault("Abilities.LavaFlux.Cooldown", 4000);
-		c.addDefault("Abilities.LavaFlux.Offset", 1.5);
-		c.addDefault("Abilities.LavaFlux.Damage", 2);
-		c.addDefault("Abilities.LavaFlux.Length", 14);
-		c.addDefault("Abilities.LavaFlux.Width", 1);
-		c.addDefault("Abilities.LavaFlux.RevertTime", 7000);
+		//MagmaSlap
+		c.addDefault("Abilities.MagmaSlap.Enabled", true);
+		c.addDefault("Abilities.MagmaSlap.Cooldown", 4000);
+		c.addDefault("Abilities.MagmaSlap.Offset", 1.5);
+		c.addDefault("Abilities.MagmaSlap.Damage", 2);
+		c.addDefault("Abilities.MagmaSlap.Length", 14);
+		c.addDefault("Abilities.MagmaSlap.Width", 1);
+		c.addDefault("Abilities.MagmaSlap.RevertTime", 7000);
 		
 		// Shrapnel
 		c.addDefault("Abilities.Shrapnel.Enabled", true);
@@ -211,6 +211,13 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.MetalRepair.Cooldown", 1000);
 		c.addDefault("Abilities.MetalRepair.RepairAmount", 25);
 		c.addDefault("Abilities.MetalRepair.RepairInterval", 1250);
+		
+		// RazorLeaf
+		c.addDefault("Abilities.RazorLeaf.Enabled", true);
+		c.addDefault("Abilities.RazorLeaf.Cooldown", 3000);
+		c.addDefault("Abilities.RazorLeaf.Damage", 2);
+		c.addDefault("Abilities.RazorLeaf.Radius", 0.6);
+		c.addDefault("Abilities.RazorLeaf.Range", 20);
 		
 		config.save();
 	}

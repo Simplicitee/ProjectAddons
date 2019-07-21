@@ -36,13 +36,14 @@ import me.simplicitee.projectaddons.ability.chi.Jab.JabHand;
 import me.simplicitee.projectaddons.ability.chi.NinjaStance;
 import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
-import me.simplicitee.projectaddons.ability.earth.LavaFlux;
+import me.simplicitee.projectaddons.ability.earth.MagmaSlap;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
 import me.simplicitee.projectaddons.ability.earth.MetalRepair;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
 import me.simplicitee.projectaddons.ability.fire.Explode;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
+import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
 public class MainListener implements Listener {
 	
@@ -88,8 +89,8 @@ public class MainListener implements Listener {
 		
 		if (canBend(player, "FireDisc")) {
 			new FireDisc(player);
-		} else if (canBend(player, "LavaFlux")) {
-			new LavaFlux(player);
+		} else if (canBend(player, "MagmaSlap")) {
+			new MagmaSlap(player);
 		} else if (canBend(player, "Shrapnel")) {
 			if (player.isSneaking()) {
 				new ShrapnelBlast(player);
@@ -150,6 +151,8 @@ public class MainListener implements Listener {
 			new LavaSurge(player);
 		} else if (canBend(player, "MetalRepair")) {
 			new MetalRepair(player, player.getInventory().getItemInMainHand());
+		} else if (canBend(player, "RazorLeaf")) {
+			new RazorLeaf(player);
 		}
 	}
 	
@@ -183,9 +186,9 @@ public class MainListener implements Listener {
 			if (EarthKick.isBlock(fb)) {
 				event.setCancelled(true);
 				EarthKick.removeBlock(fb);
-			} else if (LavaFlux.isBlock(fb)) {
+			} else if (MagmaSlap.isBlock(fb)) {
 				event.setCancelled(true);
-				((LavaFlux) fb.getMetadata("lavaflux").get(0).value()).turnToTempBlock(event.getBlock());
+				((MagmaSlap) fb.getMetadata("lavaflux").get(0).value()).turnToTempBlock(event.getBlock());
 			} else if (fb.hasMetadata("earthring")) {
 				event.setCancelled(true);
 			} else if (fb.hasMetadata("lavasurge")) {
@@ -232,7 +235,7 @@ public class MainListener implements Listener {
 		if (CoreAbility.hasAbility(player, NinjaStance.class)) {
 			NinjaStance ninja = CoreAbility.getAbility(player, NinjaStance.class);
 			if (ninja.stealth && ninja.stealthReady && player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-				event.setCancelled(true);
+				ninja.stopStealth();
 			}
 			
 			event.setDamage(event.getDamage() * NinjaStance.getDamageModifier());

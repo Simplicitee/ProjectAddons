@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.MetalAbility;
@@ -27,6 +28,15 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 
 	public MetalRepair(Player player, ItemStack item) {
 		super(player);
+		
+		if (!(item instanceof Damageable)) {
+			return;
+		}
+		
+		if (!((Damageable) item).hasDamage()) {
+			remove();
+			return;
+		}
 		
 		if (!Arrays.asList(metal_tools).contains(item.getType())) {
 			return;
@@ -86,15 +96,22 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 			return;
 		}
 		
+		if (!((Damageable) item).hasDamage()) {
+			remove();
+			return;
+		}
+		
 		if (player.getInventory().containsAtLeast(new ItemStack(Material.IRON_INGOT), 1)) {
+			Damageable dmg = (Damageable) item;
+			
 			player.getInventory().removeItem(new ItemStack(Material.IRON_INGOT, 1));
-			int val = item.getDurability() - repairAmount;
+			int val = dmg.getDamage() - repairAmount;
 			if (val < -250) {
 				val = -249;
 			}
-			short durability = Short.parseShort(String.valueOf(val));
+			
 			bPlayer.addCooldown("MetalRepair Interval", repairCooldown);
-			item.setDurability(durability);
+			dmg.setDamage(val);
 			player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 		} else {
 			remove();
