@@ -36,8 +36,8 @@ import me.simplicitee.projectaddons.ability.chi.Jab.JabHand;
 import me.simplicitee.projectaddons.ability.chi.NinjaStance;
 import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
-import me.simplicitee.projectaddons.ability.earth.MagmaSlap;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
+import me.simplicitee.projectaddons.ability.earth.MagmaSlap;
 import me.simplicitee.projectaddons.ability.earth.MetalRepair;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
@@ -165,10 +165,6 @@ public class MainListener implements Listener {
 	
 	@EventHandler
 	public void onItemPickup(EntityPickupItemEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-		
 		if (event.getItem().hasMetadata("shrapnel")) {
 			event.getItem().removeMetadata("shrapnel", ProjectKorra.plugin);
 		}
@@ -176,8 +172,6 @@ public class MainListener implements Listener {
 	
 	@EventHandler
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-		if (event.isCancelled()) return;
-		
 		Entity e = event.getEntity();
 		
 		if (e instanceof FallingBlock) {
@@ -198,7 +192,7 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) return;
 		
@@ -214,7 +208,7 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHitDamage(EntityDamageByEntityEvent event) {
 		if (event.isCancelled()) return;
 		if (!(event.getDamager() instanceof Player)) return;

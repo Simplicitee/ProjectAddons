@@ -116,6 +116,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 1.5)) {
 				if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
 					DamageHandler.damageEntity(e, player, damage, this);
+					((LivingEntity) e).setNoDamageTicks(0);
 					
 					if (!removal.contains(fb)) {
 						removal.add(fb);

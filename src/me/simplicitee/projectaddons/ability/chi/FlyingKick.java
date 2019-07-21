@@ -28,6 +28,10 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 	public FlyingKick(Player player) {
 		super(player);
 		
+		if (bPlayer.isOnCooldown(this)) {
+			return;
+		}
+		
 		if (hasAbility(player, FlyingKick.class)) {
 			return;
 		}
@@ -84,11 +88,15 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 			return;
 		}
 		
-		if (player.getLocation().subtract(0, 0.1, 0).getBlock().getType() != Material.AIR) {
-			remove();
-			bPlayer.addCooldown(this);
-			return;
+		if (System.currentTimeMillis() > this.getStartTime() + 400) {
+			if (player.getLocation().subtract(0, 0.1, 0).getBlock().getType() != Material.AIR) {
+				player.sendMessage("done");
+				remove();
+				bPlayer.addCooldown(this);
+				return;
+			}
 		}
+	
 		
 		ParticleEffect.CRIT_MAGIC.display(player.getLocation(), 3, 0.2, 0.2, 0.2, 0.02);
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(player.getLocation(), 2)) {

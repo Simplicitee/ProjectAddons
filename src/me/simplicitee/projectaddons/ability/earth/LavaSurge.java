@@ -127,6 +127,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 1.5)) {
 					if (e instanceof LivingEntity) {
 						DamageHandler.damageEntity(e, damage, this);
+						((LivingEntity) e).setNoDamageTicks(0);
 						
 						if (burn) {
 							((LivingEntity) e).setFireTicks((int) (burnTime/1000 * 20));
