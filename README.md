@@ -14,7 +14,7 @@ Side plugin for various addon abilities to ProjectKorra plugin
 
 ### Earth
 - EarthKick
-- LavaFlux
+- MagmaSlap
 - LavaSurge
 - MetalRepair
 - Shrapnel
@@ -23,3 +23,6 @@ Side plugin for various addon abilities to ProjectKorra plugin
 - Explode
 - FireDisc
 - FlameBreath (Combo)
+
+### Water
+- RazorLeaf
