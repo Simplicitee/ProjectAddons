@@ -90,7 +90,6 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 		
 		if (System.currentTimeMillis() > this.getStartTime() + 400) {
 			if (player.getLocation().subtract(0, 0.1, 0).getBlock().getType() != Material.AIR) {
-				player.sendMessage("done");
 				remove();
 				bPlayer.addCooldown(this);
 				return;
