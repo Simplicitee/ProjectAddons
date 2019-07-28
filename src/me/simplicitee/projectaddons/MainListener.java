@@ -28,6 +28,8 @@ import com.projectkorra.projectkorra.Element.SubElement;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
+import com.projectkorra.projectkorra.util.ClickType;
 
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam;
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam.EnergyColor;
@@ -43,6 +45,7 @@ import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
 import me.simplicitee.projectaddons.ability.fire.Explode;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
+import me.simplicitee.projectaddons.ability.water.PlantArmor;
 import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
 public class MainListener implements Listener {
@@ -78,6 +81,12 @@ public class MainListener implements Listener {
 		CoreAbility ability = bPlayer.getBoundAbility();
 		
 		if (ability == null) {
+			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
+				if (MultiAbilityManager.getBoundMultiAbility(player).equalsIgnoreCase("PlantArmor")) {
+					new PlantArmor(player, ClickType.LEFT_CLICK);
+				}
+			}
+			
 			return;
 		}
 		
@@ -86,6 +95,7 @@ public class MainListener implements Listener {
 		if (e != Element.AVATAR && !bPlayer.hasElement(ability.getElement())) {
 			return;
 		}
+		
 		
 		if (canBend(player, "FireDisc")) {
 			new FireDisc(player);
@@ -107,7 +117,8 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, LavaSurge.class)) {
 				CoreAbility.getAbility(player, LavaSurge.class).shoot();
 			}
-		}
+		} 
+		
 	}
 	
 	@EventHandler
@@ -128,6 +139,12 @@ public class MainListener implements Listener {
 		CoreAbility ability = bPlayer.getBoundAbility();
 		
 		if (ability == null) {
+			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
+				if (MultiAbilityManager.getBoundMultiAbility(player).equalsIgnoreCase("PlantArmor")) {
+					new PlantArmor(player, ClickType.SHIFT_DOWN);
+				}
+			}
+			
 			return;
 		}	
 		
@@ -136,6 +153,7 @@ public class MainListener implements Listener {
 		if (e != Element.AVATAR && !bPlayer.hasElement(ability.getElement())) {
 			return;
 		}
+		
 		
 		if (canBend(player, "EarthKick")) {
 			new EarthKick(player);
@@ -152,7 +170,9 @@ public class MainListener implements Listener {
 		} else if (canBend(player, "MetalRepair")) {
 			new MetalRepair(player, player.getInventory().getItemInMainHand());
 		} else if (canBend(player, "RazorLeaf")) {
-			new RazorLeaf(player);
+			new RazorLeaf(player, true);
+		} else if (ability.getName().equals("PlantArmor")) {
+			new PlantArmor(player, ClickType.SHIFT_DOWN);
 		}
 	}
 	
@@ -199,10 +219,20 @@ public class MainListener implements Listener {
 		Entity entity = event.getEntity();
 		
 		if (entity instanceof Player) {
-			if (CoreAbility.hasAbility((Player) entity, NinjaStance.class)) {
-				NinjaStance ninja = CoreAbility.getAbility((Player) entity, NinjaStance.class);
-				if (ninja.stealth && ninja.stealthReady && ((Player)entity).hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+			Player player = (Player) entity;
+			
+			if (CoreAbility.hasAbility(player, NinjaStance.class)) {
+				NinjaStance ninja = CoreAbility.getAbility(player, NinjaStance.class);
+				if (ninja.stealth && ninja.stealthReady && player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 					ninja.stopStealth();
+				}
+			} else if (MultiAbilityManager.hasMultiAbilityBound(player, "PlantArmor")) {
+				if (event.getCause() == DamageCause.FALL) {
+					event.setCancelled(true);
+					CoreAbility.getAbility(player, PlantArmor.class).damage((int) event.getDamage() * 10);
+				} else if (event.getCause() == DamageCause.DROWNING) {
+					event.setCancelled(true);
+					CoreAbility.getAbility(player, PlantArmor.class).damage((int) event.getDamage() * 5);
 				}
 			}
 		}

@@ -16,6 +16,7 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.configuration.Config;
 
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
+import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
 public class ProjectAddons extends JavaPlugin {
 	
@@ -33,7 +34,7 @@ public class ProjectAddons extends JavaPlugin {
 		this.setupConfig();
 		
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.projectaddons.ability");
-		String[] abils = {"MagmaSlap", "Shrapnel", "EarthKick", "Jab", "NinjaStance", "FireDisc", "MetalRepair", "Explode", "LavaSurge", "RazorLeaf"};
+		String[] abils = {"MagmaSlap", "Shrapnel", "EarthKick", "Jab", "NinjaStance", "FireDisc", "MetalRepair", "Explode", "LavaSurge", "RazorLeaf", "PlantArmor"};
 		String[] combos = {"FlameBreath", "WeakeningJab", "FlyingKick", "ChiblockJab"};
 		
 		for (String abil : abils) {
@@ -218,11 +219,59 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.RazorLeaf.Damage", 2);
 		c.addDefault("Abilities.RazorLeaf.Radius", 0.6);
 		c.addDefault("Abilities.RazorLeaf.Range", 20);
+		c.addDefault("Abilities.RazorLeaf.Particles", 250);
+		
+		// PlantArmor
+		c.addDefault("Abilities.PlantArmor.Enabled", true);
+		c.addDefault("Abilities.PlantArmor.Cooldown", 10000);
+		c.addDefault("Abilities.PlantArmor.Duration", -1);
+		c.addDefault("Abilities.PlantArmor.Durability", 4000);
+		c.addDefault("Abilities.PlantArmor.SelectRange", 9);
+		c.addDefault("Abilities.PlantArmor.RequiredPlants", 10);
+		c.addDefault("Abilities.PlantArmor.Boost.Swim", 1);
+		c.addDefault("Abilities.PlantArmor.Boost.Speed", 1);
+		c.addDefault("Abilities.PlantArmor.Boost.Jump", 1);
+		
+		// PlantArmor - VineWhip
+		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Cost", 50);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Cooldown", 2000);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Damage", 2);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Range", 18);
+		
+		// PlantArmor - RazorLeaf
+		c.addDefault("Abilities.PlantArmor.SubAbilities.RazorLeaf.Cost", 150);
+		
+		// PlantArmor - LeafShield
+		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Cost", 100);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Cooldown", 1500);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Radius", 2);
+		
+		// PlantArmor - Tangle
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Cost", 200);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Cooldown", 7000);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Radius", 0.45);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Duration", 3000);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Range", 18);
+		
+		// PlantArmor - Leap
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cost", 100);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cooldown", 2500);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Power", 1.4);
+		
+		// PlantArmor - Regenerate
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.Cooldown", 10000);
+		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.RegenAmount", 350);
 		
 		config.save();
 	}
 	
 	private void setupCollisions() {
-		ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(FireDisc.class));
+		if (enabled.contains("FireDisc")) {
+			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(FireDisc.class));
+		}
+		
+		if (enabled.contains("RazorLeaf")) {
+			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(RazorLeaf.class));
+		}
 	}
 }

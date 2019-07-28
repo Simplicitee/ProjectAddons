@@ -19,6 +19,7 @@ import me.simplicitee.projectaddons.ProjectAddons;
 public class RazorLeaf extends PlantAbility implements AddonAbility {
 	
 	private Location center;
+	private int particles;
 	private long cooldown;
 	private double damage;
 	private double radius;
@@ -26,24 +27,31 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 	private TempBlock source;
 	private Vector direction;
 
-	public RazorLeaf(Player player) {
+	public RazorLeaf(Player player, boolean sourced) {
 		super(player);
 		
 		if (hasAbility(player, RazorLeaf.class)) {
 			return;
 		}
 		
-		Block source = player.getTargetBlock(getTransparentMaterialSet(), 7);
-		if (!isPlantbendable(source.getType())) {
-			return;
+		if (sourced) {
+			Block source = player.getTargetBlock(getTransparentMaterialSet(), 7);
+			if (!isPlantbendable(source.getType())) {
+				return;
+			}
+			
+			this.source = new TempBlock(source, Material.AIR);
+			this.center = source.getLocation().clone().add(0.5, 0.5, 0.5);
+		} else {
+			this.source = null;
+			this.center = player.getEyeLocation().clone().add(player.getEyeLocation().getDirection().clone().normalize().multiply(1.5));
 		}
 		
-		this.source = new TempBlock(source, Material.AIR);
-		this.center = source.getLocation().clone().add(0.5, 0.5, 0.5);
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.RazorLeaf.Cooldown");
 		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Damage");
 		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Radius");
 		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Range");
+		this.particles = ProjectAddons.instance.getConfig().getInt("Abilities.RazorLeaf.Particles");
 		
 		start();
 	}
@@ -87,14 +95,14 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 			center = center.add(direction);
 		}
 		
-		if (!isAir(center.getBlock().getType()) && !isWater(center.getBlock().getType())) {
+		if (!center.getBlock().isPassable()) {
 			remove();
 			return;
 		}
 		
 		playPlantbendingSound(center);
 		
-		for (int n = 0; n < 200; n++) {
+		for (int n = 0; n < particles; n++) {
 			Location current, start = center.clone();
 			double c = 0.075;
 			double phi = n * 137.5;
