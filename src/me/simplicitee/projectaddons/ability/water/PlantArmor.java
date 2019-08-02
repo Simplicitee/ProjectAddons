@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -46,71 +47,6 @@ import net.md_5.bungee.api.ChatColor;
 
 public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbility {
 	
-	public static enum ArmorState {
-		FORMING, FORMED, DISPERSING;
-	}
-	
-	public static enum ArmorAbility {
-		NONE("null", -1, false, ClickType.LEFT_CLICK, null),
-		VINEWHIP("VineWhip", 0, true, ClickType.LEFT_CLICK, null),
-		RAZORLEAF("RazorLeaf", 1, true, ClickType.SHIFT_DOWN, (player -> !CoreAbility.hasAbility(player, RazorLeaf.class))),
-		LEAFSHIELD("LeafShield", 2, true, ClickType.SHIFT_DOWN, null),
-		TANGLE("Tangle", 3, true, ClickType.LEFT_CLICK, null),
-		SLOT5("Slot5", 4, true, ClickType.LEFT_CLICK, null),
-		LEAP("Leap", 5, true, ClickType.LEFT_CLICK, (player -> player.isOnGround())),
-		SLOT7("Slot7", 6, true, ClickType.SHIFT_DOWN, null),
-		REGENERATE("Regenerate", 7, false, ClickType.SHIFT_DOWN, null),
-		DISPERSE("Disperse", 8, false, ClickType.LEFT_CLICK, null);
-		
-		private String name;
-		private int slot;
-		private boolean cost;
-		private ClickType type;
-		private Predicate<Player> pred;
-		
-		private ArmorAbility(String name, int slot, boolean cost, ClickType type, Predicate<Player> pred) {
-			this.name = name;
-			this.slot = slot;
-			this.cost = cost;
-			this.type = type;
-			this.pred = pred;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
-		public int getSlot() {
-			return slot;
-		}
-		
-		public int getDisplaySlot() {
-			return slot + 1;
-		}
-		
-		public boolean hasCost() {
-			return cost;
-		}
-		
-		public ClickType getType() {
-			return type;
-		}
-		
-		public Predicate<Player> getPredicate() {
-			return pred;
-		}
-		
-		public static ArmorAbility getAbility(int slot) {
-			for (ArmorAbility ability : ArmorAbility.values()) {
-				if (ability.getSlot() == slot) {
-					return ability;
-				}
-			}
-			
-			return NONE;
-		}
-	}
-	
 	// general variables
 	private long duration, cooldown;
 	private int durability, maxDurability, swim, speed, jump;
@@ -119,11 +55,11 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private BossBar bar;
 	private ItemStack[] armors;
 	private TempArmor armor;
+	private World origin;
 	
 	// general variables (set in activate(..) always)
 	private Location current;
 	private Vector direction;
-	private int angle;
 	
 	// forming and dispersing variables
 	private int requiredPlants;
@@ -143,9 +79,19 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private double tRadius;
 	private long tDuration;
 	private double tRange;
+	private int angle;
+	
+	// grapple variables
+	private Location target;
+	private int gRange, gMax;
+	private boolean pulling;
+	private double gSpeed;
 	
 	// leap variables
 	private double power;
+	
+	// leafdome variables
+	private int dRadius;
 	
 	// regenerate variables
 	private int regen;
@@ -202,6 +148,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			
 			this.state = ArmorState.FORMING;
 			this.active = ArmorAbility.NONE;
+			this.origin = player.getWorld();
 			
 			this.requiredPlants = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.RequiredPlants");
 			this.selectRange = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SelectRange");
@@ -221,6 +168,13 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.tDuration = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.SubAbilities.Tangle.Duration");
 			this.angle = 0;
 			
+			this.gMax = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.Grapple.Range");
+			this.gSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Grapple.Speed");
+			this.pulling = false;
+			this.gRange = 0;
+			
+			this.dRadius = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.LeafDome.Radius");
+			
 			this.power = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Leap.Power");
 			
 			this.regen = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.Regenerate.RegenAmount");
@@ -232,6 +186,11 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Override
 	public void progress() {
 		if (!player.isOnline() || player.isDead()) {
+			remove();
+			return;
+		}
+		
+		if (!player.getWorld().equals(origin)) {
 			remove();
 			return;
 		}
@@ -284,13 +243,15 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 				case TANGLE:
 					progressTangle();
 					break;
-				case SLOT5:
-					progressVineSwing();
-					break;
 				case LEAP:
 					leap();
 					break;
-				case SLOT7:
+				case GRAPPLE:
+					progressGrapple();
+					break;
+				case LEAFDOME:
+					progressLeafDome();
+					break;
 				case RAZORLEAF:
 				case DISPERSE:
 				case NONE:
@@ -351,6 +312,10 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			shield.clear();
 		}
 		
+		this.target = null;
+		this.pulling = false;
+		this.gRange = 0;
+		
 		this.current = null;
 		this.direction = null;
 		this.angle = 0;
@@ -386,8 +351,14 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.state = ArmorState.DISPERSING;
 		} else {
 			this.active = ability;
-			this.current = player.getEyeLocation();
-			this.direction = current.getDirection().clone().normalize();
+			
+			if (ability == ArmorAbility.GRAPPLE) {
+				this.current = GeneralMethods.getRightSide(player.getLocation(), 0.45).add(0, 1, 0);
+				this.target = player.getTargetBlock(getTransparentMaterialSet(), gMax).getLocation().clone().add(0.5, 0.5, 0.5);
+			} else {
+				this.current = player.getEyeLocation();
+				this.direction = current.getDirection().clone().normalize();
+			}
 		}
 	}
 	
@@ -551,9 +522,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 	}
 	
-	private void progressVineSwing() {
-	}
-	
 	private void leap() {
 		Location ground = player.getLocation().clone();
 		
@@ -573,6 +541,73 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		player.setVelocity(direction.add(new Vector(0, 0.8, 0)).multiply(power));
 		
 		this.reset();
+	}
+	
+	private void progressGrapple() {
+		current = GeneralMethods.getRightSide(player.getLocation(), 0.45).add(0, 1, 0);
+		
+		if (current.distance(target) < 2) {
+			this.reset();
+			return;
+		}
+		
+		if (!pulling) {
+			gRange++;
+		
+			if (gRange >= gMax) {
+				this.reset();
+				return;
+			}
+		} else {
+			gRange = (int) Math.floor(current.distance(target));
+		}
+		
+		Vector direction = GeneralMethods.getDirection(current, target).normalize();
+		
+		for (int i = 0; i < gRange; i++) {
+			current.add(direction);
+			
+			GeneralMethods.displayColoredParticle("3D9970", current);
+			
+			if (!current.getBlock().isPassable() && !pulling) {
+				if (current.distance(target) < 1) {
+					this.pulling = true;
+				} else {
+					this.reset();
+					return;
+				}
+			}
+		}
+		
+		if (pulling) {
+			player.setVelocity(direction.multiply(gSpeed));
+		}
+	}
+	
+	private void progressLeafDome() {
+		if (!player.isSneaking()) {
+			this.reset();
+			return;
+		}
+		
+		if (!shield.isEmpty()) {
+			for (TempBlock tb : shield) {
+				tb.revertBlock();
+			}
+			shield.clear();
+		}
+		
+		for (Location loc : GeneralMethods.getCircle(player.getLocation(), dRadius, 0, true, true, 0)) {
+			if (loc.getBlock().isPassable() && !TempBlock.isTempBlock(loc.getBlock())) {
+				shield.add(new TempBlock(loc.getBlock(), Material.OAK_LEAVES));
+			}
+		}
+		
+		for (Location loc : GeneralMethods.getCircle(player.getLocation(), dRadius - 1, 0, false, true, 0)) {
+			if (loc.getBlock().getType() == Material.WATER && !TempBlock.isTempBlock(loc.getBlock())) {
+				shield.add(new TempBlock(loc.getBlock(), Material.AIR));
+			}
+		}
 	}
 	
 	private void progressRegenerate() {
@@ -676,16 +711,108 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	public ArrayList<MultiAbilityInfoSub> getMultiAbilities() {
 		ArrayList<MultiAbilityInfoSub> info = new ArrayList<>();
 		
-		info.add(new MultiAbilityInfoSub("VineWhip", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("RazorLeaf", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("LeafShield", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("Tangle", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("slot 5", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("Leap", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("slot 7", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("Regenerate", Element.PLANT));
-		info.add(new MultiAbilityInfoSub("Disperse", Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.VINEWHIP.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.RAZORLEAF.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAFSHIELD.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.TANGLE.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAP.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.GRAPPLE.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAFDOME.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.REGENERATE.getName(), Element.PLANT));
+		info.add(new MultiAbilityInfoSub(ArmorAbility.DISPERSE.getName(), Element.PLANT));
 		
 		return info;
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.PlantArmor.Enabled");
+	}
+	
+	@Override
+	public String getDescription() {
+		return  "Wrap your body in vines and leaves to create a protective armor which nullifies falling and drowning damage, while also giving speed, jump, and swim boosts! The armor then acts as a source for many subabilities!" + 
+				ChatColor.WHITE + "\n[VineWhip] : " + ChatColor.DARK_AQUA + "Throw a whip of vines to damage entities!" +
+				ChatColor.WHITE + "\n[RazorLeaf] : " + ChatColor.DARK_AQUA + "Control a spinning disc of leaves to damage entities!" +
+				ChatColor.WHITE + "\n[LeafShield] : " + ChatColor.DARK_AQUA + "Hold a circular shield of leaves to block attacks!" +
+				ChatColor.WHITE + "\n[Tangle] : " + ChatColor.DARK_AQUA + "Shoot a bundle of vines to constrict enemies!" +
+				ChatColor.WHITE + "\n[Leap] : " + ChatColor.DARK_AQUA + "Launch yourself really high into the air!" +
+				ChatColor.WHITE + "\n[Grapple] : " + ChatColor.DARK_AQUA + "Grapple to a point with your vines!" +
+				ChatColor.WHITE + "\n[LeafDome] : " + ChatColor.DARK_AQUA + "Surround your body in a dome of leaves!" +
+				ChatColor.WHITE + "\n[Regenerate] : " + ChatColor.DARK_AQUA + "Gather more plants to repair armor!" +
+				ChatColor.WHITE + "\n[Disperse] : " + ChatColor.DARK_AQUA + "Deactivate your plantarmor!";
+	}
+	
+	@Override
+	public String getInstructions() {
+		return  "Press sneak to activate multiability\n" +
+				"[VineWhip, Tangle, Leap, Grapple, Disperse]   : Left Click\n" +
+				"[RazorLeaf, LeafShield, LeafDome, Regenerate] : Hold Sneak";
+	}
+
+	public static enum ArmorState {
+		FORMING, FORMED, DISPERSING;
+	}
+	
+	public static enum ArmorAbility {
+		NONE("null", -1, false, ClickType.LEFT_CLICK, null),
+		VINEWHIP("VineWhip", 0, true, ClickType.LEFT_CLICK, null),
+		RAZORLEAF("RazorLeaf", 1, true, ClickType.SHIFT_DOWN, (player -> !CoreAbility.hasAbility(player, RazorLeaf.class))),
+		LEAFSHIELD("LeafShield", 2, true, ClickType.SHIFT_DOWN, null),
+		TANGLE("Tangle", 3, true, ClickType.LEFT_CLICK, null),
+		LEAP("Leap", 4, true, ClickType.LEFT_CLICK, (player -> player.isOnGround())),
+		GRAPPLE("Grapple", 5, true, ClickType.LEFT_CLICK, null),
+		LEAFDOME("LeafDome", 6, true, ClickType.SHIFT_DOWN, null),
+		REGENERATE("Regenerate", 7, false, ClickType.SHIFT_DOWN, null),
+		DISPERSE("Disperse", 8, false, ClickType.LEFT_CLICK, null);
+		
+		private String name;
+		private int slot;
+		private boolean cost;
+		private ClickType type;
+		private Predicate<Player> pred;
+		
+		private ArmorAbility(String name, int slot, boolean cost, ClickType type, Predicate<Player> pred) {
+			this.name = name;
+			this.slot = slot;
+			this.cost = cost;
+			this.type = type;
+			this.pred = pred;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public int getSlot() {
+			return slot;
+		}
+		
+		public int getDisplaySlot() {
+			return slot + 1;
+		}
+		
+		public boolean hasCost() {
+			return cost;
+		}
+		
+		public ClickType getType() {
+			return type;
+		}
+		
+		public Predicate<Player> getPredicate() {
+			return pred;
+		}
+		
+		public static ArmorAbility getAbility(int slot) {
+			for (ArmorAbility ability : ArmorAbility.values()) {
+				if (ability.getSlot() == slot) {
+					return ability;
+				}
+			}
+			
+			return NONE;
+		}
+	}
+	
 }

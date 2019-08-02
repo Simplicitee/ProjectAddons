@@ -29,6 +29,9 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
+import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
+import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
+import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent.Result;
 import com.projectkorra.projectkorra.util.ClickType;
 
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam;
@@ -226,7 +229,9 @@ public class MainListener implements Listener {
 				if (ninja.stealth && ninja.stealthReady && player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
 					ninja.stopStealth();
 				}
-			} else if (MultiAbilityManager.hasMultiAbilityBound(player, "PlantArmor")) {
+			}
+			
+			if (MultiAbilityManager.hasMultiAbilityBound(player, "PlantArmor")) {
 				if (event.getCause() == DamageCause.FALL) {
 					event.setCancelled(true);
 					CoreAbility.getAbility(player, PlantArmor.class).damage((int) event.getDamage() * 10);
@@ -316,6 +321,29 @@ public class MainListener implements Listener {
 				}
 				event.setCancelled(true);
 			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onAbilityChange(PlayerBindChangeEvent event) {
+		if (event.isCancelled()) {
+			return;
+		} else if (!plugin.isBoardEnabled()) {
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		plugin.getBoardManager().update(player, BendingPlayer.getBendingPlayer(player));
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onCooldown(PlayerCooldownChangeEvent event) {
+		if (event.getResult() == Result.REMOVED) {
+			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+				plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), false);
+			}, 15);
+		} else {
+			plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), true);
 		}
 	}
 
