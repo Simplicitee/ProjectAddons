@@ -326,9 +326,7 @@ public class MainListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onAbilityChange(PlayerBindChangeEvent event) {
-		if (event.isCancelled()) {
-			return;
-		} else if (!plugin.isBoardEnabled()) {
+		if (event.isCancelled() || !plugin.isBoardEnabled()) {
 			return;
 		}
 		
@@ -338,6 +336,10 @@ public class MainListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onCooldown(PlayerCooldownChangeEvent event) {
+		if (event.isCancelled() || !plugin.isBoardEnabled()) {
+			return;
+		}
+		
 		if (event.getResult() == Result.REMOVED) {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 				plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), false);
