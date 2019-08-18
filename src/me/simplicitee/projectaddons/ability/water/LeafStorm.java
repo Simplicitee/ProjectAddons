@@ -168,6 +168,16 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 		
 		return combo;
 	}
+	
+	@Override
+	public String getDescription() {
+		return "A combo only usable in with PlantArmor, create a whirling storm of leaves around you! Leaves disappear after hitting a block or entity, or you stop sneaking.";
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "RazorLeaf (Double Click) > VineWhip (Hold Sneak)";
+	}
 
 	public class Leaf {
 		
