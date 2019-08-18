@@ -57,7 +57,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private TempArmor armor;
 	private World origin;
 	
-	// general variables (set in activate(..) always)
+	// general variables
 	private Location current;
 	private Vector direction;
 	

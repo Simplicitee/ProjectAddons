@@ -28,6 +28,7 @@ import com.projectkorra.projectkorra.Element.SubElement;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
@@ -86,6 +87,7 @@ public class MainListener implements Listener {
 		if (ability == null) {
 			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
 				if (MultiAbilityManager.getBoundMultiAbility(player).equalsIgnoreCase("PlantArmor")) {
+					ComboManager.addComboAbility(player, ClickType.LEFT_CLICK);
 					new PlantArmor(player, ClickType.LEFT_CLICK);
 				}
 			}
@@ -144,6 +146,7 @@ public class MainListener implements Listener {
 		if (ability == null) {
 			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
 				if (MultiAbilityManager.getBoundMultiAbility(player).equalsIgnoreCase("PlantArmor")) {
+					ComboManager.addComboAbility(player, ClickType.SHIFT_DOWN);
 					new PlantArmor(player, ClickType.SHIFT_DOWN);
 				}
 			}
@@ -156,7 +159,6 @@ public class MainListener implements Listener {
 		if (e != Element.AVATAR && !bPlayer.hasElement(ability.getElement())) {
 			return;
 		}
-		
 		
 		if (canBend(player, "EarthKick")) {
 			new EarthKick(player);

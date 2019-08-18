@@ -18,6 +18,7 @@ import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfo;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfoSub;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
+import com.projectkorra.projectkorra.util.Cooldown;
 
 public class BoardManager {
 	
@@ -69,12 +70,6 @@ public class BoardManager {
 	
 	public void update(Player player, BendingPlayer bPlayer) {
 		if (disabled.contains(player.getUniqueId())) {
-			Scoreboard scoreboard = player.getScoreboard();
-			scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-			
-			for (String entry : scoreboard.getEntries()) {
-				scoreboard.resetScores(entry);
-			}
 			return;
 		} else if (!player.isOnline() || player.isDead()) {
 			return;
@@ -82,7 +77,9 @@ public class BoardManager {
 			return;
 		} else if (bPlayer.getElements().isEmpty()) {
 			return;
-		} 
+		} else if (bPlayer.isOnCooldown("MAM_setup")) {
+			return;
+		}
 		
 		Scoreboard scoreboard = player.getScoreboard();
 		scoreboard.clearSlot(DisplaySlot.SIDEBAR);
@@ -94,12 +91,16 @@ public class BoardManager {
 		Objective bendingboard = scoreboard.getObjective("projectaddons");
 		
 		if (bendingboard == null) {
-			bendingboard = scoreboard.registerNewObjective("projectaddons", "", ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
+			bendingboard = scoreboard.registerNewObjective("projectaddons", "", "");
 		}
 		
 		bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
+		bendingboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
+
+		//Map<String, Cooldown> copy = new HashMap<>(bPlayer.getCooldowns());
 		
 		for (int i = 1; i < 10; i++) {
+			String color = "";
 			String format = "%name%";
 			String name = "Slot " + i;
 			
@@ -111,7 +112,7 @@ public class BoardManager {
 				CoreAbility ability = CoreAbility.getAbility(bPlayer.getAbilities().get(i));
 				
 				if (ability != null) {
-					format = ability.getElement().getColor() + format;
+					color = ability.getElement().getColor() + "";
 					name = ability.getName();
 					
 					if (bPlayer.getStance() != null && ability.getName().equals(bPlayer.getStance().getName())) {
@@ -120,11 +121,10 @@ public class BoardManager {
 					
 					if (bPlayer.isOnCooldown(ability)) {
 						int time = (int) Math.floor((bPlayer.getCooldown(ability.getName()) - System.currentTimeMillis()) / 1000) + 1;
+						format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
 						
 						if (time < 100) {
-							format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET + " ~ " + time;
-						} else {
-							format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
+							format += " : " + time + "s";
 						}
 					}
 				} else if (MultiAbilityManager.hasMultiAbilityBound(player)){
@@ -132,21 +132,24 @@ public class BoardManager {
 					
 					if (i - 1 < info.getAbilities().size()) {
 						MultiAbilityInfoSub sub = info.getAbilities().get(i - 1);
-						format = sub.getAbilityColor() + format;
+						color = sub.getAbilityColor() + "";
 						name = sub.getName();
 						
 						if (bPlayer.isOnCooldown(sub.getName())) {
 							int time = (int) Math.floor((bPlayer.getCooldown(sub.getName()) - System.currentTimeMillis()) / 1000) + 1;
+							format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
 							
 							if (time < 100) {
-								format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET + " ~ " + time;
-							} else {
-								format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
+								format += " : " + time + "s";
 							}
 						}
 					}
 				}
 			}
+			
+			
+			//copy.remove(name);
+			format = color + format;
 			
 			if (name.length() > 16) {
 				name = name.substring(0, 15) + ".";
@@ -155,6 +158,28 @@ public class BoardManager {
 			format = format.replace("%name%", name);
 			bendingboard.getScore(format).setScore(-i);
 		}
+		
+		/*
+		if (!copy.isEmpty()) {
+			bendingboard.getScore("-- Cooldowns --").setScore(-10);
+			
+			int tracker = -11;
+			for (String cooldown : bPlayer.getCooldowns().keySet()) {
+				int time = (int) Math.floor((bPlayer.getCooldown(cooldown) - System.currentTimeMillis()) / 1000) + 1;
+				String format = "%name%";
+				
+				format += ChatColor.RESET;
+				
+				if (time < 100) {
+					format += " : " + time + "s";
+				}
+				
+				bendingboard.getScore(format.replace("%name%", cooldown)).setScore(tracker);
+				
+				tracker--;
+			}
+		}
+		*/
 		
 		player.setScoreboard(scoreboard);
 		this.slots.put(player.getUniqueId(), player.getInventory().getHeldItemSlot());
@@ -185,6 +210,12 @@ public class BoardManager {
 	public void setDisabled(Player player, boolean disabled) {
 		if (disabled) {
 			this.disabled.add(player.getUniqueId());
+			Scoreboard scoreboard = player.getScoreboard();
+			scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+			
+			for (String entry : scoreboard.getEntries()) {
+				scoreboard.resetScores(entry);
+			}
 		} else {
 			this.disabled.remove(player.getUniqueId());
 		}

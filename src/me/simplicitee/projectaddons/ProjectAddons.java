@@ -2,15 +2,11 @@ package me.simplicitee.projectaddons;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
@@ -27,34 +23,17 @@ public class ProjectAddons extends JavaPlugin {
 	public static ProjectAddons instance;
 	
 	private Config config;
-	private Set<String> enabled;
 	private BoardManager boards;
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		this.enabled = new HashSet<>();
 		
 		this.config = new Config(new File("project_addons.yml"));
 		this.setupConfig();
 		
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.projectaddons.ability");
-		String[] abils = {"MagmaSlap", "Shrapnel", "EarthKick", "Jab", "NinjaStance", "FireDisc", "MetalRepair", "Explode", "LavaSurge", "RazorLeaf", "PlantArmor"};
-		String[] combos = {"FlameBreath", "WeakeningJab", "FlyingKick", "ChiblockJab"};
 		
-		for (String abil : abils) {
-			if (config.get().getBoolean("Abilities." + abil + ".Enabled")) {
-				enabled.add(abil);
-			}
-		}
-		
-		for (String combo : combos) {
-			if (config.get().getBoolean("Combos." + combo + ".Enabled")) {
-				enabled.add(combo);
-			}
-		}
-		
-		this.setupPermissions();
 		this.setupCollisions();
 		
 		new MainListener(this);
@@ -70,12 +49,14 @@ public class ProjectAddons extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		for (Player player : this.getServer().getOnlinePlayers()) {
-			Scoreboard scoreboard = player.getScoreboard();
-			scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-			
-			for (String entry : scoreboard.getEntries()) {
-				scoreboard.resetScores(entry);
+		if (boards != null) {
+			for (Player player : this.getServer().getOnlinePlayers()) {
+				Scoreboard scoreboard = player.getScoreboard();
+				scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+				
+				for (String entry : scoreboard.getEntries()) {
+					scoreboard.resetScores(entry);
+				}
 			}
 		}
 	}
@@ -103,82 +84,6 @@ public class ProjectAddons extends JavaPlugin {
 	
 	public BoardManager getBoardManager() {
 		return boards;
-	}
-	
-	private void setupPermissions() {
-		for (String abil : enabled) {
-			if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability." + abil.toLowerCase()) == null) {
-				Permission perm = new Permission("bending.ability." + abil.toLowerCase());
-				perm.setDefault(PermissionDefault.TRUE);
-				ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-			}
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.energybeam") == null) {
-			Permission perm = new Permission("bending.ability.energybeam");
-			perm.setDefault(PermissionDefault.OP);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.firedisc.bluefire") == null) {
-			Permission perm = new Permission("bending.ability.firedisc.bluefire");
-			perm.setDefault(PermissionDefault.OP);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.vinewhip") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.vinewhip");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.razorleaf") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.razorleaf");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.leafshield") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.leafshield");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.tangle") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.tangle");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.slot5") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.slot5");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.leap") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.leap");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.slot7") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.slot7");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.regenerate") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.regenerate");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
-		
-		if (ProjectKorra.plugin.getServer().getPluginManager().getPermission("bending.ability.plantarmor.disperse") == null) {
-			Permission perm = new Permission("bending.ability.plantarmor.disperse");
-			perm.setDefault(PermissionDefault.TRUE);
-			ProjectKorra.plugin.getServer().getPluginManager().addPermission(perm);
-		}
 	}
 	
 	private void setupConfig() {
@@ -343,7 +248,6 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Duration", 3000);
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Range", 18);
 		
-		
 		// PlantArmor - Leap
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cost", 100);
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cooldown", 2500);
@@ -364,15 +268,24 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.Cooldown", 10000);
 		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.RegenAmount", 350);
 		
+		// LeafStorm
+		c.addDefault("Combos.LeafStorm.Enabled", true);
+		c.addDefault("Combos.LeafStorm.Cooldown", 8000);
+		c.addDefault("Combos.LeafStorm.PlantArmorCost", 800);
+		c.addDefault("Combos.LeafStorm.LeafCount", 10);
+		c.addDefault("Combos.LeafStorm.LeafSpeed", 12);
+		c.addDefault("Combos.LeafStorm.Damage", 0.5);
+		c.addDefault("Combos.LeafStorm.Radius", 10);
+		
 		config.save();
 	}
 	
 	private void setupCollisions() {
-		if (enabled.contains("FireDisc")) {
+		if (CoreAbility.getAbility(FireDisc.class) != null) {
 			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(FireDisc.class));
 		}
 		
-		if (enabled.contains("RazorLeaf")) {
+		if (CoreAbility.getAbility(RazorLeaf.class) != null) {
 			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(RazorLeaf.class));
 		}
 	}

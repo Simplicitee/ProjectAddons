@@ -8,3 +8,38 @@ commands:
   projectaddons:
     aliases: [pa]
     usage: /<command>
+permissions:
+  projectaddons.player:
+    default: true
+    children:
+      bending.ability.firedisc: true
+      bending.ability.flamebreath: true
+      bending.ability.plantarmor: true
+      bending.ability.razorleaf: true
+      bending.ability.earthkick: true
+      bending.ability.magmaslap: true
+      bending.ability.lavasurge: true
+      bending.ability.metalrepair: true
+      bending.ability.shrapnel: true
+      bending.ability.explode: true
+      bending.ability.jab: true
+      bending.ability.chiblockjab: true
+      bending.ability.weakeningjab: true
+      bending.ability.ninjastance: true
+      bending.ability.flyingkick: true
+      bending.ability.leafstorm: true
+  bending.ability.plantarmor:
+    children:
+      bending.ability.plantarmor.vinewhip: true
+      bending.ability.plantarmor.razorleaf: true
+      bending.ability.plantarmor.leafshield: true
+      bending.ability.plantarmor.tangle: true
+      bending.ability.plantarmor.leap: true
+      bending.ability.plantarmor.grapple: true
+      bending.ability.plantarmor.leafdome: true
+      bending.ability.plantarmor.regenerate: true
+      bending.ability.plantarmor.disperse: true
+  bending.ability.energybeam:
+    default: op
+  bending.ability.firedisc.bluefire:
+    default: op
