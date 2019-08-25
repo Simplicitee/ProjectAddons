@@ -6,10 +6,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
 
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
@@ -50,14 +47,7 @@ public class ProjectAddons extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		if (boards != null) {
-			for (Player player : this.getServer().getOnlinePlayers()) {
-				Scoreboard scoreboard = player.getScoreboard();
-				scoreboard.clearSlot(DisplaySlot.SIDEBAR);
-				
-				for (String entry : scoreboard.getEntries()) {
-					scoreboard.resetScores(entry);
-				}
-			}
+			boards.disable();
 		}
 	}
 	
@@ -276,6 +266,19 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.LeafStorm.LeafSpeed", 12);
 		c.addDefault("Combos.LeafStorm.Damage", 0.5);
 		c.addDefault("Combos.LeafStorm.Radius", 10);
+		
+		// GaleGust
+		c.addDefault("Abilities.GaleGust.Enabled", true);
+		c.addDefault("Abilities.GaleGust.Cooldown", 3000);
+		c.addDefault("Abilities.GaleGust.Damage", 1);
+		c.addDefault("Abilities.GaleGust.Radius", 1.2);
+		c.addDefault("Abilities.GaleGust.Range", 25);
+		c.addDefault("Abilities.GaleGust.Knockback", 1.92);
+		
+		// Zephyr
+		c.addDefault("Abilities.Zephyr.Enabled", true);
+		c.addDefault("Abilities.Zephyr.Cooldown", 1000);
+		c.addDefault("Abilities.Zephyr.Radius", 3);
 		
 		config.save();
 	}

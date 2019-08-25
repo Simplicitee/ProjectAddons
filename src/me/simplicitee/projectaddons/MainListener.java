@@ -35,6 +35,8 @@ import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent.Result;
 import com.projectkorra.projectkorra.util.ClickType;
 
+import me.simplicitee.projectaddons.ability.air.GaleGust;
+import me.simplicitee.projectaddons.ability.air.Zephyr;
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam;
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam.EnergyColor;
 import me.simplicitee.projectaddons.ability.chi.Jab;
@@ -122,8 +124,9 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, LavaSurge.class)) {
 				CoreAbility.getAbility(player, LavaSurge.class).shoot();
 			}
-		} 
-		
+		} else if (canBend(player, "GaleGust")) {
+			new GaleGust(player);
+		}
 	}
 	
 	@EventHandler
@@ -178,6 +181,8 @@ public class MainListener implements Listener {
 			new RazorLeaf(player, true);
 		} else if (ability.getName().equals("PlantArmor")) {
 			new PlantArmor(player, ClickType.SHIFT_DOWN);
+		} else if (canBend(player, "Zephyr")) {
+			new Zephyr(player);
 		}
 	}
 	
@@ -345,7 +350,7 @@ public class MainListener implements Listener {
 		if (event.getResult() == Result.REMOVED) {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 				plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), false);
-			}, 15);
+			}, 30);
 		} else {
 			plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), true);
 		}
@@ -355,7 +360,9 @@ public class MainListener implements Listener {
 		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 		CoreAbility abil = CoreAbility.getAbility(ability);
 		
-		if (!bPlayer.getBoundAbilityName().equals(ability)) {
+		if (abil == null) {
+			return false;
+		} else if (!bPlayer.getBoundAbilityName().equals(ability)) {
 			return false;
 		} else if (!bPlayer.canBend(abil)) {
 			return false;

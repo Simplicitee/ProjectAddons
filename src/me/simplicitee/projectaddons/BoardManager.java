@@ -18,7 +18,6 @@ import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfo;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfoSub;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
-import com.projectkorra.projectkorra.util.Cooldown;
 
 public class BoardManager {
 	
@@ -26,12 +25,14 @@ public class BoardManager {
 	private Set<UUID> disabled;
 	private Map<UUID, Set<String>> cooldown;
 	private Map<UUID, Integer> slots;
+	private Map<UUID, Scoreboard> boards;
 
 	public BoardManager(ProjectAddons plugin) {
 		this.plugin = plugin;
 		this.disabled = new HashSet<>();
 		this.slots = new HashMap<>();
 		this.cooldown = new HashMap<>();
+		this.boards = new HashMap<>();
 		
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -68,6 +69,17 @@ public class BoardManager {
 		}, 60, plugin.getConfig().getInt("Properties.BendingBoard.IntervalTicks"));
 	}
 	
+	public void disable() {
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
+		}
+		
+		disabled.clear();
+		cooldown.clear();
+		slots.clear();
+		boards.clear();
+	}
+	
 	public void update(Player player, BendingPlayer bPlayer) {
 		if (disabled.contains(player.getUniqueId())) {
 			return;
@@ -81,8 +93,11 @@ public class BoardManager {
 			return;
 		}
 		
-		Scoreboard scoreboard = player.getScoreboard();
-		scoreboard.clearSlot(DisplaySlot.SIDEBAR);
+		if (!boards.containsKey(player.getUniqueId())) {
+			boards.put(player.getUniqueId(), plugin.getServer().getScoreboardManager().getNewScoreboard());
+		}
+		
+		Scoreboard scoreboard = boards.get(player.getUniqueId());
 		
 		for (String entry : scoreboard.getEntries()) {
 			scoreboard.resetScores(entry);
@@ -92,10 +107,10 @@ public class BoardManager {
 		
 		if (bendingboard == null) {
 			bendingboard = scoreboard.registerNewObjective("projectaddons", "", "");
+			bendingboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
 		}
 		
 		bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
-		bendingboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
 
 		//Map<String, Cooldown> copy = new HashMap<>(bPlayer.getCooldowns());
 		
@@ -147,12 +162,11 @@ public class BoardManager {
 				}
 			}
 			
-			
 			//copy.remove(name);
 			format = color + format;
 			
 			if (name.length() > 16) {
-				name = name.substring(0, 15) + ".";
+				name = name.substring(0, 15);
 			}
 			
 			format = format.replace("%name%", name);
