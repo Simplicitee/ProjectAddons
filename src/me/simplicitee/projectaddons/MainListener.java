@@ -31,6 +31,7 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
+import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent.Result;
 import com.projectkorra.projectkorra.util.ClickType;
@@ -329,6 +330,16 @@ public class MainListener implements Listener {
 				event.setCancelled(true);
 			}
 		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onElementChange(PlayerChangeElementEvent event) {
+		if (!plugin.isBoardEnabled()) {
+			return;
+		}
+
+		Player player = event.getTarget();
+		plugin.getBoardManager().update(player, BendingPlayer.getBendingPlayer(player));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
