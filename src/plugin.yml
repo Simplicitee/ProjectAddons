@@ -28,6 +28,9 @@ permissions:
       bending.ability.ninjastance: true
       bending.ability.flyingkick: true
       bending.ability.leafstorm: true
+      bending.ability.galegust: true
+      bending.ability.zephyr: true
+      bending.ability.tailwind: true
   bending.ability.plantarmor:
     children:
       bending.ability.plantarmor.vinewhip: true

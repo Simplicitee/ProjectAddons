@@ -280,6 +280,12 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Zephyr.Cooldown", 1000);
 		c.addDefault("Abilities.Zephyr.Radius", 3);
 		
+		// Tailwind
+		c.addDefault("Combos.Tailwind.Enabled", true);
+		c.addDefault("Combos.Tailwind.Cooldown", 7000);
+		c.addDefault("Combos.Tailwind.Duration", 22000);
+		c.addDefault("Combos.Tailwind.Speed", 8);
+		
 		config.save();
 	}
 	
