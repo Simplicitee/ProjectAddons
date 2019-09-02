@@ -12,6 +12,7 @@ import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.configuration.Config;
 
+import me.simplicitee.projectaddons.ability.air.GaleGust;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
 import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
@@ -286,6 +287,13 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Tailwind.Duration", 22000);
 		c.addDefault("Combos.Tailwind.Speed", 8);
 		
+		// Dig
+		c.addDefault("Abilities.Dig.Enabled", true);
+		c.addDefault("Abilities.Dig.Cooldown", 3000);
+		c.addDefault("Abilities.Dig.Duration", -1);
+		c.addDefault("Abilities.Dig.RevertTime", 3500);
+		c.addDefault("Abilities.Dig.Speed", 0.52);
+		
 		config.save();
 	}
 	
@@ -296,6 +304,10 @@ public class ProjectAddons extends JavaPlugin {
 		
 		if (CoreAbility.getAbility(RazorLeaf.class) != null) {
 			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(RazorLeaf.class));
+		}
+		
+		if (CoreAbility.getAbility(GaleGust.class) != null) {
+			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(GaleGust.class));
 		}
 	}
 }

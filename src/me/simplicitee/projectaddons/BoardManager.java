@@ -1,7 +1,9 @@
 package me.simplicitee.projectaddons;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -13,17 +15,19 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.projectkorra.projectkorra.BendingPlayer;
+import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfo;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfoSub;
 import com.projectkorra.projectkorra.configuration.ConfigManager;
+import com.projectkorra.projectkorra.util.Cooldown;
 
 public class BoardManager {
 	
 	private ProjectAddons plugin;
 	private Set<UUID> disabled;
-	private Map<UUID, Set<String>> cooldown;
+	private Map<UUID, List<String>> cooldown;
 	private Map<UUID, Integer> slots;
 	private Map<UUID, Scoreboard> boards;
 
@@ -80,14 +84,26 @@ public class BoardManager {
 		boards.clear();
 	}
 	
+	public void remove(Player player) {
+		if (boards.containsKey(player.getUniqueId())) {
+			player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
+			boards.remove(player.getUniqueId());
+			slots.remove(player.getUniqueId());
+		}
+	}
+	
 	public void update(Player player, BendingPlayer bPlayer) {
 		if (disabled.contains(player.getUniqueId())) {
+			remove(player);
 			return;
 		} else if (!player.isOnline() || player.isDead()) {
+			remove(player);
 			return;
 		} else if (bPlayer == null) {
+			remove(player);
 			return;
 		} else if (bPlayer.getElements().isEmpty()) {
+			remove(player);
 			return;
 		} else if (bPlayer.isOnCooldown("MAM_setup")) {
 			return;
@@ -112,7 +128,7 @@ public class BoardManager {
 		
 		bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-		//Map<String, Cooldown> copy = new HashMap<>(bPlayer.getCooldowns());
+		Map<String, Cooldown> copy = new HashMap<>(bPlayer.getCooldowns());
 		
 		for (int i = 1; i < 10; i++) {
 			String color = "";
@@ -162,7 +178,7 @@ public class BoardManager {
 				}
 			}
 			
-			//copy.remove(name);
+			copy.remove(name);
 			format = color + format;
 			
 			if (name.length() > 16) {
@@ -173,27 +189,35 @@ public class BoardManager {
 			bendingboard.getScore(format).setScore(-i);
 		}
 		
-		/*
 		if (!copy.isEmpty()) {
-			bendingboard.getScore("-- Cooldowns --").setScore(-10);
-			
+			boolean show = false;
 			int tracker = -11;
+			
 			for (String cooldown : bPlayer.getCooldowns().keySet()) {
-				int time = (int) Math.floor((bPlayer.getCooldown(cooldown) - System.currentTimeMillis()) / 1000) + 1;
-				String format = "%name%";
+				CoreAbility ability = CoreAbility.getAbility(cooldown);
 				
-				format += ChatColor.RESET;
-				
-				if (time < 100) {
-					format += " : " + time + "s";
+				if (ability != null && ability instanceof ComboAbility) {
+					int time = (int) Math.floor((bPlayer.getCooldown(cooldown) - System.currentTimeMillis()) / 1000) + 1;
+					String format = "%name%";
+					
+					format += ChatColor.RESET;
+					
+					if (time < 100) {
+						format += " : " + time + "s";
+					}
+					
+					bendingboard.getScore(format.replace("%name%", ability.getElement().getColor() + ability.getName())).setScore(tracker);
+					
+					show = true;
+					
+					tracker--;
 				}
-				
-				bendingboard.getScore(format.replace("%name%", cooldown)).setScore(tracker);
-				
-				tracker--;
+			}
+			
+			if (show) {
+				bendingboard.getScore("-- Combos --").setScore(-10);
 			}
 		}
-		*/
 		
 		player.setScoreboard(scoreboard);
 		this.slots.put(player.getUniqueId(), player.getInventory().getHeldItemSlot());
@@ -205,10 +229,10 @@ public class BoardManager {
 		}
 		
 		if (!this.cooldown.containsKey(player.getUniqueId())) {
-			this.cooldown.put(player.getUniqueId(), new HashSet<>());
+			this.cooldown.put(player.getUniqueId(), new ArrayList<>());
 		}
 		
-		Set<String> active = this.cooldown.get(player.getUniqueId());
+		List<String> active = this.cooldown.get(player.getUniqueId());
 		
 		if (cooldown) {
 			active.add(ability);

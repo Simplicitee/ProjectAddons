@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -43,6 +44,7 @@ import me.simplicitee.projectaddons.ability.chi.Jab;
 import me.simplicitee.projectaddons.ability.chi.Jab.JabHand;
 import me.simplicitee.projectaddons.ability.chi.NinjaStance;
 import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
+import me.simplicitee.projectaddons.ability.earth.Dig;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
 import me.simplicitee.projectaddons.ability.earth.MagmaSlap;
@@ -183,6 +185,8 @@ public class MainListener implements Listener {
 			new PlantArmor(player, ClickType.SHIFT_DOWN);
 		} else if (canBend(player, "Zephyr")) {
 			new Zephyr(player);
+		} else if (canBend(player, "Dig")) {
+			new Dig(player);
 		}
 	}
 	
@@ -245,6 +249,12 @@ public class MainListener implements Listener {
 				} else if (event.getCause() == DamageCause.DROWNING) {
 					event.setCancelled(true);
 					CoreAbility.getAbility(player, PlantArmor.class).damage((int) event.getDamage() * 5);
+				}
+			}
+			
+			if (event.getCause() == DamageCause.FLY_INTO_WALL) {
+				if (CoreAbility.hasAbility(player, Dig.class)) {
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -326,6 +336,22 @@ public class MainListener implements Listener {
 				} else {
 					player.sendMessage(ChatColor.RED + "Unknown color! Try red, blue, yellow, green, purple, orange, indigo, brown, white, or black!");
 				}
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onToggleGlide(EntityToggleGlideEvent event) {
+		if (!(event.getEntity() instanceof Player)) {
+			return;
+		}
+		
+		Player player = (Player) event.getEntity();
+		CoreAbility dig = CoreAbility.getAbility(player, Dig.class);
+		
+		if (dig != null && dig.isStarted()) {
+			if (!event.isGliding()) {
 				event.setCancelled(true);
 			}
 		}

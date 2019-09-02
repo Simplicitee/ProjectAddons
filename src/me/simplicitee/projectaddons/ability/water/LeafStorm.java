@@ -43,8 +43,12 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 		}
 		
 		PlantArmor armor = getAbility(player, PlantArmor.class);
-		
 		int cost = ProjectAddons.instance.getConfig().getInt("Combos.LeafStorm.PlantArmorCost");
+		
+		if (!armor.damage(cost)) {
+			return;
+		}
+		
 		radius = ProjectAddons.instance.getConfig().getDouble("Combos.LeafStorm.Radius");
 		damage = ProjectAddons.instance.getConfig().getDouble("Combos.LeafStorm.Damage");
 		leaves = ProjectAddons.instance.getConfig().getInt("Combos.LeafStorm.LeafCount");
@@ -61,10 +65,8 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 			
 			leafTracker.add(new Leaf(loc, angle, offset));
 		}
-		
-		if (armor.damage(cost)) {
-			start();
-		}
+
+		start();
 	}
 
 	@Override
@@ -110,6 +112,12 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 			remove();
 			return;
 		}
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		bPlayer.addCooldown(this);
 	}
 
 	@Override
@@ -167,6 +175,11 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 		combo.add(new AbilityInformation(Element.WATER.getSubColor() + "VineWhip", ClickType.SHIFT_DOWN));
 		
 		return combo;
+	}
+	
+	@Override
+	public boolean isEnabled() {
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.LeafStorm.Enabled");
 	}
 	
 	@Override

@@ -35,13 +35,13 @@ public class Zephyr extends AirAbility implements AddonAbility {
 
 	@Override
 	public void progress() {
-		if (!player.isOnline() || player.isDead() || !player.isSneaking()) {
+		if (!player.isOnline() || player.isDead() || !player.isSneaking() || player.getLocation().getBlock().isLiquid()) {
 			remove();
 			return;
 		}
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(player.getLocation(), radius)) {
-			if (e instanceof LivingEntity) {
+			if (e instanceof LivingEntity && ((LivingEntity) e).getEyeLocation().getY() >= player.getLocation().getY()) {
 				((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 2), true);
 				ParticleEffect.CLOUD.display(e.getLocation(), 2, 0.3, 0.15, 0.3);
 			}
@@ -74,7 +74,7 @@ public class Zephyr extends AirAbility implements AddonAbility {
 
 	@Override
 	public boolean isHarmlessAbility() {
-		return false;
+		return true;
 	}
 
 	@Override

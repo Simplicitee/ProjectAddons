@@ -30,6 +30,7 @@ permissions:
       bending.ability.leafstorm: true
       bending.ability.galegust: true
       bending.ability.zephyr: true
+      bending.ability.dig: true
       bending.ability.tailwind: true
   bending.ability.plantarmor:
     children:

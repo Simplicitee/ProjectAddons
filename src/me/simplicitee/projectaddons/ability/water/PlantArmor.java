@@ -116,9 +116,9 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.Duration");
 			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.Cooldown");
 			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Durability");
-			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Swim") + 1;
-			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Speed") + 1;
-			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Jump") + 1;
+			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Swim") - 1;
+			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Speed") - 1;
+			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Jump") - 1;
 			this.armor = null;
 			
 			final ItemStack head = new ItemStack(Material.OAK_LEAVES, 1);
