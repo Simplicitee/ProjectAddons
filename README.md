@@ -5,6 +5,11 @@ Side plugin for various addon abilities to ProjectKorra plugin
 ### Avatar
 - EnergyBeam
 
+### Airbending
+- GaleGust
+- Zephyr
+- Tailwind (Combo)
+
 ### Chiblocking
 - Jab
 - NinjaStance
@@ -12,17 +17,20 @@ Side plugin for various addon abilities to ProjectKorra plugin
 - FlyingKick (Combo)
 - WeakeningJab (Combo)
 
-### Earth
+### Earthbending
 - EarthKick
+- Dig
 - MagmaSlap
 - LavaSurge
 - MetalRepair
 - Shrapnel
 
-### Fire
+### Firebending
 - Explode
 - FireDisc
 - FlameBreath (Combo)
 
-### Water
+### Waterbending
 - RazorLeaf
+- PlantArmor
+- LeafStorm (Combo)
