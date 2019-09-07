@@ -1,9 +1,7 @@
 package me.simplicitee.projectaddons;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -20,57 +18,25 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfo;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfoSub;
-import com.projectkorra.projectkorra.configuration.ConfigManager;
-import com.projectkorra.projectkorra.util.Cooldown;
 
 public class BoardManager {
 	
 	private ProjectAddons plugin;
 	private Set<UUID> disabled;
-	private Map<UUID, List<String>> cooldown;
-	private Map<UUID, Integer> slots;
 	private Map<UUID, Scoreboard> boards;
+	private String empty;
 
 	public BoardManager(ProjectAddons plugin) {
 		this.plugin = plugin;
 		this.disabled = new HashSet<>();
-		this.slots = new HashMap<>();
-		this.cooldown = new HashMap<>();
 		this.boards = new HashMap<>();
+		this.empty = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.EmptySlot"));
 		
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
-				
-				this.update(player, bPlayer);
+				this.update(player);
 			}
 		}, 60);
-		
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				if (ConfigManager.getConfig().getStringList("Properties.DisabledWorlds").contains(player.getWorld().getName())) {
-					continue;
-				} else if (disabled.contains(player.getUniqueId())) {
-					continue;
-				}
-				
-				BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
-				
-				if (bPlayer == null) {
-					continue;
-				} else if (bPlayer.getElements().isEmpty()) {
-					continue;
-				}
-				
-				if (cooldown.containsKey(player.getUniqueId())) {
-					this.update(player, bPlayer);
-				} else if (!slots.containsKey(player.getUniqueId())) {
-					this.update(player, bPlayer);
-				} else if (slots.get(player.getUniqueId()) != player.getInventory().getHeldItemSlot()) {
-					this.update(player, bPlayer);
-				}
-			}
-		}, 60, plugin.getConfig().getInt("Properties.BendingBoard.IntervalTicks"));
 	}
 	
 	public void disable() {
@@ -79,8 +45,6 @@ public class BoardManager {
 		}
 		
 		disabled.clear();
-		cooldown.clear();
-		slots.clear();
 		boards.clear();
 	}
 	
@@ -88,11 +52,16 @@ public class BoardManager {
 		if (boards.containsKey(player.getUniqueId())) {
 			player.setScoreboard(plugin.getServer().getScoreboardManager().getMainScoreboard());
 			boards.remove(player.getUniqueId());
-			slots.remove(player.getUniqueId());
 		}
 	}
 	
-	public void update(Player player, BendingPlayer bPlayer) {
+	public void update(Player player) {
+		this.update(player, player.getInventory().getHeldItemSlot());
+	}
+	
+	public void update(Player player, int newSlot) {
+		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+		
 		if (disabled.contains(player.getUniqueId())) {
 			remove(player);
 			return;
@@ -124,18 +93,15 @@ public class BoardManager {
 		if (bendingboard == null) {
 			bendingboard = scoreboard.registerNewObjective("projectaddons", "", "");
 			bendingboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
+			bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
-		
-		bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-		Map<String, Cooldown> copy = new HashMap<>(bPlayer.getCooldowns());
 		
 		for (int i = 1; i < 10; i++) {
 			String color = "";
-			String format = "%name%";
-			String name = "Slot " + i;
+			String format = "";
+			String name = empty.replace("%d", i + "");
 			
-			if (player.getInventory().getHeldItemSlot() == (i - 1)) {
+			if (newSlot == (i - 1)) {
 				format = ChatColor.BOLD + format;
 			}
 			
@@ -151,12 +117,7 @@ public class BoardManager {
 					}
 					
 					if (bPlayer.isOnCooldown(ability)) {
-						int time = (int) Math.floor((bPlayer.getCooldown(ability.getName()) - System.currentTimeMillis()) / 1000) + 1;
-						format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
-						
-						if (time < 100) {
-							format += " : " + time + "s";
-						}
+						format = ChatColor.STRIKETHROUGH + format;
 					}
 				} else if (MultiAbilityManager.hasMultiAbilityBound(player)){
 					MultiAbilityInfo info = MultiAbilityManager.getMultiAbility(MultiAbilityManager.getBoundMultiAbility(player));
@@ -167,82 +128,41 @@ public class BoardManager {
 						name = sub.getName();
 						
 						if (bPlayer.isOnCooldown(sub.getName())) {
-							int time = (int) Math.floor((bPlayer.getCooldown(sub.getName()) - System.currentTimeMillis()) / 1000) + 1;
-							format = ChatColor.STRIKETHROUGH + format + ChatColor.RESET;
-							
-							if (time < 100) {
-								format += " : " + time + "s";
-							}
+							format = ChatColor.STRIKETHROUGH + format;
 						}
 					}
 				}
 			}
 			
-			copy.remove(name);
-			format = color + format;
-			
 			if (name.length() > 16) {
 				name = name.substring(0, 15);
 			}
 			
-			format = format.replace("%name%", name);
-			bendingboard.getScore(format).setScore(-i);
+			bendingboard.getScore(color + format + name).setScore(-i);
 		}
 		
-		if (!copy.isEmpty()) {
-			boolean show = false;
-			int tracker = -11;
+		boolean show = false;
+		int tracker = -11;
+		
+		for (String cooldown : bPlayer.getCooldowns().keySet()) {
+			CoreAbility ability = CoreAbility.getAbility(cooldown);
 			
-			for (String cooldown : bPlayer.getCooldowns().keySet()) {
-				CoreAbility ability = CoreAbility.getAbility(cooldown);
+			if (ability != null && ability instanceof ComboAbility) {
+				String s = ability.getElement().getColor() + (ChatColor.STRIKETHROUGH + ability.getName());
 				
-				if (ability != null && ability instanceof ComboAbility) {
-					int time = (int) Math.floor((bPlayer.getCooldown(cooldown) - System.currentTimeMillis()) / 1000) + 1;
-					String format = "%name%";
-					
-					format += ChatColor.RESET;
-					
-					if (time < 100) {
-						format += " : " + time + "s";
-					}
-					
-					bendingboard.getScore(format.replace("%name%", ability.getElement().getColor() + ability.getName())).setScore(tracker);
-					
-					show = true;
-					
-					tracker--;
-				}
-			}
-			
-			if (show) {
-				bendingboard.getScore("-- Combos --").setScore(-10);
+				bendingboard.getScore(s).setScore(tracker);
+				
+				show = true;
+				
+				tracker--;
 			}
 		}
 		
-		player.setScoreboard(scoreboard);
-		this.slots.put(player.getUniqueId(), player.getInventory().getHeldItemSlot());
-	}
+		if (show) {
+			bendingboard.getScore("-- Combos --").setScore(-10);
+		}
 	
-	public void setCooldown(Player player, String ability, boolean cooldown) {
-		if (ability == null || ability.equals("")) {
-			return;
-		}
-		
-		if (!this.cooldown.containsKey(player.getUniqueId())) {
-			this.cooldown.put(player.getUniqueId(), new ArrayList<>());
-		}
-		
-		List<String> active = this.cooldown.get(player.getUniqueId());
-		
-		if (cooldown) {
-			active.add(ability);
-		} else {
-			active.remove(ability);
-			
-			if (active.isEmpty()) {
-				this.cooldown.remove(player.getUniqueId());
-			}
-		}
+		player.setScoreboard(scoreboard);
 	}
 	
 	public void setDisabled(Player player, boolean disabled) {

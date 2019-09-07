@@ -1,4 +1,4 @@
-package me.simplicitee.projectaddons.ability.fire;
+		package me.simplicitee.projectaddons.ability.fire;
 
 import java.util.Random;
 
@@ -168,15 +168,7 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	}
 	
 	public boolean cutBlock(Block b) {
-		for (String name : ProjectAddons.instance.getConfig().getStringList("Abilities.FireDisc.Cuttable_Blocks")) {
-			Material m = Material.valueOf(name);
-			if (m != null) {
-				return b.getType() == m;
-			} else {
-				continue;
-			}
-		}
-		return false;
+		return ProjectAddons.instance.getConfig().getStringList("Abilities.FireDisc.Cuttable_Blocks").contains(b.getType().toString());
 	}
 	
 	public void displayBlueParticle(Location loc) {
@@ -203,5 +195,15 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	@Override
 	public boolean isEnabled() {
 		return ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.Enabled");
+	}
+	
+	@Override
+	public String getDescription() {
+		return "Throw a spinning disc of fire that can cut through some blocks or your enemies!";
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "Left Click";
 	}
 }

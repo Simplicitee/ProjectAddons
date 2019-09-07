@@ -81,8 +81,8 @@ public class ProjectAddons extends JavaPlugin {
 		FileConfiguration c = config.get();
 		
 		c.addDefault("Properties.BendingBoard.Enabled", true);
-		c.addDefault("Properties.BendingBoard.IntervalTicks", 4);
 		c.addDefault("Properties.BendingBoard.Title", "Binds");
+		c.addDefault("Properties.BendingBoard.EmptySlot", "&o~ Slot %d ~");
 		
 		// LavaSurge
 		c.addDefault("Abilities.LavaSurge.Enabled", true);
@@ -293,6 +293,18 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Dig.Duration", -1);
 		c.addDefault("Abilities.Dig.RevertTime", 3500);
 		c.addDefault("Abilities.Dig.Speed", 0.52);
+		
+		// Dodging
+		c.addDefault("Passives.Dodging.Enabled", true);
+		c.addDefault("Passives.Dodging.Chance", 26);
+		
+		// Accretion
+		c.addDefault("Abilities.Accretion.Enabled", true);
+		c.addDefault("Abilities.Accretion.Cooldown", 10000);
+		c.addDefault("Abilities.Accretion.Damage", 1);
+		c.addDefault("Abilities.Accretion.Blocks", 7);
+		c.addDefault("Abilities.Accretion.SelectRange", 7);
+		c.addDefault("Abilities.Accretion.RevertTime", 20000);
 		
 		config.save();
 	}

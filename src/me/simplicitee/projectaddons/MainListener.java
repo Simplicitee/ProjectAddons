@@ -19,9 +19,13 @@ import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.Element;
@@ -32,18 +36,21 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
+import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
-import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent.Result;
+import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 
 import me.simplicitee.projectaddons.ability.air.GaleGust;
 import me.simplicitee.projectaddons.ability.air.Zephyr;
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam;
 import me.simplicitee.projectaddons.ability.avatar.EnergyBeam.EnergyColor;
+import me.simplicitee.projectaddons.ability.chi.Dodging;
 import me.simplicitee.projectaddons.ability.chi.Jab;
 import me.simplicitee.projectaddons.ability.chi.Jab.JabHand;
 import me.simplicitee.projectaddons.ability.chi.NinjaStance;
 import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
+import me.simplicitee.projectaddons.ability.earth.Accretion;
 import me.simplicitee.projectaddons.ability.earth.Dig;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
@@ -105,7 +112,6 @@ public class MainListener implements Listener {
 			return;
 		}
 		
-		
 		if (canBend(player, "FireDisc")) {
 			new FireDisc(player);
 		} else if (canBend(player, "MagmaSlap")) {
@@ -128,6 +134,10 @@ public class MainListener implements Listener {
 			}
 		} else if (canBend(player, "GaleGust")) {
 			new GaleGust(player);
+		} else if (canBend(player, "Accretion")) {
+			if (CoreAbility.hasAbility(player, Accretion.class)) {
+				CoreAbility.getAbility(player, Accretion.class).shoot();
+			}
 		}
 	}
 	
@@ -187,6 +197,8 @@ public class MainListener implements Listener {
 			new Zephyr(player);
 		} else if (canBend(player, "Dig")) {
 			new Dig(player);
+		} else if (canBend(player, "Accretion")) {
+			new Accretion(player);
 		}
 	}
 	
@@ -222,6 +234,9 @@ public class MainListener implements Listener {
 			} else if (fb.hasMetadata("lavasurge")) {
 				event.setCancelled(true);
 				((LavaSurge) fb.getMetadata("lavasurge").get(0).value()).removeBlock(fb);
+			} else if (fb.hasMetadata("accretion")) {
+				event.setCancelled(true);
+				((Accretion) fb.getMetadata("accretion").get(0).value()).blockCollision(fb, event.getBlock());
 			}
 		}
 	}
@@ -234,6 +249,11 @@ public class MainListener implements Listener {
 		
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
+			BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+			
+			if (bPlayer == null) {
+				return;
+			}
 			
 			if (CoreAbility.hasAbility(player, NinjaStance.class)) {
 				NinjaStance ninja = CoreAbility.getAbility(player, NinjaStance.class);
@@ -263,10 +283,29 @@ public class MainListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHitDamage(EntityDamageByEntityEvent event) {
 		if (event.isCancelled()) return;
-		if (!(event.getDamager() instanceof Player)) return;
 		
-		Player player = (Player) event.getDamager();
 		Entity entity = event.getEntity();
+		Entity damagerE = event.getDamager();
+		
+		if (entity instanceof Player) {
+			Player player = (Player) event.getEntity();
+			BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+			
+			Dodging dodge = CoreAbility.getAbility(player, Dodging.class);
+				
+			if (dodge != null && bPlayer.canBendPassive(dodge)) {
+				if (dodge.check()) {
+					event.setCancelled(true);
+					ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + Element.CHI.getColor() + "Dodged" + ChatColor.LIGHT_PURPLE + " <!", player);
+					
+					if (damagerE instanceof Player) {
+						ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + ChatColor.WHITE + player.getName() + Element.CHI.getColor() + "dodged" + ChatColor.LIGHT_PURPLE + " <!", (Player) damagerE);
+					}
+					
+					return;
+				}
+			}
+		}
 		
 		if (WeakeningJab.isAffected(entity)) {
 			event.setDamage(event.getDamage() * WeakeningJab.getModifier());
@@ -275,24 +314,28 @@ public class MainListener implements Listener {
 			}
 		}
 		
-		if (event.getCause() != DamageCause.ENTITY_ATTACK) return;
-		if (GeneralMethods.isWeapon(player.getInventory().getItemInMainHand().getType())) return;
-		
-		if (CoreAbility.hasAbility(player, NinjaStance.class)) {
-			NinjaStance ninja = CoreAbility.getAbility(player, NinjaStance.class);
-			if (ninja.stealth && ninja.stealthReady && player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-				ninja.stopStealth();
+		if (damagerE instanceof Player) {
+			Player damager = (Player) damagerE;
+			
+			if (event.getCause() != DamageCause.ENTITY_ATTACK) return;
+			if (GeneralMethods.isWeapon(damager.getInventory().getItemInMainHand().getType())) return;
+			
+			if (CoreAbility.hasAbility(damager, NinjaStance.class)) {
+				NinjaStance ninja = CoreAbility.getAbility(damager, NinjaStance.class);
+				if (ninja.stealth && ninja.stealthReady && damager.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+					ninja.stopStealth();
+				}
+				
+				event.setDamage(event.getDamage() * NinjaStance.getDamageModifier());
 			}
 			
-			event.setDamage(event.getDamage() * NinjaStance.getDamageModifier());
-		}
-		
-		if (canBend(player, "Jab")) {
-			if (CoreAbility.hasAbility(player, Jab.class)) {
-				Jab jab = CoreAbility.getAbility(player, Jab.class);
-				jab.activate(entity, JabHand.RIGHT);
-			} else {
-				new Jab(player, entity, JabHand.RIGHT);
+			if (canBend(damager, "Jab")) {
+				if (CoreAbility.hasAbility(damager, Jab.class)) {
+					Jab jab = CoreAbility.getAbility(damager, Jab.class);
+					jab.activate(entity, JabHand.RIGHT);
+				} else {
+					new Jab(damager, entity, JabHand.RIGHT);
+				}
 			}
 		}
 	}
@@ -363,8 +406,16 @@ public class MainListener implements Listener {
 			return;
 		}
 		
-		Player player = event.getPlayer();
-		plugin.getBoardManager().update(player, BendingPlayer.getBendingPlayer(player));
+		final Player player = event.getPlayer();
+
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				plugin.getBoardManager().update(player);
+			}
+			
+		}.runTaskLater(plugin, 1);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -373,13 +424,72 @@ public class MainListener implements Listener {
 			return;
 		}
 		
-		if (event.getResult() == Result.REMOVED) {
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-				plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), false);
-			}, 30);
-		} else {
-			plugin.getBoardManager().setCooldown(event.getPlayer(), event.getAbility(), true);
+		final Player player = event.getPlayer();
+
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				plugin.getBoardManager().update(player);
+			}
+			
+		}.runTaskLater(plugin, 1);
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event) {
+		if (!plugin.isBoardEnabled()) {
+			return;
 		}
+		
+		final Player player = event.getPlayer();
+
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				plugin.getBoardManager().update(player);
+			}
+			
+		}.runTaskLater(plugin, 5);
+	}
+	
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		if (!plugin.isBoardEnabled()) {
+			return;
+		}
+		
+		final Player player = event.getPlayer();
+		plugin.getBoardManager().remove(player);
+	}
+	
+	@EventHandler
+	public void onElementChangeEvent(PlayerChangeElementEvent event) {
+		if (!plugin.isBoardEnabled()) {
+			return;
+		}
+		
+		final Player player = event.getTarget();
+		
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				plugin.getBoardManager().update(player);
+			}
+			
+		}.runTaskLater(plugin, 1);
+	}
+	
+	@EventHandler
+	public void onSlotChangeEvent(PlayerItemHeldEvent event) {
+		if (event.isCancelled() || !plugin.isBoardEnabled()) {
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		plugin.getBoardManager().update(player, event.getNewSlot());
 	}
 
 	private boolean canBend(Player player, String ability) {
