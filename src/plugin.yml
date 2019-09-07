@@ -31,6 +31,9 @@ permissions:
       bending.ability.galegust: true
       bending.ability.zephyr: true
       bending.ability.dig: true
+      bending.ability.dodging: true
+      bending.ability.accretion: true
+      bending.ability.crumble: true
       bending.ability.tailwind: true
   bending.ability.plantarmor:
     children:

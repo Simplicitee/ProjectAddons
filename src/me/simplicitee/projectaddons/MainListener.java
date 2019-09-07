@@ -51,6 +51,7 @@ import me.simplicitee.projectaddons.ability.chi.Jab.JabHand;
 import me.simplicitee.projectaddons.ability.chi.NinjaStance;
 import me.simplicitee.projectaddons.ability.chi.WeakeningJab;
 import me.simplicitee.projectaddons.ability.earth.Accretion;
+import me.simplicitee.projectaddons.ability.earth.Crumble;
 import me.simplicitee.projectaddons.ability.earth.Dig;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
@@ -138,6 +139,8 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, Accretion.class)) {
 				CoreAbility.getAbility(player, Accretion.class).shoot();
 			}
+		} else if (canBend(player, "Crumble")) {
+			new Crumble(player, ClickType.LEFT_CLICK);
 		}
 	}
 	
@@ -199,6 +202,8 @@ public class MainListener implements Listener {
 			new Dig(player);
 		} else if (canBend(player, "Accretion")) {
 			new Accretion(player);
+		} else if (canBend(player, "Crumble")) {
+			new Crumble(player, ClickType.SHIFT_UP);
 		}
 	}
 	
@@ -299,7 +304,7 @@ public class MainListener implements Listener {
 					ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + Element.CHI.getColor() + "Dodged" + ChatColor.LIGHT_PURPLE + " <!", player);
 					
 					if (damagerE instanceof Player) {
-						ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + ChatColor.WHITE + player.getName() + Element.CHI.getColor() + "dodged" + ChatColor.LIGHT_PURPLE + " <!", (Player) damagerE);
+						ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + ChatColor.WHITE + player.getName() + Element.CHI.getColor() + " dodged" + ChatColor.LIGHT_PURPLE + " <!", (Player) damagerE);
 					}
 					
 					return;

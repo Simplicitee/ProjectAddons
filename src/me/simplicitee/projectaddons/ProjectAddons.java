@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +14,7 @@ import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.configuration.Config;
 
 import me.simplicitee.projectaddons.ability.air.GaleGust;
+import me.simplicitee.projectaddons.ability.earth.Crumble;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
 import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
@@ -49,6 +51,12 @@ public class ProjectAddons extends JavaPlugin {
 	public void onDisable() {
 		if (boards != null) {
 			boards.disable();
+		}
+		
+		if (CoreAbility.getAbility(Crumble.class) != null) {
+			for (Crumble c : CoreAbility.getAbilities(Crumble.class)) {
+				c.revert();
+			}
 		}
 	}
 	
@@ -305,6 +313,13 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Accretion.Blocks", 7);
 		c.addDefault("Abilities.Accretion.SelectRange", 7);
 		c.addDefault("Abilities.Accretion.RevertTime", 20000);
+		
+		// Crumble
+		c.addDefault("Abilities.Crumble.Enabled", true);
+		c.addDefault("Abilities.Crumble.Cooldown", 2000);
+		c.addDefault("Abilities.Crumble.Radius", 6);
+		c.addDefault("Abilities.Crumble.SelectRange", 9);
+		c.addDefault("Abilities.Crumble.RevertTime", 60);
 		
 		config.save();
 	}
