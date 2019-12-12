@@ -8,29 +8,35 @@ Side plugin for various addon abilities to ProjectKorra plugin
 ### Airbending
 - GaleGust
 - Zephyr
-- Tailwind (Combo)
+- Tailwind (combo)
 
 ### Chiblocking
 - Jab
 - NinjaStance
-- ChiblockingJab (Combo)
-- FlyingKick (Combo)
-- WeakeningJab (Combo)
+- ChiblockingJab (combo)
+- FlyingKick (combo)
+- WeakeningJab (combo)
+- Dodging (passive)
 
 ### Earthbending
-- EarthKick
+- Accretion
 - Dig
-- MagmaSlap
+- EarthKick
 - LavaSurge
-- MetalRepair
+- MagmaSlap
+- QuickWeld
 - Shrapnel
+- LandLaunch (passive)
 
 ### Firebending
+- ArcSpark
 - Explode
 - FireDisc
-- FlameBreath (Combo)
+- FlameBreath (combo)
+- Incinerate (combo)
 
 ### Waterbending
-- RazorLeaf
 - PlantArmor
-- LeafStorm (Combo)
+- RazorLeaf
+- LeafStorm (combo)
+- Hydrojet (passive)
