@@ -20,8 +20,6 @@ import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
-import com.projectkorra.projectkorra.util.BlockSource;
-import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -151,7 +149,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	}
 
 	public boolean launchKick() {
-		Block b = BlockSource.getEarthOrLavaSourceBlock(player, 2, ClickType.SHIFT_DOWN);
+		Block b = player.getTargetBlock(getTransparentMaterialSet(), 3);
 		Material type = b.getType();
 		
 		if (TempBlock.isTempBlock(b)) {
