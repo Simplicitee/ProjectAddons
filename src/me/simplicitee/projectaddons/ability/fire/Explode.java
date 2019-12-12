@@ -47,13 +47,12 @@ public class Explode extends CombustionAbility implements AddonAbility {
 		if (player.isSneaking()) {
 			this.center = GeneralMethods.getTargetedLocation(player, range, ElementalAbility.getTransparentMaterials());
 			
-			ParticleEffect.FLAME.display(center, 1);
 			ParticleEffect.CRIT.display(center, 3, 0.3, 0.3, 0.3);
 			player.getWorld().playSound(center, Sound.ENTITY_CREEPER_PRIMED, 0.2f, 8f);
 		} else {
 			if (center != null) {
 				double offset = radius / 2;
-				ParticleEffect.FLAME.display(center, 7, offset, offset, offset);
+				ProjectAddons.instance.getMethods().playDynamicFireParticles(player, center, 7, offset, offset, offset);
 				ParticleEffect.CRIT.display(center, 6, offset, offset, offset);
 				ParticleEffect.EXPLOSION_HUGE.display(center, 1);
 				player.getWorld().playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 2f, 3f);

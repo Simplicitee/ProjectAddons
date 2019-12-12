@@ -54,11 +54,13 @@ import me.simplicitee.projectaddons.ability.earth.Accretion;
 import me.simplicitee.projectaddons.ability.earth.Crumble;
 import me.simplicitee.projectaddons.ability.earth.Dig;
 import me.simplicitee.projectaddons.ability.earth.EarthKick;
+import me.simplicitee.projectaddons.ability.earth.Geoblast;
 import me.simplicitee.projectaddons.ability.earth.LavaSurge;
 import me.simplicitee.projectaddons.ability.earth.MagmaSlap;
-import me.simplicitee.projectaddons.ability.earth.MetalRepair;
+import me.simplicitee.projectaddons.ability.earth.QuickWeld;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
+import me.simplicitee.projectaddons.ability.fire.ArcSpark;
 import me.simplicitee.projectaddons.ability.fire.Explode;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
 import me.simplicitee.projectaddons.ability.water.PlantArmor;
@@ -141,6 +143,14 @@ public class MainListener implements Listener {
 			}
 		} else if (canBend(player, "Crumble")) {
 			new Crumble(player, ClickType.LEFT_CLICK);
+		} else if (canBend(player, "Geoblast", false)) {
+			if (CoreAbility.hasAbility(player, Geoblast.class)) {
+				CoreAbility.getAbility(player, Geoblast.class).launch();
+			}
+		} else if (canBend(player, "ArcSpark")) {
+			if (CoreAbility.hasAbility(player, ArcSpark.class)) {
+				CoreAbility.getAbility(player, ArcSpark.class).shoot();
+			}
 		}
 	}
 	
@@ -191,7 +201,7 @@ public class MainListener implements Listener {
 		} else if (canBend(player, "LavaSurge")) {
 			new LavaSurge(player);
 		} else if (canBend(player, "MetalRepair")) {
-			new MetalRepair(player, player.getInventory().getItemInMainHand());
+			new QuickWeld(player, player.getInventory().getItemInMainHand());
 		} else if (canBend(player, "RazorLeaf")) {
 			new RazorLeaf(player, true);
 		} else if (ability.getName().equals("PlantArmor")) {
@@ -204,6 +214,10 @@ public class MainListener implements Listener {
 			new Accretion(player);
 		} else if (canBend(player, "Crumble")) {
 			new Crumble(player, ClickType.SHIFT_UP);
+		} else if (canBend(player, "Geoblast")) {
+			new Geoblast(player);
+		} else if (canBend(player, "ArcSpark")) {
+			new ArcSpark(player);
 		}
 	}
 	
@@ -496,8 +510,12 @@ public class MainListener implements Listener {
 		Player player = event.getPlayer();
 		plugin.getBoardManager().update(player, event.getNewSlot());
 	}
-
+	
 	private boolean canBend(Player player, String ability) {
+		return canBend(player, ability, true);
+	}
+
+	private boolean canBend(Player player, String ability, boolean canbend) {
 		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 		CoreAbility abil = CoreAbility.getAbility(ability);
 		
@@ -505,7 +523,7 @@ public class MainListener implements Listener {
 			return false;
 		} else if (!bPlayer.getBoundAbilityName().equals(ability)) {
 			return false;
-		} else if (!bPlayer.canBend(abil)) {
+		} else if (canbend && !bPlayer.canBend(abil)) {
 			return false;
 		}
 		

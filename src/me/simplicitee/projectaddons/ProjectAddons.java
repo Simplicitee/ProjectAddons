@@ -1,11 +1,9 @@
 package me.simplicitee.projectaddons;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +22,7 @@ public class ProjectAddons extends JavaPlugin {
 	
 	private Config config;
 	private BoardManager boards;
+	private CustomMethods methods;
 
 	@Override
 	public void onEnable() {
@@ -45,6 +44,7 @@ public class ProjectAddons extends JavaPlugin {
 		}
 		
 		this.getCommand("projectaddons").setExecutor(new ProjectCommand());
+		this.methods = new CustomMethods(this);
 	}
 	
 	@Override
@@ -85,6 +85,10 @@ public class ProjectAddons extends JavaPlugin {
 		return boards;
 	}
 	
+	public CustomMethods getMethods() {
+		return methods;
+	}
+	
 	private void setupConfig() {
 		FileConfiguration c = config.get();
 		
@@ -119,10 +123,6 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.EarthKick.LavaMultiplier", 1.5);
 		
 		// FireDisc
-		List<String> logs = new ArrayList<>();
-		logs.add("LOG");
-		logs.add("LOG_2");
-		
 		c.addDefault("Abilities.FireDisc.Enabled", true);
 		c.addDefault("Abilities.FireDisc.Damage", 2);
 		c.addDefault("Abilities.FireDisc.Range", 25);
@@ -130,7 +130,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.FireDisc.Controllable", true);
 		c.addDefault("Abilities.FireDisc.RevertCutBlocks", true);
 		c.addDefault("Abilities.FireDisc.DropCutBlocks", false);
-		c.addDefault("Abilities.FireDisc.CuttableBlocks", logs);
+		c.addDefault("Abilities.FireDisc.CuttableBlocks", Arrays.asList("LOG", "LOG_2"));
 		
 		// FlameBreath
 		c.addDefault("Combos.FlameBreath.Enabled", true);
@@ -201,11 +201,11 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.EnergyBeam.Range", 20);
 		c.addDefault("Abilities.EnergyBeam.EasterEgg", false);
 		
-		// MetalRepair
-		c.addDefault("Abilities.MetalRepair.Enabled", true);
-		c.addDefault("Abilities.MetalRepair.Cooldown", 1000);
-		c.addDefault("Abilities.MetalRepair.RepairAmount", 25);
-		c.addDefault("Abilities.MetalRepair.RepairInterval", 1250);
+		// QuickWeld
+		c.addDefault("Abilities.QuickWeld.Enabled", true);
+		c.addDefault("Abilities.QuickWeld.Cooldown", 1000);
+		c.addDefault("Abilities.QuickWeld.RepairAmount", 25);
+		c.addDefault("Abilities.QuickWeld.RepairInterval", 1250);
 		
 		// RazorLeaf
 		c.addDefault("Abilities.RazorLeaf.Enabled", true);
@@ -320,6 +320,31 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Crumble.Radius", 6);
 		c.addDefault("Abilities.Crumble.SelectRange", 9);
 		c.addDefault("Abilities.Crumble.RevertTime", 60);
+		
+		// Incinerate
+		c.addDefault("Combos.Incinerate.Enabled", true);
+		c.addDefault("Combos.Incinerate.Cooldown", 8000);
+		c.addDefault("Combos.Incinerate.Duration", 6000);
+		c.addDefault("Combos.Incinerate.FireTicks", 30);
+		c.addDefault("Combos.Incinerate.MaxLength", 6);
+		
+		// LandLaunch
+		c.addDefault("Passives.LandLaunch.Enabled", true);
+		c.addDefault("Passives.LandLaunch.Power", 3);
+		
+		// Hydrojet
+		c.addDefault("Passives.Hydrojet.Enabled", true);
+		c.addDefault("Passives.Hydrojet.Power", 6);
+		
+		// ArcSpark
+		c.addDefault("Abilities.ArcSpark.Enabled", true);
+		c.addDefault("Abilities.ArcSpark.Speed", 6);
+		c.addDefault("Abilities.ArcSpark.Length", 7);
+		c.addDefault("Abilities.ArcSpark.Damage", 1);
+		c.addDefault("Abilities.ArcSpark.Cooldown", 5000);
+		c.addDefault("Abilities.ArcSpark.Duration", 4000);
+		c.addDefault("Abilities.ArcSpark.ChargeTime", 800);
+		c.addDefault("Abilities.ArcSpark.AttractiveBlocks", Arrays.asList("GOLDEN_BLOCK", "IRON_BLOCK"));
 		
 		config.save();
 	}

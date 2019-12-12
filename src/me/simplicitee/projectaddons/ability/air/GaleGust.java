@@ -15,7 +15,6 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
-import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.object.HorizontalVelocityTracker;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
@@ -35,10 +34,6 @@ public class GaleGust extends AirAbility implements AddonAbility {
 	public GaleGust(Player player) {
 		super(player);
 		
-		if (CoreAbility.getAbility(this.getClass()) == null) {
-			return;
-		}
-		
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.GaleGust.Cooldown");
 		this.knockback = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Knockback");
 		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Radius");
@@ -54,6 +49,7 @@ public class GaleGust extends AirAbility implements AddonAbility {
 		this.direction = player.getEyeLocation().getDirection().clone().normalize();
 		this.points = new HashSet<>();
 		
+		bPlayer.addCooldown(this);
 		start();
 	}
 
@@ -125,7 +121,6 @@ public class GaleGust extends AirAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		bPlayer.addCooldown(this);
 	}
 
 	@Override

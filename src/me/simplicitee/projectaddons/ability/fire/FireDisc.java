@@ -1,10 +1,7 @@
 		package me.simplicitee.projectaddons.ability.fire;
 
-import java.util.Random;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -26,10 +23,8 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	private Location loc;
 	private Vector direction;
 	private double damage, range, currRange = 0;
-	private boolean revert, drop, control, bluefire=false;
+	private boolean revert, drop, control;
 	private long cooldown;
-	private String[] hexVals = {"3349ff", "3371ff", "33b8ff", "33e6ff", "fddb78", "300cfe", "03d2d2"};
-	private Random r = new Random();
 
 	public FireDisc(Player player) {
 		super(player);
@@ -43,11 +38,7 @@ public class FireDisc extends FireAbility implements AddonAbility{
 		this.drop = ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.DropCutBlocks");
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.FireDisc.Cooldown");
 		
-		if (player.hasPermission("bending.ability.firedisc.bluefire")) {
-			bluefire = true;
-		}
-		
-		if (bluefire) {
+		if (player.hasPermission("bending.fire.bluefire")) {
 			this.damage += (0.5*damage);
 		}
 		
@@ -136,27 +127,13 @@ public class FireDisc extends FireAbility implements AddonAbility{
 			return;
 		}
 		
-		for (int n = 0; n < Integer.MAX_VALUE; n++) {
-			Location current, start = loc.clone();
-			double c = 0.075;
-			double phi = n * 137.5;
-			double r = c * Math.sqrt(n);
-			double x = r * Math.cos(Math.toRadians(phi));
-			double z = r * Math.sin(Math.toRadians(phi));
-			current = start.clone().add(x, 0, z);
-			
-			if (current.distance(start) > 1) {
-				break;
-			}
-			
-			if (bluefire) {
-				displayBlueParticle(current);
-			} else {
-				loc.getWorld().spawnParticle(Particle.FLAME, current, 1, 0, 0, 0, 0.0012);
+		Vector normal = GeneralMethods.getOrthogonalVector(direction, 0, 1);
+		for (double r = 0; r < 1; r += 0.2) {
+			for (double theta = 0; theta < 2 * Math.PI; theta += Math.PI / (r * 12)) {
+				Vector ortho = GeneralMethods.getOrthogonalVector(normal, Math.toDegrees(theta), r);
+				ProjectAddons.instance.getMethods().playDynamicFireParticles(player, loc.clone().add(ortho), 2, 0.03, 0, 0.03);
 			}
 		}
-		
-		
 		
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(loc, 1.5)) {
 			if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
@@ -169,11 +146,6 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	
 	public boolean cutBlock(Block b) {
 		return ProjectAddons.instance.getConfig().getStringList("Abilities.FireDisc.Cuttable_Blocks").contains(b.getType().toString());
-	}
-	
-	public void displayBlueParticle(Location loc) {
-		String hexVal = hexVals[r.nextInt(hexVals.length)];
-		GeneralMethods.displayColoredParticle(hexVal, loc);
 	}
 
 	@Override

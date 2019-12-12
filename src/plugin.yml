@@ -1,7 +1,7 @@
 name: ProjectAddons
 author: Simplicitee
 api-version: 1.13
-version: 1.0.4
+version: 1.0.5
 main: me.simplicitee.projectaddons.ProjectAddons
 depend: [ProjectKorra]
 commands:
@@ -19,7 +19,7 @@ permissions:
       bending.ability.earthkick: true
       bending.ability.magmaslap: true
       bending.ability.lavasurge: true
-      bending.ability.metalrepair: true
+      bending.ability.quickweld: true
       bending.ability.shrapnel: true
       bending.ability.explode: true
       bending.ability.jab: true
@@ -34,6 +34,10 @@ permissions:
       bending.ability.dodging: true
       bending.ability.accretion: true
       bending.ability.crumble: true
+      bending.ability.arcspark: true
+      bending.ability.incinerate: true
+      bending.ability.landlaunch: true
+      bending.ability.hydrojet: true
       bending.ability.tailwind: true
   bending.ability.plantarmor:
     children:
@@ -48,5 +52,5 @@ permissions:
       bending.ability.plantarmor.disperse: true
   bending.ability.energybeam:
     default: op
-  bending.ability.firedisc.bluefire:
+  bending.fire.bluefire:
     default: op

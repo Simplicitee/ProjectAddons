@@ -80,7 +80,7 @@ public class Accretion extends EarthAbility implements AddonAbility {
 				continue;
 			}
 			
-			if (!isEarthbendable(b)) {
+			if (!isEarthbendable(b.getType(), true, true, false)) {
 				continue;
 			}
 			

@@ -14,7 +14,7 @@ import com.projectkorra.projectkorra.ability.MetalAbility;
 
 import me.simplicitee.projectaddons.ProjectAddons;
 
-public class MetalRepair extends MetalAbility implements AddonAbility{
+public class QuickWeld extends MetalAbility implements AddonAbility{
 	
 	private ItemStack item;
 	private long cooldown;
@@ -26,7 +26,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 			Material.IRON_HELMET, Material.IRON_HOE, Material.IRON_LEGGINGS,
 			Material.IRON_PICKAXE, Material.IRON_SHOVEL, Material.IRON_SWORD};
 
-	public MetalRepair(Player player, ItemStack item) {
+	public QuickWeld(Player player, ItemStack item) {
 		super(player);
 		
 		if (item.getDurability() <= -249) {
@@ -38,9 +38,9 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 		}
 		
 		this.item = item;
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.MetalRepair.Cooldown");
-		this.repairAmount = ProjectAddons.instance.getConfig().getInt("Abilities.MetalRepair.RepairAmount");
-		this.repairCooldown = ProjectAddons.instance.getConfig().getLong("Abilities.MetalRepair.RepairInterval");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.QuickWeld.Cooldown");
+		this.repairAmount = ProjectAddons.instance.getConfig().getInt("Abilities.QuickWeld.RepairAmount");
+		this.repairCooldown = ProjectAddons.instance.getConfig().getLong("Abilities.QuickWeld.RepairInterval");
 		
 		start();
 	}
@@ -57,7 +57,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 
 	@Override
 	public String getName() {
-		return "MetalRepair";
+		return "QuickWeld";
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 			return;
 		}
 		
-		if (bPlayer.isOnCooldown("MetalRepair Interval")) {
+		if (bPlayer.isOnCooldown("QuickWeld Interval")) {
 			return;
 		}
 		
@@ -98,7 +98,7 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 				val = -249;
 			}
 			
-			bPlayer.addCooldown("MetalRepair Interval", repairCooldown);
+			bPlayer.addCooldown("QuickWeld Interval", repairCooldown);
 			item.setDurability((short) val);
 			player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.5f, 1f);
 		} else {
@@ -141,6 +141,6 @@ public class MetalRepair extends MetalAbility implements AddonAbility{
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.MetalRepair.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.QuickWeld.Enabled");
 	}
 }

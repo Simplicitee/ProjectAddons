@@ -38,6 +38,10 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 			return;
 		}
 		
+		if (hasAbility(player, MagmaSlap.class)) {
+			return;
+		}
+		
 		setFields();
 		start();
 	}
@@ -124,7 +128,11 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 			return;
 		}
 		
-		b = getTopBlock(b.getLocation());
+		b = GeneralMethods.getTopBlock(b.getLocation(), 2);
+		if (b.isPassable() && !b.isLiquid()) {
+			b.breakNaturally();
+			b = b.getRelative(BlockFace.DOWN);
+		}
 		
 		if (!isEarthbendable(b.getType(), true, true, true)) {
 			return;
@@ -145,22 +153,6 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		}
 		
 		player.getWorld().playSound(fb.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.4f, 1f);
-	}
-	
-	private Block getTopBlock(Location loc) {
-		Block b = GeneralMethods.getTopBlock(loc, 2);
-		int i = 0;
-		while (!isEarthbendable(b.getType(), true, true, true)) {
-			if (i >= 3) {
-				break;
-			}
-			if (isPlant(b.getType()) || isSnow(b.getType())) {
-				b.breakNaturally();
-			}
-			b = b.getRelative(BlockFace.DOWN);
-			i++;
-		}
-		return b;
 	}
 	
 	public void turnToTempBlock(Block b) {
