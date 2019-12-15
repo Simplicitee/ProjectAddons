@@ -1,6 +1,3 @@
-# ProjectAddons
-Side plugin for various addon abilities to ProjectKorra plugin
-
 ## Abilities
 ### Avatar
 - EnergyBeam
