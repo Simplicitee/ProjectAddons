@@ -445,6 +445,10 @@ public class MainListener implements Listener {
 		
 		final Player player = event.getPlayer();
 
+		if (player == null) {
+			return;
+		}
+		
 		new BukkitRunnable() {
 
 			@Override

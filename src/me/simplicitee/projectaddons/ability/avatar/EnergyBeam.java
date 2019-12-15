@@ -30,7 +30,7 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 	private Map<Location, Vector> map;
 	private Map<Location, Integer> ranges;
 	private double damage;
-	private int range, angle = 0;
+	private int range;
 	private long cooldown, duration;
 	private EnergyColor color;
 	private boolean effects;
@@ -209,14 +209,8 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 			use = EnergyColor.values()[r];
 		}
 		
-		ParticleEffect.FIREWORKS_SPARK.display(loc, 3, 0.15, 0.15, 0.15);
-		
-		for (int i = 0; i < 3; i++) {
-			Vector ov = GeneralMethods.getOrthogonalVector(map.get(loc), angle + (120 * i), 0.6);
-			Location pl = loc.clone().add(ov.clone());
-			GeneralMethods.displayColoredParticle(use.getHex(), pl);
-		}
-		angle++;
+
+		GeneralMethods.displayColoredParticle(use.getHex(), loc, 4, 0.3, 0.3, 0.3);
 	}
 	
 	public boolean damageEntities(Location loc) {

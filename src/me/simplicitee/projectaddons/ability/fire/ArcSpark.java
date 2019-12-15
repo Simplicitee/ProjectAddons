@@ -69,24 +69,12 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 				return;
 			}
 			
-			Location one = GeneralMethods.getMainHandLocation(player);
-			one.setDirection(player.getEyeLocation().getDirection());
-			Arc first = new Arc(one);
-			
-			Location two = one.clone();
-			two.setDirection(player.getEyeLocation().getDirection());
-			Arc secnd = new Arc(two);
-			
-			Location tre = one.clone();
-			tre.setDirection(player.getEyeLocation().getDirection());
-			Arc third = new Arc(tre);
-			
-			Arc[] arcs = {first, secnd, third};
+			Location hand = GeneralMethods.getMainHandLocation(player);
+			hand.setDirection(player.getEyeLocation().getDirection());
+			Arc arc = new Arc(hand);	
 			
 			for (int i = 0; i < speed*length; i++) {
-				for (int j = 0; j < 3; j++) {
-					arcs[j].run(this);
-				}
+				arc.run(this);
 			}
 		}
 	}

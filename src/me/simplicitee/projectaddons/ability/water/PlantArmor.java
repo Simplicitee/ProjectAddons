@@ -268,7 +268,9 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		super.remove();
 		bPlayer.addCooldown(this);
 		MultiAbilityManager.unbindMultiAbility(player);
-		this.armor.revert();
+		if (!player.isDead()) {
+			this.armor.revert();
+		}
 		
 		if (!sources.isEmpty()) {
 			for (TempBlock tb : sources) {
