@@ -27,6 +27,7 @@
 
 ### Firebending
 - ArcSpark
+- CombustBeam
 - Explode
 - FireDisc
 - FlameBreath (combo)
