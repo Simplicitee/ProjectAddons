@@ -230,4 +230,14 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	public boolean isEnabled() {
 		return ProjectAddons.instance.getConfig().getBoolean("Abilities.CombustBeam.Enabled");
 	}
+	
+	@Override
+	public String getDescription() {
+		return "Fire a beam of concentrated energy from your forehead after charging. Longer charge times increase power, speed, and decrease how controllable the beam is. Explodes when hitting blocks and entities. Evaporates nearby water on explosion. Collides with some other abilities.";
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "Hold sneak to begin charging. Release anytime you see particles in front of you to launch the beam. Hold sneak again to direct the beam to some degree.";
+	}
 }
