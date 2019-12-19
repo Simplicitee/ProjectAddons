@@ -22,6 +22,7 @@ permissions:
       bending.ability.quickweld: true
       bending.ability.shrapnel: true
       bending.ability.explode: true
+      bending.ability.combustbeam: true
       bending.ability.jab: true
       bending.ability.chiblockjab: true
       bending.ability.weakeningjab: true
