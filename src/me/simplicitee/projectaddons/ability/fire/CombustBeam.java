@@ -63,7 +63,10 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 		}
 		
 		if (charging) {
-			if (!charged && !player.isSneaking()) {
+			if (!bPlayer.getBoundAbilityName().equalsIgnoreCase("CombustBeam")) {
+				remove();
+				return;
+			} else if (!charged && !player.isSneaking()) {
 				remove();
 				return;
 			} else if (charged && !player.isSneaking()) {
@@ -209,12 +212,10 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	}
 
 	@Override
-	public void load() {
-	}
+	public void load() {}
 
 	@Override
-	public void stop() {
-	}
+	public void stop() {}
 
 	@Override
 	public String getAuthor() {

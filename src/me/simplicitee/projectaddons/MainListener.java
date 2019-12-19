@@ -492,12 +492,19 @@ public class MainListener implements Listener {
 	
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
+		final Player player = event.getPlayer();
+		
 		if (!plugin.isBoardEnabled()) {
-			return;
+			plugin.getBoardManager().remove(player);
 		}
 		
-		final Player player = event.getPlayer();
-		plugin.getBoardManager().remove(player);
+		if (swapped.containsKey(player)) {
+			BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+			if (bPlayer != null) {
+				bPlayer.setAbilities(swapped.get(player));
+			}
+			swapped.remove(player);
+		}
 	}
 	
 	@EventHandler
@@ -545,15 +552,30 @@ public class MainListener implements Listener {
 			if (swapped.containsKey(player)) {
 				bPlayer.setAbilities(swapped.get(player));
 				swapped.remove(player);
+				ActionBar.sendActionBar(ChatColor.YELLOW + "Swapped to original binds", player);
 			} else if (Preset.presetExists(player, "offhand_swap")) {
 				swapped.put(player, new HashMap<>(bPlayer.getAbilities()));
 				Preset.bindPreset(player, Preset.getPreset(player, "offhand_swap"));
+				ActionBar.sendActionBar(ChatColor.YELLOW + "Swapped to offhand preset", player);
 			}
 			
 			if (plugin.isBoardEnabled()) {
 				plugin.getBoardManager().update(player);
 			}
 		}
+	}
+	
+	public void revertSwappedBinds() {
+		for (Player player : swapped.keySet()) {
+			BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+			
+			if (bPlayer == null) {
+				continue;
+			}
+			
+			bPlayer.setAbilities(swapped.get(player));
+		}
+		swapped.clear();
 	}
 	
 	private boolean canBend(Player player, String ability) {

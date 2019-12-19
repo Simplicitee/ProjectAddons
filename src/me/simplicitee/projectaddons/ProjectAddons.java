@@ -27,6 +27,7 @@ public class ProjectAddons extends JavaPlugin {
 	private Config config;
 	private BoardManager boards;
 	private CustomMethods methods;
+	private MainListener listener;
 
 	@Override
 	public void onEnable() {
@@ -39,7 +40,7 @@ public class ProjectAddons extends JavaPlugin {
 		
 		this.setupCollisions();
 		
-		new MainListener(this);
+		this.listener = new MainListener(this);
 		
 		if (config.get().getBoolean("Properties.BendingBoard.Enabled")) {
 			this.boards = new BoardManager(this);
@@ -56,6 +57,8 @@ public class ProjectAddons extends JavaPlugin {
 		if (boards != null) {
 			boards.disable();
 		}
+		
+		listener.revertSwappedBinds();
 		
 		if (CoreAbility.getAbility(Crumble.class) != null) {
 			for (Crumble c : CoreAbility.getAbilities(Crumble.class)) {
