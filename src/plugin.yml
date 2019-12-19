@@ -55,3 +55,5 @@ permissions:
     default: op
   bending.fire.bluefire:
     default: op
+  bending.offhandswap:
+    default: true

@@ -1,5 +1,8 @@
 package me.simplicitee.projectaddons;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -22,6 +25,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffectType;
@@ -38,6 +42,7 @@ import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
+import com.projectkorra.projectkorra.object.Preset;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 
@@ -70,10 +75,11 @@ import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 public class MainListener implements Listener {
 	
 	private ProjectAddons plugin;
+	private Map<Player, HashMap<Integer, String>> swapped;
 
 	public MainListener(ProjectAddons plugin) {
 		this.plugin = plugin;
-		
+		this.swapped = new HashMap<>();
 		this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 	
@@ -520,6 +526,34 @@ public class MainListener implements Listener {
 		
 		Player player = event.getPlayer();
 		plugin.getBoardManager().update(player, event.getNewSlot());
+	}
+	
+	@EventHandler
+	public void onOffhandToggle(PlayerSwapHandItemsEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+		
+		if (bPlayer == null) { 
+			return;
+		}
+		
+		if (player.hasPermission("bending.offhandswap")) {
+			if (swapped.containsKey(player)) {
+				bPlayer.setAbilities(swapped.get(player));
+				swapped.remove(player);
+			} else if (Preset.presetExists(player, "offhand_swap")) {
+				swapped.put(player, new HashMap<>(bPlayer.getAbilities()));
+				Preset.bindPreset(player, Preset.getPreset(player, "offhand_swap"));
+			}
+			
+			if (plugin.isBoardEnabled()) {
+				plugin.getBoardManager().update(player);
+			}
+		}
 	}
 	
 	private boolean canBend(Player player, String ability) {

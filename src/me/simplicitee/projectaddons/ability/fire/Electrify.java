@@ -71,4 +71,8 @@ public class Electrify extends LightningAbility implements AddonAbility {
 		return ProjectAddons.instance.version();
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
 }
