@@ -61,6 +61,7 @@ import me.simplicitee.projectaddons.ability.earth.QuickWeld;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelBlast;
 import me.simplicitee.projectaddons.ability.earth.ShrapnelShot;
 import me.simplicitee.projectaddons.ability.fire.ArcSpark;
+import me.simplicitee.projectaddons.ability.fire.CombustBeam;
 import me.simplicitee.projectaddons.ability.fire.Explode;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
 import me.simplicitee.projectaddons.ability.water.PlantArmor;
@@ -151,6 +152,10 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, ArcSpark.class)) {
 				CoreAbility.getAbility(player, ArcSpark.class).shoot();
 			}
+		} else if (canBend(player, "CombustBeam")) {
+			if (CoreAbility.hasAbility(player, CombustBeam.class)) {
+				CoreAbility.getAbility(player, CombustBeam.class).explode();
+			}
 		}
 	}
 	
@@ -218,6 +223,8 @@ public class MainListener implements Listener {
 			new Geoblast(player);
 		} else if (canBend(player, "ArcSpark")) {
 			new ArcSpark(player);
+		} else if (canBend(player, "CombustBeam")) {
+			new CombustBeam(player);
 		}
 	}
 	

@@ -82,7 +82,9 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		bPlayer.addCooldown(this);
+		if (charged && shoot) {
+			bPlayer.addCooldown(this);
+		}
 	}
 	
 	public void shoot() {
@@ -211,8 +213,8 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 			}
 			
 			ProjectAddons.instance.getMethods().playLightningParticles(loc, 1, 0, 0, 0);
-			if (Math.random() < 0.2) {
-				player.getWorld().playSound(loc, Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 0.05f, 5.5f);
+			if (Math.random() < 0.15) {
+				playLightningbendingSound(loc);
 			}
 		}
 	}

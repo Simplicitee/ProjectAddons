@@ -9,10 +9,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
+import com.projectkorra.projectkorra.ability.util.Collision;
+import com.projectkorra.projectkorra.airbending.AirShield;
 import com.projectkorra.projectkorra.configuration.Config;
+import com.projectkorra.projectkorra.firebending.FireShield;
 
 import me.simplicitee.projectaddons.ability.air.GaleGust;
 import me.simplicitee.projectaddons.ability.earth.Crumble;
+import me.simplicitee.projectaddons.ability.fire.CombustBeam;
 import me.simplicitee.projectaddons.ability.fire.FireDisc;
 import me.simplicitee.projectaddons.ability.water.RazorLeaf;
 
@@ -346,6 +350,18 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.ArcSpark.ChargeTime", 800);
 		c.addDefault("Abilities.ArcSpark.AttractiveBlocks", Arrays.asList("GOLDEN_BLOCK", "IRON_BLOCK"));
 		
+		// CombustBeam
+		c.addDefault("Abilities.CombustBeam.Enabled", true);
+		c.addDefault("Abilities.CombustBeam.Range", 50);
+		c.addDefault("Abilities.CombustBeam.Cooldown", 3750);
+		c.addDefault("Abilities.CombustBeam.Minimum.Power", 1);
+		c.addDefault("Abilities.CombustBeam.Minimum.Angle", 1);
+		c.addDefault("Abilities.CombustBeam.Minimum.ChargeTime", 2000);
+		c.addDefault("Abilities.CombustBeam.Maximum.Power", 3);
+		c.addDefault("Abilities.CombustBeam.Maximum.Angle", 50);
+		c.addDefault("Abilities.CombustBeam.Maximum.ChargeTime", 5000);
+		c.addDefault("Abilities.CombustBeam.InterruptedDamage", 3);
+		
 		config.save();
 	}
 	
@@ -360,6 +376,12 @@ public class ProjectAddons extends JavaPlugin {
 		
 		if (CoreAbility.getAbility(GaleGust.class) != null) {
 			ProjectKorra.getCollisionInitializer().addSmallAbility(CoreAbility.getAbility(GaleGust.class));
+		}
+		
+		if (CoreAbility.getAbility(CombustBeam.class) != null) {
+			ProjectKorra.getCollisionInitializer().addLargeAbility(CoreAbility.getAbility(CombustBeam.class));
+			ProjectKorra.getCollisionManager().addCollision(new Collision(CoreAbility.getAbility(FireShield.class), CoreAbility.getAbility(CombustBeam.class), false, true));
+			ProjectKorra.getCollisionManager().addCollision(new Collision(CoreAbility.getAbility(AirShield.class), CoreAbility.getAbility(CombustBeam.class), false, true));
 		}
 	}
 }
