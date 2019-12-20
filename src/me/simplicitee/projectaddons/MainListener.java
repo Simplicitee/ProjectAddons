@@ -549,6 +549,10 @@ public class MainListener implements Listener {
 		}
 		
 		if (player.hasPermission("bending.offhandswap")) {
+			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
+				return;
+			}
+			
 			if (swapped.containsKey(player)) {
 				bPlayer.setAbilities(swapped.get(player));
 				swapped.remove(player);

@@ -8,6 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.GeneralMethods;
@@ -89,7 +91,8 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				this.angleCheck = minAngle;
 				this.power = maxPower;
 				this.charged = true;
-				GeneralMethods.displayColoredParticle("ff2424", player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()));
+				GeneralMethods.displayColoredParticle("ff2424", player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 5), true);
 
 				ActionBar.sendActionBar(ChatColor.RED + "100%", player);
 			} else if (getStartTime() + minChargeTime <= System.currentTimeMillis()) {
@@ -97,15 +100,15 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				
 				double percent = ((double) chargeTime / ((double) (maxChargeTime - minChargeTime)));
 				
-				ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
-				
-				HexColor color = new HexColor((int) (255 * percent), 36, 36);
-				
 				this.angleCheck = maxAngle - (maxAngle - minAngle) * percent;
 				this.power = minPower + (maxPower - minPower) * percent;
 				this.charged = true;
 				
-				GeneralMethods.displayColoredParticle(color.getHexcode(), player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()));
+				ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
+				
+				HexColor color = new HexColor((int) (255 * percent), 36, 36);
+				GeneralMethods.displayColoredParticle(color.getHexcode(), player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, (int) (5 * percent)), true);
 			}
 		} else {
 			if (player.isSneaking()) {
