@@ -2,7 +2,7 @@ name: ProjectAddons
 author: Simplicitee
 api-version: 1.13
 version: 1.0.5
-main: me.simplicitee.projectaddons.ProjectAddons
+main: me.simplicitee.project.addons.ProjectAddons
 depend: [ProjectKorra]
 commands:
   projectaddons:
