@@ -52,10 +52,11 @@ import me.simplicitee.project.addons.ability.avatar.EnergyBeam;
 import me.simplicitee.project.addons.ability.avatar.EnergyBeam.EnergyColor;
 import me.simplicitee.project.addons.ability.chi.Dodging;
 import me.simplicitee.project.addons.ability.chi.Jab;
+import me.simplicitee.project.addons.ability.chi.Jab.JabHand;
 import me.simplicitee.project.addons.ability.chi.NinjaStance;
 import me.simplicitee.project.addons.ability.chi.WeakeningJab;
-import me.simplicitee.project.addons.ability.chi.Jab.JabHand;
 import me.simplicitee.project.addons.ability.earth.Accretion;
+import me.simplicitee.project.addons.ability.earth.Bulwark;
 import me.simplicitee.project.addons.ability.earth.Crumble;
 import me.simplicitee.project.addons.ability.earth.Dig;
 import me.simplicitee.project.addons.ability.earth.EarthKick;
@@ -67,8 +68,10 @@ import me.simplicitee.project.addons.ability.earth.ShrapnelBlast;
 import me.simplicitee.project.addons.ability.earth.ShrapnelShot;
 import me.simplicitee.project.addons.ability.fire.ArcSpark;
 import me.simplicitee.project.addons.ability.fire.CombustBeam;
+import me.simplicitee.project.addons.ability.fire.Electrify;
 import me.simplicitee.project.addons.ability.fire.Explode;
 import me.simplicitee.project.addons.ability.fire.FireDisc;
+import me.simplicitee.project.addons.ability.fire.Jets;
 import me.simplicitee.project.addons.ability.water.PlantArmor;
 import me.simplicitee.project.addons.ability.water.RazorLeaf;
 
@@ -162,6 +165,16 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, CombustBeam.class)) {
 				CoreAbility.getAbility(player, CombustBeam.class).explode();
 			}
+		} else if (canBend(player, "Jets")) {
+			if (CoreAbility.hasAbility(player, Jets.class)) {
+				CoreAbility.getAbility(player, Jets.class).clickFunction();
+			} else {
+				new Jets(player);
+			}
+		} else if (canBend(player, "Bulwark")) {
+			if (CoreAbility.hasAbility(player, Bulwark.class)) {
+				CoreAbility.getAbility(player, Bulwark.class).clickFunction();
+			}
 		}
 	}
 	
@@ -211,7 +224,7 @@ public class MainListener implements Listener {
 			new Explode(player);
 		} else if (canBend(player, "LavaSurge")) {
 			new LavaSurge(player);
-		} else if (canBend(player, "MetalRepair")) {
+		} else if (canBend(player, "QuickWeld")) {
 			new QuickWeld(player, player.getInventory().getItemInMainHand());
 		} else if (canBend(player, "RazorLeaf")) {
 			new RazorLeaf(player, true);
@@ -231,6 +244,8 @@ public class MainListener implements Listener {
 			new ArcSpark(player);
 		} else if (canBend(player, "CombustBeam")) {
 			new CombustBeam(player);
+		} else if (canBend(player, "Bulwark")) {
+			new Bulwark(player);
 		}
 	}
 	
@@ -269,6 +284,9 @@ public class MainListener implements Listener {
 			} else if (fb.hasMetadata("accretion")) {
 				event.setCancelled(true);
 				((Accretion) fb.getMetadata("accretion").get(0).value()).blockCollision(fb, event.getBlock());
+			} else if (fb.hasMetadata("bulwark")) {
+				event.setCancelled(true);
+				fb.remove();
 			}
 		}
 	}
@@ -369,6 +387,19 @@ public class MainListener implements Listener {
 					new Jab(damager, entity, JabHand.RIGHT);
 				}
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onRightClickBlock(PlayerInteractEvent event) {
+		if (event.getClickedBlock() == null) {
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		
+		if (canBend(player, "Electrify")) {
+			new Electrify(player, event.getClickedBlock(), true);
 		}
 	}
 

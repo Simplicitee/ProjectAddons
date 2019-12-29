@@ -3,6 +3,7 @@ package me.simplicitee.project.addons.ability.fire;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -34,7 +35,7 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.Cooldown");
 		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.Duration");
 		this.charge = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.ChargeTime");
-		this.attractive = ProjectAddons.instance.getConfig().getStringList("Abilities.ArcSpark.AttractiveBlocks");
+		this.attractive = ProjectAddons.instance.getConfig().getStringList("Properties.MetallicBlocks");
 		this.charged = false;
 		this.shoot = false;
 		this.chargedTill = System.currentTimeMillis();
@@ -207,7 +208,14 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 			
 			loc.getDirection().normalize();
 			loc.add(loc.getDirection().multiply(0.3));
-			if (!loc.getBlock().isPassable()) {
+
+			if (loc.getBlock().getType() == Material.WATER || attractive.contains(loc.getBlock().getType().toString())) {
+				if (Math.random() > 0.55) {
+					new Electrify(player, loc.getBlock(), false);
+				}
+				progressing = false;
+				return;
+			} else if (!loc.getBlock().isPassable()) {
 				progressing = false;
 				return;
 			}
@@ -228,6 +236,6 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	
 	@Override
 	public String getDescription() {
-		return "Shoots many arcs of electricity in the direction you are looking, and the arcs are attracted to some blocks and entities!";
+		return "Shoots many arcs of electricity in the direction you are looking, and the arcs are attracted to some blocks and entities! Hitting a metallic block or water will cause it to become electrified!";
 	}
 }

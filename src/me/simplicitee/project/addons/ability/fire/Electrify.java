@@ -1,33 +1,122 @@
 package me.simplicitee.project.addons.ability.fire;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.projectkorra.projectkorra.BendingPlayer;
+import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.LightningAbility;
+import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class Electrify extends LightningAbility implements AddonAbility {
 	
+	private static Set<Block> electrified = new HashSet<>();
+	
 	private Block block;
 	private Location center;
-	private long cooldown;
-	private double damage, radius;
+	private long cooldown, duration;
+	private double waterdmg;
+	private int slowness, weakness, spread;
+	
+	public Electrify(Player player, Block block, boolean direct) {
+		this(player, block, direct, 3);
+	}
 
-	public Electrify(Player player, Block block) {
+	public Electrify(Player player, Block block, boolean direct, int spread) {
 		super(player);
 		
+		if (!ProjectAddons.instance.getConfig().getStringList("Properties.MetallicBlocks").contains(block.getType().toString()) && block.getType() != Material.WATER) {
+			return;
+		} else if (electrified.contains(block)) {
+			return;
+		}
+		
+		electrified.add(block);
 		this.block = block;
 		this.center = block.getLocation().add(0.5, 0.5, 0.5);
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Electrify.Cooldown");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Electrify.Damage");
-		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Electrify.Radius");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Electrify.Duration");
+		this.waterdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Electrify.DamageInWater");
+		this.slowness = ProjectAddons.instance.getConfig().getInt("Abilities.Electrify.Slowness") + 1;
+		this.weakness = ProjectAddons.instance.getConfig().getInt("Abilities.Electrify.Weakness") + 1;
+		this.spread = spread;
+		
+		if (direct) {
+			bPlayer.addCooldown(this);
+		}
+		
+		start();
 	}
 
 	@Override
 	public void progress() {
+		if (getStartTime() + duration <= System.currentTimeMillis()) {
+			remove();
+			return;
+		}
+
+		if (spread > 0) {
+			BlockFace[] faces = {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
+			for (BlockFace face : faces) {
+				Block b = block.getRelative(face);
+				new Electrify(player, b, false, spread - 1);
+			}
+		}
+		
+		for (Entity e : GeneralMethods.getEntitiesAroundPoint(center, 1)) {
+			if (e instanceof LivingEntity) {
+				if (block.getType() == Material.WATER && e.getLocation().getBlock().equals(block)) {
+					DamageHandler.damageEntity(e, waterdmg, this);
+				} else if (!e.getLocation().getBlock().equals(block.getRelative(BlockFace.UP))) {
+					continue;
+				}
+				
+				if (e instanceof Player) {
+					BendingPlayer bp = BendingPlayer.getBendingPlayer((Player) e);
+					if (bp != null) {
+						if (!bp.canLightningbend()) {
+							((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness), true);
+							((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness), true);
+						}
+					}
+				} else {
+					((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness), true);
+					((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness), true);
+				}
+			}
+		}
+		
+		ProjectAddons.instance.getMethods().playLightningParticles(center, 1, 0.5, 0.5, 0.5);
+		if (Math.random() < 0.15) {
+			playLightningbendingSound(center);
+		}
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				electrified.remove(block);
+			}
+		}.runTaskLater(ProjectAddons.instance, 80);
 	}
 
 	@Override
@@ -42,7 +131,7 @@ public class Electrify extends LightningAbility implements AddonAbility {
 
 	@Override
 	public long getCooldown() {
-		return 0;
+		return cooldown;
 	}
 
 	@Override
@@ -52,7 +141,7 @@ public class Electrify extends LightningAbility implements AddonAbility {
 
 	@Override
 	public Location getLocation() {
-		return null;
+		return center;
 	}
 
 	@Override
@@ -73,6 +162,16 @@ public class Electrify extends LightningAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Electrify.Enabled");
+	}
+	
+	@Override
+	public String getDescription() {
+		return "Electrify water and metallic blocks to slow and weaken entities! Entities in electrified water will also take damage! Lightningbenders are immune to the slowness and weakness, but still take damage in water.";
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "Right click a block!";
 	}
 }

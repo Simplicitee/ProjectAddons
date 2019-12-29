@@ -25,7 +25,7 @@ public class CustomMethods {
 	public void playDynamicFireParticles(Player player, Location loc, int amount, double xOff, double yOff, double zOff) {
         Random r = new Random();
 		if (player.hasPermission("bending.fire.bluefire")) {
-            int d = (int) Math.floor(player.getEyeLocation().distance(loc));
+            int d = (int) Math.floor(player.getEyeLocation().distance(loc) * 2);
             int i = r.nextInt(blueFire.length);
             
             String hexVal = blueFire[d < i ? d : i];

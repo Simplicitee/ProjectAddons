@@ -102,6 +102,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Properties.BendingBoard.Enabled", true);
 		c.addDefault("Properties.BendingBoard.Title", "Binds");
 		c.addDefault("Properties.BendingBoard.EmptySlot", "&o~ Slot %d ~");
+		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK"));
 		
 		// LavaSurge
 		c.addDefault("Abilities.LavaSurge.Enabled", true);
@@ -351,7 +352,6 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.ArcSpark.Cooldown", 5000);
 		c.addDefault("Abilities.ArcSpark.Duration", 4000);
 		c.addDefault("Abilities.ArcSpark.ChargeTime", 800);
-		c.addDefault("Abilities.ArcSpark.AttractiveBlocks", Arrays.asList("GOLDEN_BLOCK", "IRON_BLOCK"));
 		
 		// CombustBeam
 		c.addDefault("Abilities.CombustBeam.Enabled", true);
@@ -364,6 +364,31 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.CombustBeam.Maximum.Angle", 50);
 		c.addDefault("Abilities.CombustBeam.Maximum.ChargeTime", 5000);
 		c.addDefault("Abilities.CombustBeam.InterruptedDamage", 3);
+		
+		// Jets
+		c.addDefault("Abilities.Jets.Enabled", true);
+		c.addDefault("Abilities.Jets.Cooldown", 8000);
+		c.addDefault("Abilities.Jets.Duration", 20000);
+		c.addDefault("Abilities.Jets.FlySpeed", 0.65);
+		c.addDefault("Abilities.Jets.HoverSpeed", 0.065);
+		c.addDefault("Abilities.Jets.SpeedThreshold", 2.4);
+		
+		// Electrify
+		c.addDefault("Abilities.Electrify.Enabled", true);
+		c.addDefault("Abilities.Electrify.Cooldown", 4000);
+		c.addDefault("Abilities.Electrify.Duration", 10000);
+		c.addDefault("Abilities.Electrify.DamageInWater", 2);
+		c.addDefault("Abilities.Electrify.Slowness", 2);
+		c.addDefault("Abilities.Electrify.Weakness", 1);
+		
+		// TurboJet
+		c.addDefault("Combos.TurboJet.Enabled", true);
+		c.addDefault("Combos.TurboJet.Cooldown", 8000);
+		c.addDefault("Combos.TurboJet.Speed", 2.85);
+		
+		// Bulwark
+		c.addDefault("Abilities.Bulwark.Enabled", true);
+		c.addDefault("Abilities.Bulwark.Cooldown", 4000);
 		
 		config.save();
 	}

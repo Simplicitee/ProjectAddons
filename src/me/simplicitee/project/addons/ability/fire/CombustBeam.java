@@ -73,14 +73,15 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				return;
 			} else if (charged && !player.isSneaking()) {
 				charging = false;
+				curr = player.getEyeLocation();
+				direction = player.getEyeLocation().getDirection().clone().normalize();
+				
 				if (player.getHealth() < health) {
 					DamageHandler.damageEntity(player, ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.InterruptedDamage"), this);
 					explode();
 					return;
 				}
 				
-				curr = player.getEyeLocation();
-				direction = player.getEyeLocation().getDirection().clone().normalize();
 				return;
 			}
 

@@ -37,6 +37,10 @@ permissions:
       bending.ability.crumble: true
       bending.ability.arcspark: true
       bending.ability.incinerate: true
+      bending.ability.jets: true
+      bending.ability.turbojet: true
+      bending.ability.bulwark: true
+      bending.ability.electrify: true
       bending.ability.landlaunch: true
       bending.ability.hydrojet: true
       bending.ability.tailwind: true
