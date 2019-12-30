@@ -29,12 +29,12 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	public ArcSpark(Player player) {
 		super(player);
 		
-		this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.ArcSpark.Speed");
-		this.length = ProjectAddons.instance.getConfig().getInt("Abilities.ArcSpark.Length");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.ArcSpark.Damage");
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.Cooldown");
-		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.Duration");
-		this.charge = ProjectAddons.instance.getConfig().getLong("Abilities.ArcSpark.ChargeTime");
+		this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.Fire.ArcSpark.Speed");
+		this.length = ProjectAddons.instance.getConfig().getInt("Abilities.Fire.ArcSpark.Length");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.ArcSpark.Damage");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.ArcSpark.Cooldown");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.ArcSpark.Duration");
+		this.charge = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.ArcSpark.ChargeTime");
 		this.attractive = ProjectAddons.instance.getConfig().getStringList("Properties.MetallicBlocks");
 		this.charged = false;
 		this.shoot = false;
@@ -137,7 +137,17 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.ArcSpark.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.ArcSpark.Enabled");
+	}
+	
+	@Override
+	public String getInstructions() {
+		return "Hold sneak to charge up and click when charged to shoot, but keep holding sneak!";
+	}
+	
+	@Override
+	public String getDescription() {
+		return "Shoots arcs of electricity in the direction you are looking, and the arcs are attracted to some blocks and entities! Hitting a metallic block or water will cause it to become electrified!";
 	}
 
 	class Arc {
@@ -225,17 +235,5 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 				playLightningbendingSound(loc);
 			}
 		}
-	}
-	
-	
-	
-	@Override
-	public String getInstructions() {
-		return "Hold sneak to charge up and click when charged to shoot, but keep holding sneak!";
-	}
-	
-	@Override
-	public String getDescription() {
-		return "Shoots many arcs of electricity in the direction you are looking, and the arcs are attracted to some blocks and entities! Hitting a metallic block or water will cause it to become electrified!";
 	}
 }

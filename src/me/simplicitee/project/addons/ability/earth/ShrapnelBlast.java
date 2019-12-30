@@ -19,10 +19,10 @@ public class ShrapnelBlast extends MetalAbility implements AddonAbility {
 			return;
 		}
 		
-		int shots = ProjectAddons.instance.getConfig().getInt("Abilities.Shrapnel.Blast.Shots");
-		int spread = ProjectAddons.instance.getConfig().getInt("Abilities.Shrapnel.Blast.Spread");
-		long cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Shrapnel.Blast.Cooldown");
-		double speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Shrapnel.Blast.Speed");
+		int shots = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Shrapnel.Blast.Shots");
+		int spread = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Shrapnel.Blast.Spread");
+		long cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Blast.Cooldown");
+		double speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Blast.Speed");
 		
 		for (int i = 0; i < shots; i++) {
 			Location loc = player.getLocation().clone();
@@ -90,6 +90,6 @@ public class ShrapnelBlast extends MetalAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Shrapnel.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Shrapnel.Enabled");
 	}
 }

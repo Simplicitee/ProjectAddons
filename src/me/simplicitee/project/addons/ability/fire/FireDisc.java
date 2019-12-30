@@ -31,12 +31,12 @@ public class FireDisc extends FireAbility implements AddonAbility{
 		
 		this.loc = player.getEyeLocation();
 		this.direction = player.getLocation().getDirection();
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.FireDisc.Damage");
-		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.FireDisc.Range");
-		this.control = ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.Controllable");
-		this.revert = ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.RevertCutBlocks");
-		this.drop = ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.DropCutBlocks");
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.FireDisc.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.FireDisc.Damage");
+		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.FireDisc.Range");
+		this.control = ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.FireDisc.Controllable");
+		this.revert = ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.FireDisc.RevertCutBlocks");
+		this.drop = ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.FireDisc.DropCutBlocks");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.FireDisc.Cooldown");
 		
 		if (player.hasPermission("bending.fire.bluefire")) {
 			this.damage += (0.5*damage);
@@ -145,7 +145,7 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	}
 	
 	public boolean cutBlock(Block b) {
-		return ProjectAddons.instance.getConfig().getStringList("Abilities.FireDisc.Cuttable_Blocks").contains(b.getType().toString());
+		return ProjectAddons.instance.getConfig().getStringList("Abilities.Fire.FireDisc.CuttableBlocks").contains(b.getType().toString());
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class FireDisc extends FireAbility implements AddonAbility{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.FireDisc.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.FireDisc.Enabled");
 	}
 	
 	@Override

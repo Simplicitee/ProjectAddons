@@ -59,11 +59,11 @@ public class Accretion extends EarthAbility implements AddonAbility {
 		}
 		
 		this.shot = false;
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Accretion.Damage");
-		this.blocks = ProjectAddons.instance.getConfig().getInt("Abilities.Accretion.Blocks");
-		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Accretion.SelectRange");
-		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Accretion.RevertTime");
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Accretion.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Accretion.Damage");
+		this.blocks = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Accretion.Blocks");
+		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Accretion.SelectRange");
+		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Accretion.RevertTime");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Accretion.Cooldown");
 		this.tracker = new HashSet<>();
 		this.temps = new HashSet<>();
 		
@@ -265,7 +265,7 @@ public class Accretion extends EarthAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Accretion.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Accretion.Enabled");
 	}
 	
 	@Override

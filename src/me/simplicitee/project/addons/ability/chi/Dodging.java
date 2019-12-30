@@ -16,7 +16,7 @@ public class Dodging extends ChiAbility implements AddonAbility, PassiveAbility 
 	public Dodging(Player player) {
 		super(player);
 		
-		chance = ProjectAddons.instance.getConfig().getDouble("Passives.Dodging.Chance") / 100;
+		chance = ProjectAddons.instance.getConfig().getDouble("Passives.Chi.Dodging.Chance") / 100;
 	}
 	
 	public boolean check() {
@@ -82,7 +82,7 @@ public class Dodging extends ChiAbility implements AddonAbility, PassiveAbility 
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Passives.Dodging.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Passives.Chi.Dodging.Enabled");
 	}
 	
 	@Override

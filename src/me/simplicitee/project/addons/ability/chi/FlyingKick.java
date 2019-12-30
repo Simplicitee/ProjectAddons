@@ -44,8 +44,8 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 			return;
 		}
 		
-		launch = ProjectAddons.instance.getConfig().getDouble("Combos.FlyingKick.LaunchPower");
-		damage = ProjectAddons.instance.getConfig().getDouble("Combos.FlyingKick.Damage");
+		launch = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.LaunchPower");
+		damage = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.Damage");
 		Vector v = player.getLocation().getDirection().add(new Vector(0, 0.25485, 0)).normalize().multiply(launch);
 		player.setVelocity(v);
 		start();
@@ -53,7 +53,7 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.FlyingKick.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.FlyingKick.Cooldown");
 	}
 
 	@Override
@@ -146,6 +146,6 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.FlyingKick.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Chi.FlyingKick.Enabled");
 	}
 }

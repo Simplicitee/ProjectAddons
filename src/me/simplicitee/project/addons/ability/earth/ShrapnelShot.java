@@ -53,10 +53,10 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 		
 		nugget = player.getWorld().dropItem(spawn, new ItemStack(m));
 		nugget.setPickupDelay(10);
-		nugget.setVelocity(player.getLocation().getDirection().clone().add(new Vector(0, 0.105, 0)).normalize().multiply(ProjectAddons.instance.getConfig().getDouble("Abilities.Shrapnel.Shot.Speed")));
+		nugget.setVelocity(player.getLocation().getDirection().clone().add(new Vector(0, 0.105, 0)).normalize().multiply(ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Speed")));
 		
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Shrapnel.Shot.Damage");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Shrapnel.Shot.Cooldown");
+		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
 		
 		bPlayer.addCooldown("Shrapnel", cooldown);
 		start();
@@ -90,8 +90,8 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 		nugget.setPickupDelay(10);
 		nugget.setVelocity(direction.add(new Vector(0, 0.105, 0)).normalize().multiply(speed));
 		
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Shrapnel.Shot.Damage");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Shrapnel.Shot.Cooldown");
+		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
 		
 		start();
 	}
@@ -180,6 +180,6 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Shrapnel.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Shrapnel.Enabled");
 	}
 }

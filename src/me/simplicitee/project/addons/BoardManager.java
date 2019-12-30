@@ -25,12 +25,17 @@ public class BoardManager {
 	private Set<UUID> disabled;
 	private Map<UUID, Scoreboard> boards;
 	private String empty;
+	private String indicator;
 
 	public BoardManager(ProjectAddons plugin) {
 		this.plugin = plugin;
 		this.disabled = new HashSet<>();
 		this.boards = new HashMap<>();
 		this.empty = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.EmptySlot"));
+		this.indicator = plugin.getConfig().getString("Properties.BendingBoard.IndicatorMode");
+		if (!indicator.equalsIgnoreCase("bold") && !indicator.equalsIgnoreCase("arrow")) {
+			indicator = "bold";
+		}
 		
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
@@ -83,11 +88,7 @@ public class BoardManager {
 		}
 		
 		Scoreboard scoreboard = boards.get(player.getUniqueId());
-		
-		for (String entry : scoreboard.getEntries()) {
-			scoreboard.resetScores(entry);
-		}
-		
+		Map<Integer, String> scores = new HashMap<>();
 		Objective bendingboard = scoreboard.getObjective("projectaddons");
 		
 		if (bendingboard == null) {
@@ -96,13 +97,22 @@ public class BoardManager {
 			bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 		
+		for (String s : scoreboard.getEntries()) {
+			scores.put(bendingboard.getScore(s).getScore(), s);
+		}
+		
 		for (int i = 1; i < 10; i++) {
 			String color = "";
+			String prefix = indicator.equalsIgnoreCase("arrow") ? (ChatColor.BLACK + ">") : "";
 			String format = "";
 			String name = empty.replace("%d", i + "");
 			
 			if (newSlot == (i - 1)) {
-				format = ChatColor.BOLD + format;
+				if (indicator.equalsIgnoreCase("arrow")) {
+					prefix = ChatColor.WHITE + ">";
+				} else {
+					format = ChatColor.BOLD + "";
+				}
 			}
 			
 			if (bPlayer.getAbilities().containsKey(i)) {
@@ -138,12 +148,25 @@ public class BoardManager {
 				name = name.substring(0, 15);
 			}
 			
-			bendingboard.getScore(color + format + name).setScore(-i);
+			String score = prefix + color + format + name;
+			
+			if (!scores.containsKey(-i)) {
+				bendingboard.getScore(score).setScore(-i);
+			} else if (!scores.get(-i).equalsIgnoreCase(score)) {
+				scoreboard.resetScores(scores.get(-i));
+				bendingboard.getScore(score).setScore(-i);
+			}
 		}
 		
 		boolean show = false;
 		int tracker = -11;
-		
+		for (int i = tracker; i >= -(scores.size() + 5); i--) {
+			if (!scores.containsKey(i)) {
+				continue;
+			} else {
+				scoreboard.resetScores(scores.get(i));
+			}
+		}
 		for (String cooldown : bPlayer.getCooldowns().keySet()) {
 			CoreAbility ability = CoreAbility.getAbility(cooldown);
 			
@@ -159,7 +182,11 @@ public class BoardManager {
 		}
 		
 		if (show) {
-			bendingboard.getScore("-- Combos --").setScore(-10);
+			if (!scores.containsKey(-10)) {
+				bendingboard.getScore("-- Combos --").setScore(-10);
+			}
+		} else {
+			scoreboard.resetScores("-- Combos --");
 		}
 	
 		player.setScoreboard(scoreboard);

@@ -70,13 +70,13 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	}
 	
 	private void setFields() {
-		fireTick = ProjectAddons.instance.getConfig().getInt("Combos.FlameBreath.FireTick");
-		range = ProjectAddons.instance.getConfig().getDouble("Combos.FlameBreath.Range");
-		damage = ProjectAddons.instance.getConfig().getDouble("Combos.FlameBreath.Damage");
-		burnGround = ProjectAddons.instance.getConfig().getBoolean("Combos.FlameBreath.Burn.Ground");
-		burnEntities = ProjectAddons.instance.getConfig().getBoolean("Combos.FlameBreath.Burn.Entities");
-		rainbow = ProjectAddons.instance.getConfig().getBoolean("Combos.FlameBreath.Rainbow");
-		duration = ProjectAddons.instance.getConfig().getLong("Combos.FlameBreath.Duration");
+		fireTick = ProjectAddons.instance.getConfig().getInt("Combos.Fire.FlameBreath.FireTick");
+		range = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.FlameBreath.Range");
+		damage = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.FlameBreath.Damage");
+		burnGround = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Burn.Ground");
+		burnEntities = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Burn.Entities");
+		rainbow = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Rainbow");
+		duration = ProjectAddons.instance.getConfig().getLong("Combos.Fire.FlameBreath.Duration");
 		breaths = new HashSet<>();
 		
 		int turnsPerColor = 8;
@@ -90,7 +90,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.FlameBreath.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Combos.Fire.FlameBreath.Cooldown");
 	}
 
 	@Override
@@ -224,6 +224,14 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	public void load() {}
 	
 	@Override
+	public void stop() {}
+
+	@Override
+	public boolean isEnabled() {
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Enabled");
+	}
+	
+	@Override
 	public String getDescription() {
 		return "The greatest firebenders were able to breath fire! These firebenders learned from the majestic dragons that are now extinct, but fortunately they passed on their sacred bending arts to you! By breathing super-hot air, you can cause it to spontaneously combust, burning all entities and the ground within its radius!";
 	}
@@ -238,9 +246,6 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		super.remove();
 		bPlayer.addCooldown(this);
 	}
-
-	@Override
-	public void stop() {}
 
 	public class Breath {
 		
@@ -288,10 +293,5 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		public Color getColor() {
 			return color;
 		}
-	}
-	
-	@Override
-	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.FlameBreath.Enabled");
 	}
 }

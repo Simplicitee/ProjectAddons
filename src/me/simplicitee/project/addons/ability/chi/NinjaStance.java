@@ -32,10 +32,10 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 			}
 		}
 		
-		stealthDuration = ProjectAddons.instance.getConfig().getLong("Abilities.NinjaStance.Stealth.Duration");
-		stealthChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.NinjaStance.Stealth.ChargeTime");
-		speedAmp = ProjectAddons.instance.getConfig().getInt("Abilities.NinjaStance.SpeedAmplifier") + 1;
-		jumpAmp = ProjectAddons.instance.getConfig().getInt("Abilities.NinjaStance.JumpAmplifier") + 1;
+		stealthDuration = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Stealth.Duration");
+		stealthChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Stealth.ChargeTime");
+		speedAmp = ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.SpeedAmplifier") + 1;
+		jumpAmp = ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.JumpAmplifier") + 1;
 		
 		start();
 		bPlayer.setStance(this);
@@ -45,7 +45,7 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Abilities.NinjaStance.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Cooldown");
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.NinjaStance.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Chi.NinjaStance.Enabled");
 	}
 
 	public void beginStealth() {
@@ -153,6 +153,6 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 	}
 	
 	public static double getDamageModifier() {
-		return ProjectAddons.instance.getConfig().getDouble("Abilities.NinjaStance.DamageModifier");
+		return ProjectAddons.instance.getConfig().getDouble("Abilities.Chi.NinjaStance.DamageModifier");
 	}
 }

@@ -36,7 +36,7 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 			return;
 		}
 		
-		duration = ProjectAddons.instance.getConfig().getLong("Combos.WeakeningJab.Duration");
+		duration = ProjectAddons.instance.getConfig().getLong("Combos.Chi.WeakeningJab.Duration");
 		
 		if (entity != null && !entities.contains(entity.getEntityId())) {
 			entities.add(entity.getEntityId());
@@ -46,7 +46,7 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.WeakeningJab.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.WeakeningJab.Cooldown");
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.WeakeningJab.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Chi.WeakeningJab.Enabled");
 	}
 	
 	public static boolean isAffected(Entity e) {
@@ -129,6 +129,6 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 	}
 	
 	public static double getModifier() {
-		return ProjectAddons.instance.getConfig().getDouble("Combos.WeakeningJab.Modifier");
+		return ProjectAddons.instance.getConfig().getDouble("Combos.Chi.WeakeningJab.Modifier");
 	}
 }

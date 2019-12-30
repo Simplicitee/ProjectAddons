@@ -30,9 +30,9 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 			return;
 		}
 		
-		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Tailwind.Cooldown");
-		duration = ProjectAddons.instance.getConfig().getLong("Combos.Tailwind.Duration");
-		speed = ProjectAddons.instance.getConfig().getInt("Combos.Tailwind.Speed") - 1;
+		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Air.Tailwind.Cooldown");
+		duration = ProjectAddons.instance.getConfig().getLong("Combos.Air.Tailwind.Duration");
+		speed = ProjectAddons.instance.getConfig().getInt("Combos.Air.Tailwind.Speed") - 1;
 		
 		start();
 	}
@@ -125,7 +125,7 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.Tailwind.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Air.Tailwind.Enabled");
 	}
 	
 	@Override

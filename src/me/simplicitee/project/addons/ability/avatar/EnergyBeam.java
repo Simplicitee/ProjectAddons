@@ -74,11 +74,11 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 	public void setFields() {
 		map = new ConcurrentHashMap<>();
 		ranges = new HashMap<>();
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.EnergyBeam.Damage");
-		range = ProjectAddons.instance.getConfig().getInt("Abilities.EnergyBeam.Range");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.EnergyBeam.Cooldown");
-		duration = ProjectAddons.instance.getConfig().getLong("Abilities.EnergyBeam.Duration");
-		effects = ProjectAddons.instance.getConfig().getBoolean("Abilities.EnergyBeam.EasterEgg");
+		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Avatar.EnergyBeam.Damage");
+		range = ProjectAddons.instance.getConfig().getInt("Abilities.Avatar.EnergyBeam.Range");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Avatar.EnergyBeam.Cooldown");
+		duration = ProjectAddons.instance.getConfig().getLong("Abilities.Avatar.EnergyBeam.Duration");
+		effects = ProjectAddons.instance.getConfig().getBoolean("Abilities.Avatar.EnergyBeam.EasterEgg");
 		color = colors.containsKey(player.getUniqueId()) ? colors.get(player.getUniqueId()) : EnergyColor.BLUE;
 	}
 
@@ -134,15 +134,14 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 		map.put(center, direction);
 		ranges.put(center, 0);
 		
-		if ((new Random()).nextInt(4) == 0)
-			player.getWorld().playSound(center, Sound.ITEM_TOTEM_USE, 0.6f, 11f);
-		
 		for (Location loc : map.keySet()) {
 			collide(loc);
 			Vector next = map.get(loc);
+			
 			if (ranges.get(loc) == null) {
 				continue;
 			}
+			
 			int range = ranges.get(loc);
 			
 			if (ranges.get(loc) > this.range) {
@@ -151,8 +150,14 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 				continue;
 			}
 			
-			if ((new Random()).nextInt(2) == 0)
+			if ((new Random()).nextInt(2) == 0) {
 				displayParticles(loc);
+				
+				if ((new Random()).nextInt(4) == 0) {
+					player.getWorld().playSound(loc, Sound.ENTITY_WITHER_AMBIENT, 0.2f, 0.7f);
+				}
+			}
+			
 			if (damageEntities(loc)) {
 				ranges.remove(loc);
 				map.remove(loc);
@@ -160,6 +165,7 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 			}
 			
 			Location nextLoc = loc.add(next);
+			
 			if (GeneralMethods.isSolid(nextLoc.getBlock()) || GeneralMethods.isRegionProtectedFromBuild(player, nextLoc)) {
 				ParticleEffect.EXPLOSION_LARGE.display(nextLoc, 0, 0, 0, 0.01f, 1);
 				map.remove(loc);
@@ -346,6 +352,6 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.EnergyBeam.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Avatar.EnergyBeam.Enabled");
 	}
 }

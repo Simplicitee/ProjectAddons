@@ -51,9 +51,9 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	}
 	
 	public void setFields() {
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.EarthKick.Damage");
-		maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.EarthKick.MaxBlocks");
-		lavaMult = ProjectAddons.instance.getConfig().getDouble("Abilities.EarthKick.LavaMultiplier");
+		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthKick.Damage");
+		maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.EarthKick.MaxBlocks");
+		lavaMult = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthKick.LavaMultiplier");
 		kick = new ArrayList<>();
 	}
 
@@ -202,7 +202,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Abilities.EarthKick.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Abilities.Earth.EarthKick.Cooldown");
 	}
 
 	@Override
@@ -244,6 +244,6 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.EarthKick.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.EarthKick.Enabled");
 	}
 }

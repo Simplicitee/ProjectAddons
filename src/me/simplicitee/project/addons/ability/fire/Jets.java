@@ -12,7 +12,7 @@ import me.simplicitee.project.addons.ProjectAddons;
 public class Jets extends FireAbility implements AddonAbility {
 	
 	private float oSpeed;
-	private double flySpeed, hoverSpeed;
+	private double flySpeed, hoverSpeed, health, dmgThreshold;
 	private boolean hovering, gliding;
 	private long duration, cooldown;
 	private TurboJet source;
@@ -30,11 +30,13 @@ public class Jets extends FireAbility implements AddonAbility {
 		
 		this.source = source;
 		this.oSpeed = player.getFlySpeed();
-		this.flySpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Jets.FlySpeed");
-		this.hoverSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Jets.HoverSpeed");
-		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Jets.Duration");
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Jets.Cooldown");
-		double speedThreshold = ProjectAddons.instance.getConfig().getDouble("Abilities.Jets.SpeedThreshold");
+		this.health = player.getHealth();
+		this.flySpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.FlySpeed");
+		this.hoverSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.HoverSpeed");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.Jets.Duration");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.Jets.Cooldown");
+		this.dmgThreshold = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.DamageThreshold");
+		double speedThreshold = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.SpeedThreshold");
 		
 		if (source != null) {
 			this.gliding = true;
@@ -72,6 +74,11 @@ public class Jets extends FireAbility implements AddonAbility {
 		}
 		
 		if (duration > 0 && getStartTime() + duration < System.currentTimeMillis()) {
+			remove();
+			return;
+		}
+		
+		if (player.getHealth() < health - dmgThreshold) {
 			remove();
 			return;
 		}
@@ -183,7 +190,7 @@ public class Jets extends FireAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Jets.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.Jets.Enabled");
 	}
 	
 	@Override

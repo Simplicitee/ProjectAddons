@@ -19,7 +19,7 @@ public class LandLaunch extends EarthAbility implements AddonAbility, PassiveAbi
 	public LandLaunch(Player player) {
 		super(player);
 		
-		amp = ProjectAddons.instance.getConfig().getInt("Passives.LandLaunch.Power");
+		amp = ProjectAddons.instance.getConfig().getInt("Passives.Earth.LandLaunch.Power");
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class LandLaunch extends EarthAbility implements AddonAbility, PassiveAbi
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Passives.LandLaunch.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Passives.Earth.LandLaunch.Enabled");
 	}
 	
 	@Override

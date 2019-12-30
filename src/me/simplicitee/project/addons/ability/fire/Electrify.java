@@ -48,11 +48,11 @@ public class Electrify extends LightningAbility implements AddonAbility {
 		electrified.add(block);
 		this.block = block;
 		this.center = block.getLocation().add(0.5, 0.5, 0.5);
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Electrify.Cooldown");
-		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Electrify.Duration");
-		this.waterdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Electrify.DamageInWater");
-		this.slowness = ProjectAddons.instance.getConfig().getInt("Abilities.Electrify.Slowness") + 1;
-		this.weakness = ProjectAddons.instance.getConfig().getInt("Abilities.Electrify.Weakness") + 1;
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.Electrify.Cooldown");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.Electrify.Duration");
+		this.waterdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Electrify.DamageInWater");
+		this.slowness = ProjectAddons.instance.getConfig().getInt("Abilities.Fire.Electrify.Slowness") + 1;
+		this.weakness = ProjectAddons.instance.getConfig().getInt("Abilities.Fire.Electrify.Weakness") + 1;
 		this.spread = spread;
 		
 		if (direct) {
@@ -162,7 +162,7 @@ public class Electrify extends LightningAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Electrify.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.Electrify.Enabled");
 	}
 	
 	@Override

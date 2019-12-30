@@ -47,11 +47,11 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 			this.center = player.getEyeLocation().clone().add(player.getEyeLocation().getDirection().clone().normalize().multiply(1.5));
 		}
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.RazorLeaf.Cooldown");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Damage");
-		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Radius");
-		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.RazorLeaf.Range");
-		this.particles = ProjectAddons.instance.getConfig().getInt("Abilities.RazorLeaf.Particles");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Water.RazorLeaf.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.RazorLeaf.Damage");
+		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.RazorLeaf.Radius");
+		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.RazorLeaf.Range");
+		this.particles = ProjectAddons.instance.getConfig().getInt("Abilities.Water.RazorLeaf.Particles");
 		
 		start();
 	}
@@ -193,6 +193,6 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.RazorLeaf.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Water.RazorLeaf.Enabled");
 	}
 }

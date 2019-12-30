@@ -47,14 +47,14 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	}
 	
 	private void setFields() {
-		this.offset = ProjectAddons.instance.getConfig().getDouble("Abilities.MagmaSlap.Offset");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.MagmaSlap.Damage");
+		this.offset = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.MagmaSlap.Offset");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.MagmaSlap.Damage");
 		this.length = 0;
-		this.maxLength = ProjectAddons.instance.getConfig().getInt("Abilities.MagmaSlap.Length");
-		this.width = ProjectAddons.instance.getConfig().getInt("Abilities.MagmaSlap.Width");
+		this.maxLength = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.MagmaSlap.Length");
+		this.width = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.MagmaSlap.Width");
 		this.next = 50;
 		this.last = 0;
-		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.MagmaSlap.RevertTime");
+		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.MagmaSlap.RevertTime");
 		this.start = player.getLocation().clone().subtract(0, 1, 0);
 		this.start.setPitch(0);
 		this.start.add(start.getDirection().clone().multiply(offset));
@@ -64,7 +64,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Abilities.MagmaSlap.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Abilities.Earth.MagmaSlap.Cooldown");
 	}
 
 	@Override
@@ -197,6 +197,6 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.MagmaSlap.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.MagmaSlap.Enabled");
 	}
 }

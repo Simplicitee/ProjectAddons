@@ -30,10 +30,10 @@ public class Dig extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Dig.Cooldown");
-		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Dig.Duration");
-		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Dig.RevertTime");
-		this.speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Dig.Speed");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Dig.Cooldown");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Dig.Duration");
+		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Dig.RevertTime");
+		this.speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Dig.Speed");
 		
 		start();
 	}
@@ -120,7 +120,7 @@ public class Dig extends EarthAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Dig.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Dig.Enabled");
 	}
 	
 	@Override

@@ -40,14 +40,14 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 			return;
 		}
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.CombustBeam.Cooldown");
-		this.minChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.CombustBeam.Minimum.ChargeTime");
-		this.maxChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.CombustBeam.Maximum.ChargeTime");
-		this.minAngle = ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.Minimum.Angle");
-		this.maxAngle = ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.Maximum.Angle");
-		this.minPower = ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.Minimum.Power");
-		this.maxPower = ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.Maximum.Power");
-		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.Range");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.CombustBeam.Cooldown");
+		this.minChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.CombustBeam.Minimum.ChargeTime");
+		this.maxChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.CombustBeam.Maximum.ChargeTime");
+		this.minAngle = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Minimum.Angle");
+		this.maxAngle = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Angle");
+		this.minPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Minimum.Power");
+		this.maxPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Power");
+		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Range");
 		this.health = player.getHealth();
 		this.charging = true;
 		this.charged = false;
@@ -77,7 +77,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				direction = player.getEyeLocation().getDirection().clone().normalize();
 				
 				if (player.getHealth() < health) {
-					DamageHandler.damageEntity(player, ProjectAddons.instance.getConfig().getDouble("Abilities.CombustBeam.InterruptedDamage"), this);
+					DamageHandler.damageEntity(player, ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.InterruptedDamage"), this);
 					explode();
 					return;
 				}
@@ -233,7 +233,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.CombustBeam.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.CombustBeam.Enabled");
 	}
 	
 	@Override

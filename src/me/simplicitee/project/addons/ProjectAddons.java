@@ -102,286 +102,294 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Properties.BendingBoard.Enabled", true);
 		c.addDefault("Properties.BendingBoard.Title", "Binds");
 		c.addDefault("Properties.BendingBoard.EmptySlot", "&o~ Slot %d ~");
+		c.addDefault("Properties.BendingBoard.IndicatorMode", "bold");
 		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK"));
-		
-		// LavaSurge
-		c.addDefault("Abilities.LavaSurge.Enabled", true);
-		c.addDefault("Abilities.LavaSurge.Cooldown", 4000);
-		c.addDefault("Abilities.LavaSurge.Damage", 0.5);
-		c.addDefault("Abilities.LavaSurge.Speed", 1.14);
-		c.addDefault("Abilities.LavaSurge.SelectRange", 5);
-		c.addDefault("Abilities.LavaSurge.SourceRadius", 3);
-		c.addDefault("Abilities.LavaSurge.MaxBlocks", 10);
-		c.addDefault("Abilities.LavaSurge.Burn.Enabled", true);
-		c.addDefault("Abilities.LavaSurge.Burn.Duration", 3000);
-		
-		// Explode
-		c.addDefault("Abilities.Explode.Enabled", true);
-		c.addDefault("Abilities.Explode.Cooldown", 4500);
-		c.addDefault("Abilities.Explode.Damage", 2);
-		c.addDefault("Abilities.Explode.Radius", 2.7);
-		c.addDefault("Abilities.Explode.Knockback", 1.9);
-		c.addDefault("Abilities.Explode.Range", 7.4);
-		
-		// EarthKick
-		c.addDefault("Abilities.EarthKick.Enabled", true);
-		c.addDefault("Abilities.EarthKick.Cooldown", 4000);
-		c.addDefault("Abilities.EarthKick.Damage", 1);
-		c.addDefault("Abilities.EarthKick.MaxBlocks", 7);
-		c.addDefault("Abilities.EarthKick.LavaMultiplier", 1.5);
-		
-		// FireDisc
-		c.addDefault("Abilities.FireDisc.Enabled", true);
-		c.addDefault("Abilities.FireDisc.Damage", 2);
-		c.addDefault("Abilities.FireDisc.Range", 25);
-		c.addDefault("Abilities.FireDisc.Cooldown", 1500);
-		c.addDefault("Abilities.FireDisc.Controllable", true);
-		c.addDefault("Abilities.FireDisc.RevertCutBlocks", true);
-		c.addDefault("Abilities.FireDisc.DropCutBlocks", false);
-		c.addDefault("Abilities.FireDisc.CuttableBlocks", Arrays.asList("LOG", "LOG_2"));
-		
-		// FlameBreath
-		c.addDefault("Combos.FlameBreath.Enabled", true);
-		c.addDefault("Combos.FlameBreath.Cooldown", 8000);
-		c.addDefault("Combos.FlameBreath.Damage", 1);
-		c.addDefault("Combos.FlameBreath.FireTick", 30);
-		c.addDefault("Combos.FlameBreath.Range", 6);
-		c.addDefault("Combos.FlameBreath.Duration", 5000);
-		c.addDefault("Combos.FlameBreath.Burn.Ground", true);
-		c.addDefault("Combos.FlameBreath.Burn.Entities", true);
-		c.addDefault("Combos.FlameBreath.Rainbow", true);
-		
-		//MagmaSlap
-		c.addDefault("Abilities.MagmaSlap.Enabled", true);
-		c.addDefault("Abilities.MagmaSlap.Cooldown", 4000);
-		c.addDefault("Abilities.MagmaSlap.Offset", 1.5);
-		c.addDefault("Abilities.MagmaSlap.Damage", 2);
-		c.addDefault("Abilities.MagmaSlap.Length", 14);
-		c.addDefault("Abilities.MagmaSlap.Width", 1);
-		c.addDefault("Abilities.MagmaSlap.RevertTime", 7000);
-		
-		// Shrapnel
-		c.addDefault("Abilities.Shrapnel.Enabled", true);
-		c.addDefault("Abilities.Shrapnel.Shot.Cooldown", 2000);
-		c.addDefault("Abilities.Shrapnel.Shot.Damage", 2);
-		c.addDefault("Abilities.Shrapnel.Shot.Speed", 2.3);
-		c.addDefault("Abilities.Shrapnel.Blast.Cooldown", 3000);
-		c.addDefault("Abilities.Shrapnel.Blast.Shots", 7);
-		c.addDefault("Abilities.Shrapnel.Blast.Spread", 30);
-		c.addDefault("Abilities.Shrapnel.Blast.Speed", 1.9);
-		
-		// Jab
-		c.addDefault("Abilities.Jab.Enabled", true);
-		c.addDefault("Abilities.Jab.Cooldown", 3000);
-		c.addDefault("Abilities.Jab.MaxUses", 3);
-		
-		// NinjaStance
-		c.addDefault("Abilities.NinjaStance.Enabled", true);
-		c.addDefault("Abilities.NinjaStance.Cooldown", 0);
-		c.addDefault("Abilities.NinjaStance.Stealth.Duration", 5000);
-		c.addDefault("Abilities.NinjaStance.Stealth.ChargeTime", 2000);
-		c.addDefault("Abilities.NinjaStance.SpeedAmplifier", 5);
-		c.addDefault("Abilities.NinjaStance.JumpAmplifier", 5);
-		c.addDefault("Abilities.NinjaStance.DamageModifier", 0.5);
-		
-		// ChiblockJab
-		c.addDefault("Combos.ChiblockJab.Enabled", true);
-		c.addDefault("Combos.ChiblockJab.Cooldown", 5000);
-		c.addDefault("Combos.ChiblockJab.Duration", 3000);
-		
-		// FlyingKick
-		c.addDefault("Combos.FlyingKick.Enabled", true);
-		c.addDefault("Combos.FlyingKick.Cooldown", 4000);
-		c.addDefault("Combos.FlyingKick.Damage", 2.0);
-		c.addDefault("Combos.FlyingKick.LaunchPower", 2.2);
-		
-		// WeakeningJab
-		c.addDefault("Combos.WeakeningJab.Enabled", true);
-		c.addDefault("Combos.WeakeningJab.Cooldown", 6000);
-		c.addDefault("Combos.WeakeningJab.Duration", 3000);
-		c.addDefault("Combos.WeakeningJab.Modifier", 1.5);
-		
+
+		// ---- Avatar ----
 		// EnergyBeam
-		c.addDefault("Abilities.EnergyBeam.Enabled", true);
-		c.addDefault("Abilities.EnergyBeam.Cooldown", 6000);
-		c.addDefault("Abilities.EnergyBeam.Duration", 7000);
-		c.addDefault("Abilities.EnergyBeam.Damage", 1);
-		c.addDefault("Abilities.EnergyBeam.Range", 20);
-		c.addDefault("Abilities.EnergyBeam.EasterEgg", false);
+		c.addDefault("Abilities.Avatar.EnergyBeam.Enabled", true);
+		c.addDefault("Abilities.Avatar.EnergyBeam.Cooldown", 12000);
+		c.addDefault("Abilities.Avatar.EnergyBeam.Duration", 10000);
+		c.addDefault("Abilities.Avatar.EnergyBeam.Damage", 3);
+		c.addDefault("Abilities.Avatar.EnergyBeam.Range", 40);
+		c.addDefault("Abilities.Avatar.EnergyBeam.EasterEgg", true);
 		
-		// QuickWeld
-		c.addDefault("Abilities.QuickWeld.Enabled", true);
-		c.addDefault("Abilities.QuickWeld.Cooldown", 1000);
-		c.addDefault("Abilities.QuickWeld.RepairAmount", 25);
-		c.addDefault("Abilities.QuickWeld.RepairInterval", 1250);
-		
-		// RazorLeaf
-		c.addDefault("Abilities.RazorLeaf.Enabled", true);
-		c.addDefault("Abilities.RazorLeaf.Cooldown", 3000);
-		c.addDefault("Abilities.RazorLeaf.Damage", 2);
-		c.addDefault("Abilities.RazorLeaf.Radius", 0.6);
-		c.addDefault("Abilities.RazorLeaf.Range", 20);
-		c.addDefault("Abilities.RazorLeaf.Particles", 250);
-		
-		// PlantArmor
-		c.addDefault("Abilities.PlantArmor.Enabled", true);
-		c.addDefault("Abilities.PlantArmor.Cooldown", 10000);
-		c.addDefault("Abilities.PlantArmor.Duration", -1);
-		c.addDefault("Abilities.PlantArmor.Durability", 4000);
-		c.addDefault("Abilities.PlantArmor.SelectRange", 9);
-		c.addDefault("Abilities.PlantArmor.RequiredPlants", 10);
-		c.addDefault("Abilities.PlantArmor.Boost.Swim", 1);
-		c.addDefault("Abilities.PlantArmor.Boost.Speed", 1);
-		c.addDefault("Abilities.PlantArmor.Boost.Jump", 1);
-		
-		// PlantArmor - VineWhip
-		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Cost", 50);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Cooldown", 2000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Damage", 2);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.VineWhip.Range", 18);
-		
-		// PlantArmor - RazorLeaf
-		c.addDefault("Abilities.PlantArmor.SubAbilities.RazorLeaf.Cost", 150);
-		
-		// PlantArmor - LeafShield
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Cost", 100);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Cooldown", 1500);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafShield.Radius", 2);
-		
-		// PlantArmor - Tangle
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Cost", 200);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Cooldown", 7000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Radius", 0.45);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Duration", 3000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Tangle.Range", 18);
-		
-		// PlantArmor - Leap
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cost", 100);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Cooldown", 2500);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Leap.Power", 1.4);
-		
-		// PlantArmor - Grapple
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Grapple.Cost", 100);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Grapple.Cooldown", 2000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Grapple.Range", 25);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Grapple.Speed", 1.24);
-		
-		// PlantArmor - LeafDome
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafDome.Cost", 400);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafDome.Cooldown", 5000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.LeafDome.Radius", 4);
-		
-		// PlantArmor - Regenerate
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.Cooldown", 10000);
-		c.addDefault("Abilities.PlantArmor.SubAbilities.Regenerate.RegenAmount", 350);
-		
-		// LeafStorm
-		c.addDefault("Combos.LeafStorm.Enabled", true);
-		c.addDefault("Combos.LeafStorm.Cooldown", 8000);
-		c.addDefault("Combos.LeafStorm.PlantArmorCost", 800);
-		c.addDefault("Combos.LeafStorm.LeafCount", 10);
-		c.addDefault("Combos.LeafStorm.LeafSpeed", 12);
-		c.addDefault("Combos.LeafStorm.Damage", 0.5);
-		c.addDefault("Combos.LeafStorm.Radius", 10);
-		
+		// ---- Airbending ----
 		// GaleGust
-		c.addDefault("Abilities.GaleGust.Enabled", true);
-		c.addDefault("Abilities.GaleGust.Cooldown", 3000);
-		c.addDefault("Abilities.GaleGust.Damage", 1);
-		c.addDefault("Abilities.GaleGust.Radius", 1.2);
-		c.addDefault("Abilities.GaleGust.Range", 25);
-		c.addDefault("Abilities.GaleGust.Knockback", 1.92);
+		c.addDefault("Abilities.Air.GaleGust.Enabled", true);
+		c.addDefault("Abilities.Air.GaleGust.Cooldown", 9000);
+		c.addDefault("Abilities.Air.GaleGust.Damage", 4);
+		c.addDefault("Abilities.Air.GaleGust.Radius", 1);
+		c.addDefault("Abilities.Air.GaleGust.Range", 18);
+		c.addDefault("Abilities.Air.GaleGust.Knockback", 0.67);
 		
 		// Zephyr
-		c.addDefault("Abilities.Zephyr.Enabled", true);
-		c.addDefault("Abilities.Zephyr.Cooldown", 1000);
-		c.addDefault("Abilities.Zephyr.Radius", 3);
+		c.addDefault("Abilities.Air.Zephyr.Enabled", true);
+		c.addDefault("Abilities.Air.Zephyr.Cooldown", 1000);
+		c.addDefault("Abilities.Air.Zephyr.Radius", 4);
 		
 		// Tailwind
-		c.addDefault("Combos.Tailwind.Enabled", true);
-		c.addDefault("Combos.Tailwind.Cooldown", 7000);
-		c.addDefault("Combos.Tailwind.Duration", 22000);
-		c.addDefault("Combos.Tailwind.Speed", 8);
+		c.addDefault("Combos.Air.Tailwind.Enabled", true);
+		c.addDefault("Combos.Air.Tailwind.Cooldown", 7000);
+		c.addDefault("Combos.Air.Tailwind.Duration", 22000);
+		c.addDefault("Combos.Air.Tailwind.Speed", 9);
 		
-		// Dig
-		c.addDefault("Abilities.Dig.Enabled", true);
-		c.addDefault("Abilities.Dig.Cooldown", 3000);
-		c.addDefault("Abilities.Dig.Duration", -1);
-		c.addDefault("Abilities.Dig.RevertTime", 3500);
-		c.addDefault("Abilities.Dig.Speed", 0.52);
-		
-		// Dodging
-		c.addDefault("Passives.Dodging.Enabled", true);
-		c.addDefault("Passives.Dodging.Chance", 26);
-		
+		// ---- Earthbending ----
+		// LandLaunch
+		c.addDefault("Passives.Earth.LandLaunch.Enabled", true);
+		c.addDefault("Passives.Earth.LandLaunch.Power", 3);
+
 		// Accretion
-		c.addDefault("Abilities.Accretion.Enabled", true);
-		c.addDefault("Abilities.Accretion.Cooldown", 10000);
-		c.addDefault("Abilities.Accretion.Damage", 1);
-		c.addDefault("Abilities.Accretion.Blocks", 7);
-		c.addDefault("Abilities.Accretion.SelectRange", 7);
-		c.addDefault("Abilities.Accretion.RevertTime", 20000);
+		c.addDefault("Abilities.Earth.Accretion.Enabled", true);
+		c.addDefault("Abilities.Earth.Accretion.Cooldown", 10000);
+		c.addDefault("Abilities.Earth.Accretion.Damage", 1);
+		c.addDefault("Abilities.Earth.Accretion.Blocks", 8);
+		c.addDefault("Abilities.Earth.Accretion.SelectRange", 6);
+		c.addDefault("Abilities.Earth.Accretion.RevertTime", 20000);
+
+		// Bulwark
+		c.addDefault("Abilities.Earth.Bulwark.Enabled", true);
+		c.addDefault("Abilities.Earth.Bulwark.Cooldown", 6000);
 		
 		// Crumble
-		c.addDefault("Abilities.Crumble.Enabled", true);
-		c.addDefault("Abilities.Crumble.Cooldown", 2000);
-		c.addDefault("Abilities.Crumble.Radius", 6);
-		c.addDefault("Abilities.Crumble.SelectRange", 9);
-		c.addDefault("Abilities.Crumble.RevertTime", 60);
+		c.addDefault("Abilities.Earth.Crumble.Enabled", true);
+		c.addDefault("Abilities.Earth.Crumble.Cooldown", 3000);
+		c.addDefault("Abilities.Earth.Crumble.Radius", 6);
+		c.addDefault("Abilities.Earth.Crumble.SelectRange", 9);
+		c.addDefault("Abilities.Earth.Crumble.RevertTime", 60);
 		
-		// LandLaunch
-		c.addDefault("Passives.LandLaunch.Enabled", true);
-		c.addDefault("Passives.LandLaunch.Power", 3);
+		// Dig
+		c.addDefault("Abilities.Earth.Dig.Enabled", true);
+		c.addDefault("Abilities.Earth.Dig.Cooldown", 3000);
+		c.addDefault("Abilities.Earth.Dig.Duration", -1);
+		c.addDefault("Abilities.Earth.Dig.RevertTime", 3500);
+		c.addDefault("Abilities.Earth.Dig.Speed", 0.51);
 		
-		// Hydrojet
-		c.addDefault("Passives.Hydrojet.Enabled", true);
-		c.addDefault("Passives.Hydrojet.Power", 6);
+		// EarthKick
+		c.addDefault("Abilities.Earth.EarthKick.Enabled", true);
+		c.addDefault("Abilities.Earth.EarthKick.Cooldown", 4000);
+		c.addDefault("Abilities.Earth.EarthKick.Damage", 0.5);
+		c.addDefault("Abilities.Earth.EarthKick.MaxBlocks", 9);
+		c.addDefault("Abilities.Earth.EarthKick.LavaMultiplier", 1.5);
 		
+		// LavaSurge
+		c.addDefault("Abilities.Earth.LavaSurge.Enabled", true);
+		c.addDefault("Abilities.Earth.LavaSurge.Cooldown", 4000);
+		c.addDefault("Abilities.Earth.LavaSurge.Damage", 0.5);
+		c.addDefault("Abilities.Earth.LavaSurge.Speed", 1.14);
+		c.addDefault("Abilities.Earth.LavaSurge.SelectRange", 5);
+		c.addDefault("Abilities.Earth.LavaSurge.SourceRadius", 3);
+		c.addDefault("Abilities.Earth.LavaSurge.MaxBlocks", 10);
+		c.addDefault("Abilities.Earth.LavaSurge.Burn.Enabled", true);
+		c.addDefault("Abilities.Earth.LavaSurge.Burn.Duration", 3000);
+
+		// MagmaSlap
+		c.addDefault("Abilities.Earth.MagmaSlap.Enabled", true);
+		c.addDefault("Abilities.Earth.MagmaSlap.Cooldown", 4000);
+		c.addDefault("Abilities.Earth.MagmaSlap.Offset", 1.5);
+		c.addDefault("Abilities.Earth.MagmaSlap.Damage", 2);
+		c.addDefault("Abilities.Earth.MagmaSlap.Length", 13);
+		c.addDefault("Abilities.Earth.MagmaSlap.Width", 1);
+		c.addDefault("Abilities.Earth.MagmaSlap.RevertTime", 7000);
+
+		// QuickWeld
+		c.addDefault("Abilities.Earth.QuickWeld.Enabled", true);
+		c.addDefault("Abilities.Earth.QuickWeld.Cooldown", 1000);
+		c.addDefault("Abilities.Earth.QuickWeld.RepairAmount", 25);
+		c.addDefault("Abilities.Earth.QuickWeld.RepairInterval", 1250);
+		
+		// Shrapnel
+		c.addDefault("Abilities.Earth.Shrapnel.Enabled", true);
+		c.addDefault("Abilities.Earth.Shrapnel.Shot.Cooldown", 2000);
+		c.addDefault("Abilities.Earth.Shrapnel.Shot.Damage", 2);
+		c.addDefault("Abilities.Earth.Shrapnel.Shot.Speed", 2.3);
+		c.addDefault("Abilities.Earth.Shrapnel.Blast.Cooldown", 8000);
+		c.addDefault("Abilities.Earth.Shrapnel.Blast.Shots", 9);
+		c.addDefault("Abilities.Earth.Shrapnel.Blast.Spread", 24);
+		c.addDefault("Abilities.Earth.Shrapnel.Blast.Speed", 1.7);
+		
+		// ---- Firebending ----
 		// ArcSpark
-		c.addDefault("Abilities.ArcSpark.Enabled", true);
-		c.addDefault("Abilities.ArcSpark.Speed", 6);
-		c.addDefault("Abilities.ArcSpark.Length", 7);
-		c.addDefault("Abilities.ArcSpark.Damage", 1);
-		c.addDefault("Abilities.ArcSpark.Cooldown", 5000);
-		c.addDefault("Abilities.ArcSpark.Duration", 4000);
-		c.addDefault("Abilities.ArcSpark.ChargeTime", 800);
+		c.addDefault("Abilities.Fire.ArcSpark.Enabled", true);
+		c.addDefault("Abilities.Fire.ArcSpark.Speed", 6);
+		c.addDefault("Abilities.Fire.ArcSpark.Length", 7);
+		c.addDefault("Abilities.Fire.ArcSpark.Damage", 1);
+		c.addDefault("Abilities.Fire.ArcSpark.Cooldown", 6500);
+		c.addDefault("Abilities.Fire.ArcSpark.Duration", 4000);
+		c.addDefault("Abilities.Fire.ArcSpark.ChargeTime", 500);
 		
 		// CombustBeam
-		c.addDefault("Abilities.CombustBeam.Enabled", true);
-		c.addDefault("Abilities.CombustBeam.Range", 50);
-		c.addDefault("Abilities.CombustBeam.Cooldown", 3750);
-		c.addDefault("Abilities.CombustBeam.Minimum.Power", 1);
-		c.addDefault("Abilities.CombustBeam.Minimum.Angle", 1);
-		c.addDefault("Abilities.CombustBeam.Minimum.ChargeTime", 2000);
-		c.addDefault("Abilities.CombustBeam.Maximum.Power", 2.2);
-		c.addDefault("Abilities.CombustBeam.Maximum.Angle", 50);
-		c.addDefault("Abilities.CombustBeam.Maximum.ChargeTime", 5000);
-		c.addDefault("Abilities.CombustBeam.InterruptedDamage", 3);
-		
-		// Jets
-		c.addDefault("Abilities.Jets.Enabled", true);
-		c.addDefault("Abilities.Jets.Cooldown", 8000);
-		c.addDefault("Abilities.Jets.Duration", 20000);
-		c.addDefault("Abilities.Jets.FlySpeed", 0.65);
-		c.addDefault("Abilities.Jets.HoverSpeed", 0.065);
-		c.addDefault("Abilities.Jets.SpeedThreshold", 2.4);
+		c.addDefault("Abilities.Fire.CombustBeam.Enabled", true);
+		c.addDefault("Abilities.Fire.CombustBeam.Range", 50);
+		c.addDefault("Abilities.Fire.CombustBeam.Cooldown", 3750);
+		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Power", 0.5);
+		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Angle", 1);
+		c.addDefault("Abilities.Fire.CombustBeam.Minimum.ChargeTime", 1000);
+		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Power", 2.2);
+		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Angle", 70);
+		c.addDefault("Abilities.Fire.CombustBeam.Maximum.ChargeTime", 5000);
+		c.addDefault("Abilities.Fire.CombustBeam.InterruptedDamage", 10);
 		
 		// Electrify
-		c.addDefault("Abilities.Electrify.Enabled", true);
-		c.addDefault("Abilities.Electrify.Cooldown", 4000);
-		c.addDefault("Abilities.Electrify.Duration", 10000);
-		c.addDefault("Abilities.Electrify.DamageInWater", 2);
-		c.addDefault("Abilities.Electrify.Slowness", 2);
-		c.addDefault("Abilities.Electrify.Weakness", 1);
+		c.addDefault("Abilities.Fire.Electrify.Enabled", true);
+		c.addDefault("Abilities.Fire.Electrify.Cooldown", 4000);
+		c.addDefault("Abilities.Fire.Electrify.Duration", 7000);
+		c.addDefault("Abilities.Fire.Electrify.DamageInWater", 2);
+		c.addDefault("Abilities.Fire.Electrify.Slowness", 2);
+		c.addDefault("Abilities.Fire.Electrify.Weakness", 1);
 		
+		// Explode
+		c.addDefault("Abilities.Fire.Explode.Enabled", true);
+		c.addDefault("Abilities.Fire.Explode.Cooldown", 4500);
+		c.addDefault("Abilities.Fire.Explode.Damage", 2);
+		c.addDefault("Abilities.Fire.Explode.Radius", 2.4);
+		c.addDefault("Abilities.Fire.Explode.Knockback", 1.94);
+		c.addDefault("Abilities.Fire.Explode.Range", 7.4);
+		
+		// FireDisc
+		c.addDefault("Abilities.Fire.FireDisc.Enabled", true);
+		c.addDefault("Abilities.Fire.FireDisc.Damage", 1.5);
+		c.addDefault("Abilities.Fire.FireDisc.Range", 32);
+		c.addDefault("Abilities.Fire.FireDisc.Cooldown", 1700);
+		c.addDefault("Abilities.Fire.FireDisc.Controllable", true);
+		c.addDefault("Abilities.Fire.FireDisc.RevertCutBlocks", true);
+		c.addDefault("Abilities.Fire.FireDisc.DropCutBlocks", false);
+		c.addDefault("Abilities.Fire.FireDisc.CuttableBlocks", Arrays.asList("ACACIA_LOG", "OAK_LOG", "JUNGLE_LOG", "BIRCH_LOG", "DARK_OAK_LOG", "SPRUCE_LOG"));
+
+		// Jets
+		c.addDefault("Abilities.Fire.Jets.Enabled", true);
+		c.addDefault("Abilities.Fire.Jets.Cooldown", 8000);
+		c.addDefault("Abilities.Fire.Jets.Duration", 20000);
+		c.addDefault("Abilities.Fire.Jets.FlySpeed", 0.65);
+		c.addDefault("Abilities.Fire.Jets.HoverSpeed", 0.065);
+		c.addDefault("Abilities.Fire.Jets.SpeedThreshold", 2.4);
+		c.addDefault("Abilities.Fire.Jets.DamageThreshold", 4);
+		
+		// FlameBreath
+		c.addDefault("Combos.Fire.FlameBreath.Enabled", true);
+		c.addDefault("Combos.Fire.FlameBreath.Cooldown", 8000);
+		c.addDefault("Combos.Fire.FlameBreath.Damage", 1.25);
+		c.addDefault("Combos.Fire.FlameBreath.FireTick", 30);
+		c.addDefault("Combos.Fire.FlameBreath.Range", 5);
+		c.addDefault("Combos.Fire.FlameBreath.Duration", 4000);
+		c.addDefault("Combos.Fire.FlameBreath.Burn.Ground", true);
+		c.addDefault("Combos.Fire.FlameBreath.Burn.Entities", true);
+		c.addDefault("Combos.Fire.FlameBreath.Rainbow", true);
+
 		// TurboJet
-		c.addDefault("Combos.TurboJet.Enabled", true);
-		c.addDefault("Combos.TurboJet.Cooldown", 12000);
-		c.addDefault("Combos.TurboJet.Speed", 2.15);
+		c.addDefault("Combos.Fire.TurboJet.Enabled", true);
+		c.addDefault("Combos.Fire.TurboJet.Cooldown", 12000);
+		c.addDefault("Combos.Fire.TurboJet.Speed", 1.95);
 		
-		// Bulwark
-		c.addDefault("Abilities.Bulwark.Enabled", true);
-		c.addDefault("Abilities.Bulwark.Cooldown", 4000);
+		// ---- Waterbending ----
+		// Hydrojet
+		c.addDefault("Passives.Water.Hydrojet.Enabled", true);
+		c.addDefault("Passives.Water.Hydrojet.Power", 8);
+		
+		// RazorLeaf
+		c.addDefault("Abilities.Water.RazorLeaf.Enabled", true);
+		c.addDefault("Abilities.Water.RazorLeaf.Cooldown", 3000);
+		c.addDefault("Abilities.Water.RazorLeaf.Damage", 2);
+		c.addDefault("Abilities.Water.RazorLeaf.Radius", 0.7);
+		c.addDefault("Abilities.Water.RazorLeaf.Range", 24);
+		c.addDefault("Abilities.Water.RazorLeaf.Particles", 300);
+		
+		// PlantArmor
+		c.addDefault("Abilities.Water.PlantArmor.Enabled", true);
+		c.addDefault("Abilities.Water.PlantArmor.Cooldown", 10000);
+		c.addDefault("Abilities.Water.PlantArmor.Duration", -1);
+		c.addDefault("Abilities.Water.PlantArmor.Durability", 2000);
+		c.addDefault("Abilities.Water.PlantArmor.SelectRange", 9);
+		c.addDefault("Abilities.Water.PlantArmor.RequiredPlants", 14);
+		c.addDefault("Abilities.Water.PlantArmor.Boost.Swim", 3);
+		c.addDefault("Abilities.Water.PlantArmor.Boost.Speed", 2);
+		c.addDefault("Abilities.Water.PlantArmor.Boost.Jump", 2);
+		
+		// PlantArmor - VineWhip
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Cost", 50);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Cooldown", 2000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Damage", 2);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Range", 18);
+		
+		// PlantArmor - RazorLeaf
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.RazorLeaf.Cost", 150);
+		
+		// PlantArmor - LeafShield
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Cost", 100);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Cooldown", 1500);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Radius", 2);
+		
+		// PlantArmor - Tangle
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Tangle.Cost", 200);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Tangle.Cooldown", 7000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Tangle.Radius", 0.45);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Tangle.Duration", 3000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Tangle.Range", 18);
+		
+		// PlantArmor - Leap
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Leap.Cost", 100);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Leap.Cooldown", 2500);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Leap.Power", 1.4);
+		
+		// PlantArmor - Grapple
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Grapple.Cost", 100);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Grapple.Cooldown", 2000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Grapple.Range", 25);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Grapple.Speed", 1.24);
+		
+		// PlantArmor - LeafDome
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafDome.Cost", 400);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafDome.Cooldown", 5000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.LeafDome.Radius", 3);
+		
+		// PlantArmor - Regenerate
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Regenerate.Cooldown", 10000);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.Regenerate.RegenAmount", 150);
+		
+		// LeafStorm
+		c.addDefault("Combos.Water.LeafStorm.Enabled", true);
+		c.addDefault("Combos.Water.LeafStorm.Cooldown", 7000);
+		c.addDefault("Combos.Water.LeafStorm.PlantArmorCost", 800);
+		c.addDefault("Combos.Water.LeafStorm.LeafCount", 10);
+		c.addDefault("Combos.Water.LeafStorm.LeafSpeed", 14);
+		c.addDefault("Combos.Water.LeafStorm.Damage", 0.5);
+		c.addDefault("Combos.Water.LeafStorm.Radius", 6);
+		
+		// ---- Chiblocking ----
+		// Dodging
+		c.addDefault("Passives.Chi.Dodging.Enabled", true);
+		c.addDefault("Passives.Chi.Dodging.Chance", 18);
+		
+		// Jab
+		c.addDefault("Abilities.Chi.Jab.Enabled", true);
+		c.addDefault("Abilities.Chi.Jab.Cooldown", 3000);
+		c.addDefault("Abilities.Chi.Jab.MaxUses", 4);
+		
+		// NinjaStance
+		c.addDefault("Abilities.Chi.NinjaStance.Enabled", true);
+		c.addDefault("Abilities.Chi.NinjaStance.Cooldown", 0);
+		c.addDefault("Abilities.Chi.NinjaStance.Stealth.Duration", 5000);
+		c.addDefault("Abilities.Chi.NinjaStance.Stealth.ChargeTime", 2000);
+		c.addDefault("Abilities.Chi.NinjaStance.SpeedAmplifier", 5);
+		c.addDefault("Abilities.Chi.NinjaStance.JumpAmplifier", 5);
+		c.addDefault("Abilities.Chi.NinjaStance.DamageModifier", 0.75);
+		
+		// ChiblockJab
+		c.addDefault("Combos.Chi.ChiblockJab.Enabled", true);
+		c.addDefault("Combos.Chi.ChiblockJab.Cooldown", 5000);
+		c.addDefault("Combos.Chi.ChiblockJab.Duration", 2000);
+		
+		// FlyingKick
+		c.addDefault("Combos.Chi.FlyingKick.Enabled", true);
+		c.addDefault("Combos.Chi.FlyingKick.Cooldown", 4000);
+		c.addDefault("Combos.Chi.FlyingKick.Damage", 2.0);
+		c.addDefault("Combos.Chi.FlyingKick.LaunchPower", 1.85);
+		
+		// WeakeningJab
+		c.addDefault("Combos.Chi.WeakeningJab.Enabled", true);
+		c.addDefault("Combos.Chi.WeakeningJab.Cooldown", 6000);
+		c.addDefault("Combos.Chi.WeakeningJab.Duration", 4000);
+		c.addDefault("Combos.Chi.WeakeningJab.Modifier", 1.5);
 		
 		config.save();
 	}

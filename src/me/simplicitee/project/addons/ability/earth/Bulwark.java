@@ -48,7 +48,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Bulwark.Cooldown");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Bulwark.Cooldown");
 		this.locs = new HashSet<>();
 		this.blocks = new HashSet<>();
 		this.fbs = new HashSet<>();
@@ -228,6 +228,6 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Bulwark.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Bulwark.Enabled");
 	}
 }

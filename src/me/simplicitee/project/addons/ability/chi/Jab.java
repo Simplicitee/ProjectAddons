@@ -25,8 +25,8 @@ public class Jab extends ChiAbility implements AddonAbility{
 	public Jab(Player player, Entity entity, JabHand hand) {
 		super(player);
 		
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Jab.Cooldown");
-		maxUses = ProjectAddons.instance.getConfig().getInt("Abilities.Jab.MaxUses");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.Jab.Cooldown");
+		maxUses = ProjectAddons.instance.getConfig().getInt("Abilities.Chi.Jab.MaxUses");
 		
 		start();
 		activate(entity, hand);
@@ -114,6 +114,6 @@ public class Jab extends ChiAbility implements AddonAbility{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Jab.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Chi.Jab.Enabled");
 	}
 }

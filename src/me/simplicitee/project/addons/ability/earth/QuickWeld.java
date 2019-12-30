@@ -38,9 +38,9 @@ public class QuickWeld extends MetalAbility implements AddonAbility{
 		}
 		
 		this.item = item;
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.QuickWeld.Cooldown");
-		this.repairAmount = ProjectAddons.instance.getConfig().getInt("Abilities.QuickWeld.RepairAmount");
-		this.repairCooldown = ProjectAddons.instance.getConfig().getLong("Abilities.QuickWeld.RepairInterval");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.QuickWeld.Cooldown");
+		this.repairAmount = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.QuickWeld.RepairAmount");
+		this.repairCooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.QuickWeld.RepairInterval");
 		
 		start();
 	}
@@ -141,6 +141,6 @@ public class QuickWeld extends MetalAbility implements AddonAbility{
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.QuickWeld.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.QuickWeld.Enabled");
 	}
 }

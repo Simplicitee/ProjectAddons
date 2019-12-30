@@ -18,7 +18,7 @@ public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbili
 	public Hydrojet(Player player) {
 		super(player);
 		
-		amp = ProjectAddons.instance.getConfig().getInt("Passives.Hydrojet.Speed");
+		amp = ProjectAddons.instance.getConfig().getInt("Passives.Water.Hydrojet.Speed");
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbili
 
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Passives.Hydrojet.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Passives.Water.Hydrojet.Enabled");
 	}
 	
 	@Override

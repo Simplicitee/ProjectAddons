@@ -53,14 +53,14 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 			return;
 		}
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.LavaSurge.Cooldown");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.LavaSurge.Damage");
-		this.burn = ProjectAddons.instance.getConfig().getBoolean("Abilities.LavaSurge.Burn.Enabled");
-		this.burnTime = ProjectAddons.instance.getConfig().getLong("Abilities.LavaSurge.Burn.Duration");
-		this.speed = ProjectAddons.instance.getConfig().getDouble("Abilities.LavaSurge.Speed");
-		this.sourceRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.LavaSurge.SourceRadius");
-		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.LavaSurge.SelectRange");
-		this.maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.LavaSurge.MaxBlocks");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.LavaSurge.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.LavaSurge.Damage");
+		this.burn = ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.LavaSurge.Burn.Enabled");
+		this.burnTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.LavaSurge.Burn.Duration");
+		this.speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.LavaSurge.Speed");
+		this.sourceRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.LavaSurge.SourceRadius");
+		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.LavaSurge.SelectRange");
+		this.maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.LavaSurge.MaxBlocks");
 		this.shot = false;
 		this.shotBlocks = 0;
 		this.launchedAll = false;
@@ -280,7 +280,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.LavaSurge.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.LavaSurge.Enabled");
 	}
 	
 	@Override

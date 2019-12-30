@@ -31,9 +31,9 @@ public class TurboJet extends FireAbility implements AddonAbility, ComboAbility 
 			return;
 		}
 		
-		this.speed = ProjectAddons.instance.getConfig().getDouble("Combos.TurboJet.Speed");
-		this.normal = ProjectAddons.instance.getConfig().getDouble("Abilities.Jets.FlySpeed");
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Combos.TurboJet.Cooldown");
+		this.speed = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.TurboJet.Speed");
+		this.normal = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.FlySpeed");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Fire.TurboJet.Cooldown");
 		
 		if (!hasAbility(player, Jets.class)) {
 			jets = new Jets(player, this);
@@ -123,6 +123,6 @@ public class TurboJet extends FireAbility implements AddonAbility, ComboAbility 
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.TurboJet.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.TurboJet.Enabled");
 	}
 }

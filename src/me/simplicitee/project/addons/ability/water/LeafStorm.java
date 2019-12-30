@@ -43,17 +43,17 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 		}
 		
 		PlantArmor armor = getAbility(player, PlantArmor.class);
-		int cost = ProjectAddons.instance.getConfig().getInt("Combos.LeafStorm.PlantArmorCost");
+		int cost = ProjectAddons.instance.getConfig().getInt("Combos.Water.LeafStorm.PlantArmorCost");
 		
 		if (!armor.damage(cost)) {
 			return;
 		}
 		
-		radius = ProjectAddons.instance.getConfig().getDouble("Combos.LeafStorm.Radius");
-		damage = ProjectAddons.instance.getConfig().getDouble("Combos.LeafStorm.Damage");
-		leaves = ProjectAddons.instance.getConfig().getInt("Combos.LeafStorm.LeafCount");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.LeafStorm.Cooldown");
-		angleSpeed = ProjectAddons.instance.getConfig().getDouble("Combos.LeafStorm.LeafSpeed");
+		radius = ProjectAddons.instance.getConfig().getDouble("Combos.Water.LeafStorm.Radius");
+		damage = ProjectAddons.instance.getConfig().getDouble("Combos.Water.LeafStorm.Damage");
+		leaves = ProjectAddons.instance.getConfig().getInt("Combos.Water.LeafStorm.LeafCount");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Water.LeafStorm.Cooldown");
+		angleSpeed = ProjectAddons.instance.getConfig().getDouble("Combos.Water.LeafStorm.LeafSpeed");
 		leafTracker = new HashSet<>();
 		
 		for (int i = 0; i < leaves; i++) {
@@ -179,7 +179,7 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.LeafStorm.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Water.LeafStorm.Enabled");
 	}
 	
 	@Override

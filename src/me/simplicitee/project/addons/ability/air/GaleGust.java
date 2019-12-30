@@ -34,11 +34,11 @@ public class GaleGust extends AirAbility implements AddonAbility {
 	public GaleGust(Player player) {
 		super(player);
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.GaleGust.Cooldown");
-		this.knockback = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Knockback");
-		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Radius");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Damage");
-		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.GaleGust.Range");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Air.GaleGust.Cooldown");
+		this.knockback = ProjectAddons.instance.getConfig().getDouble("Abilities.Air.GaleGust.Knockback");
+		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Air.GaleGust.Radius");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Air.GaleGust.Damage");
+		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Air.GaleGust.Range");
 		
 		if (player.getMainHand() == MainHand.LEFT) {
 			current = GeneralMethods.getLeftSide(player.getLocation().clone().add(0, 1.2, 0), 0.55);
@@ -87,7 +87,7 @@ public class GaleGust extends AirAbility implements AddonAbility {
 				DamageHandler.damageEntity(e, damage, this);
 			}
 			
-			e.setVelocity(direction.multiply(knockback));
+			e.setVelocity(direction.clone().multiply(knockback));
 			new HorizontalVelocityTracker(e, player, 0, this);
 			e.setFireTicks(0);
 		}
@@ -200,7 +200,7 @@ public class GaleGust extends AirAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.GaleGust.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Air.GaleGust.Enabled");
 	}
 	
 	@Override

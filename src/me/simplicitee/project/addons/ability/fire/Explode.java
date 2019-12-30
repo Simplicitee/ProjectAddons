@@ -28,11 +28,11 @@ public class Explode extends CombustionAbility implements AddonAbility {
 	public Explode(Player player) {
 		super(player);
 		
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Explode.Cooldown");
-		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Explode.Damage");
-		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Explode.Radius");
-		this.knockback = ProjectAddons.instance.getConfig().getDouble("Abilities.Explode.Knockback");
-		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Explode.Range");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.Explode.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Explode.Damage");
+		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Explode.Radius");
+		this.knockback = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Explode.Knockback");
+		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Explode.Range");
 		
 		start();
 	}
@@ -119,7 +119,7 @@ public class Explode extends CombustionAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Explode.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Fire.Explode.Enabled");
 	}
 
 	@Override

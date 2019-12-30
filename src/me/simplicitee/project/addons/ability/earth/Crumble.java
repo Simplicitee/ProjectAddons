@@ -35,18 +35,18 @@ public class Crumble extends SandAbility implements AddonAbility {
 		}
 		
 		if (click == ClickType.LEFT_CLICK) {
-			int selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Crumble.SelectRange");
+			int selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Crumble.SelectRange");
 			this.center = player.getTargetBlock(null, selectRange);
 		} else {
 			this.center = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
 		}
 
 		this.revert = new HashMap<>();
-		this.revertTime = ProjectAddons.instance.getConfig().getInt("Abilities.Crumble.RevertTime");
+		this.revertTime = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Crumble.RevertTime");
 		this.counter = 0;
 		this.radius = 0;
-		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Crumble.Cooldown");
-		this.maxRadius = ProjectAddons.instance.getConfig().getInt("Abilities.Crumble.Radius");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Crumble.Cooldown");
+		this.maxRadius = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Crumble.Radius");
 		
 		start();
 	}
@@ -166,7 +166,7 @@ public class Crumble extends SandAbility implements AddonAbility {
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Crumble.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.Crumble.Enabled");
 	}
 	
 	@Override

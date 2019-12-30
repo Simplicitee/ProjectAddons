@@ -113,12 +113,12 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		
 		if (type == ClickType.SHIFT_DOWN) {
 			MultiAbilityManager.bindMultiAbility(player, "PlantArmor");
-			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.Duration");
-			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.Cooldown");
-			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Durability");
-			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Swim") - 1;
-			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Speed") - 1;
-			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.Boost.Jump") - 1;
+			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
+			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Cooldown");
+			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Durability");
+			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Swim") - 1;
+			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Speed") - 1;
+			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Jump") - 1;
 			this.armor = null;
 			
 			final ItemStack head = new ItemStack(Material.OAK_LEAVES, 1);
@@ -150,34 +150,34 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.active = ArmorAbility.NONE;
 			this.origin = player.getWorld();
 			
-			this.requiredPlants = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.RequiredPlants");
-			this.selectRange = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SelectRange");
+			this.requiredPlants = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.RequiredPlants");
+			this.selectRange = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SelectRange");
 			this.sources = new HashSet<>();
 			
 			this.forward = true;
 			this.range = 0;
-			this.maxRange = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.VineWhip.Range");
-			this.vdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.VineWhip.Damage");
+			this.maxRange = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Range");
+			this.vdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Damage");
 			
 			this.shield = new HashSet<>();
-			this.radius = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.LeafShield.Radius");
+			this.radius = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Radius");
 			
 			this.current = null;
-			this.tRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Tangle.Radius");
-			this.tRange = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Tangle.Range");
-			this.tDuration = ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.SubAbilities.Tangle.Duration");
+			this.tRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Radius");
+			this.tRange = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Range");
+			this.tDuration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.SubAbilities.Tangle.Duration");
 			this.angle = 0;
 			
-			this.gMax = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.Grapple.Range");
-			this.gSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Grapple.Speed");
+			this.gMax = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Grapple.Range");
+			this.gSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Grapple.Speed");
 			this.pulling = false;
 			this.gRange = 0;
 			
-			this.dRadius = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.LeafDome.Radius");
+			this.dRadius = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.LeafDome.Radius");
 			
-			this.power = ProjectAddons.instance.getConfig().getDouble("Abilities.PlantArmor.SubAbilities.Leap.Power");
+			this.power = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Leap.Power");
 			
-			this.regen = ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities.Regenerate.RegenAmount");
+			this.regen = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Regenerate.RegenAmount");
 			
 			start();
 		}
@@ -295,7 +295,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	
 	private void reset() {
 		if (active != ArmorAbility.NONE) {
-			bPlayer.addCooldown(active.getName(), ProjectAddons.instance.getConfig().getLong("Abilities.PlantArmor.SubAbilities." + active.getName() + ".Cooldown"));
+			bPlayer.addCooldown(active.getName(), ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.SubAbilities." + active.getName() + ".Cooldown"));
 		
 			this.active = ArmorAbility.NONE;
 		}
@@ -646,7 +646,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	private int getAbilityCost(String ability) {
-		return ProjectAddons.instance.getConfig().getInt("Abilities.PlantArmor.SubAbilities." + ability + ".Cost");
+		return ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities." + ability + ".Cost");
 	}
 	
 	private Block getRandomPlantSource() {
@@ -728,7 +728,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.PlantArmor.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Water.PlantArmor.Enabled");
 	}
 	
 	@Override
@@ -748,8 +748,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Override
 	public String getInstructions() {
 		return  "Press sneak to activate multiability\n" +
-				"[VineWhip, Tangle, Leap, Grapple, Disperse]   : Left Click\n" +
-				"[RazorLeaf, LeafShield, LeafDome, Regenerate] : Hold Sneak";
+				"[VineWhip, Tangle, Leap, Grapple, Disperse]: Left Click\n" +
+				"[RazorLeaf, LeafShield, LeafDome, Regenerate]: Hold Sneak";
 	}
 
 	public static enum ArmorState {

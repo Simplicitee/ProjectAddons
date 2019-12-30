@@ -34,7 +34,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 			return;
 		}
 		
-		duration = ProjectAddons.instance.getConfig().getLong("Combos.ChiblockJab.Duration");
+		duration = ProjectAddons.instance.getConfig().getLong("Combos.Chi.ChiblockJab.Duration");
 		
 		if (attacked != null) {
 			bp = BendingPlayer.getBendingPlayer(attacked);
@@ -48,7 +48,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.ChiblockJab.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.ChiblockJab.Cooldown");
 	}
 
 	@Override
@@ -123,6 +123,6 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Combos.ChiblockJab.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Combos.Chi.ChiblockJab.Enabled");
 	}
 }
