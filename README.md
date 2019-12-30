@@ -17,6 +17,7 @@
 
 ### Earthbending
 - Accretion
+- Bulwark
 - Dig
 - EarthKick
 - LavaSurge
@@ -28,10 +29,12 @@
 ### Firebending
 - ArcSpark
 - CombustBeam
+- Electrify
 - Explode
 - FireDisc
+- Jets
 - FlameBreath (combo)
-- Incinerate (combo)
+- TurboJet (combo)
 
 ### Waterbending
 - PlantArmor
