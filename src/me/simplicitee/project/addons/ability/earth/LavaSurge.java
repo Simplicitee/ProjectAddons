@@ -1,8 +1,10 @@
 package me.simplicitee.project.addons.ability.earth;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -32,12 +34,13 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	private double speed;
 	private double sourceRadius;
 	private int selectRange;
-	private int maxBlocks;
+	private int maxBlocks, shotBlocks;
 	private Location sourceCenter;
 	private Set<Block> source;
-	private boolean shot;
+	private boolean shot, launchedAll;
 	private Vector direction;
 	private Set<FallingBlock> blocks;
+	private Map<FallingBlock, Long> timeLived;
 
 	public LavaSurge(Player player) {
 		super(player);
@@ -59,7 +62,10 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.LavaSurge.SelectRange");
 		this.maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.LavaSurge.MaxBlocks");
 		this.shot = false;
+		this.shotBlocks = 0;
+		this.launchedAll = false;
 		this.blocks = new HashSet<>();
+		this.timeLived = new HashMap<>();
 		
 		if (prepare()) {
 			start();
@@ -120,11 +126,41 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 		}
 		
 		if (shot) {
+			if (!launchedAll && shotBlocks < maxBlocks) {
+				FallingBlock fb = GeneralMethods.spawnFallingBlock(sourceCenter.clone().add(0, 0.7, 0), Material.MAGMA_BLOCK);
+				Vector v = direction.clone().add(new Vector(randomOffset(), 0.07, randomOffset())).normalize().multiply(speed);
+				
+				fb.setMetadata("lavasurge", new FixedMetadataValue(ProjectAddons.instance, this));
+				fb.setVelocity(v);
+				fb.setDropItem(false);
+				
+				blocks.add(fb);
+				timeLived.put(fb, System.currentTimeMillis());
+				shotBlocks++;
+			}
+			
+			if (shotBlocks >= maxBlocks) {
+				launchedAll = true;
+			}
+			
 			Iterator<FallingBlock> iter = blocks.iterator();
 			
 			while (iter.hasNext()) {
 				FallingBlock fb = iter.next();
-				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 1.5)) {
+				if (fb.isDead()) {
+					iter.remove();
+					continue;
+				}
+				
+				if (timeLived.containsKey(fb)) {
+					if (timeLived.get(fb) + 4000 <= System.currentTimeMillis()) {
+						iter.remove();
+						fb.remove();
+						continue;
+					}
+				}
+				
+				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 0.7)) {
 					if (e instanceof LivingEntity) {
 						DamageHandler.damageEntity(e, damage, this);
 						((LivingEntity) e).setNoDamageTicks(0);
@@ -135,6 +171,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 						
 						iter.remove();
 						fb.remove();
+						timeLived.remove(fb);
 					}
 				}
 			}
@@ -149,7 +186,18 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		
+		for (Block b : source) {
+			TempBlock tb = null;
+			
+			if (TempBlock.isTempBlock(b)) {
+				tb = TempBlock.get(b);
+				tb.setType(Material.AIR);
+			} else {
+				tb = new TempBlock(b, Material.AIR);
+			}
+			
+			tb.setRevertTime(3000);
+		}
 		bPlayer.addCooldown(this);
 		source.clear();
 		blocks.clear();
@@ -215,28 +263,6 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 		}
 		
 		this.direction = player.getEyeLocation().getDirection().clone();
-		
-		for (Block b : source) {
-			FallingBlock fb = GeneralMethods.spawnFallingBlock(sourceCenter.clone().add(0, 1, 0), Material.MAGMA_BLOCK);
-			Vector v = direction.clone().add(new Vector(randomOffset(), 0.07, randomOffset())).normalize().multiply(speed);
-			
-			fb.setMetadata("lavasurge", new FixedMetadataValue(ProjectAddons.instance, this));
-			fb.setVelocity(v);
-			fb.setDropItem(false);
-			
-			blocks.add(fb);
-			
-			TempBlock tb = null;
-			
-			if (TempBlock.isTempBlock(b)) {
-				tb = TempBlock.get(b);
-				tb.setType(Material.AIR);
-			} else {
-				tb = new TempBlock(b, Material.AIR);
-			}
-			
-			tb.setRevertTime(3000);
-		}
 		
 		playLavabendingSound(sourceCenter);
 		

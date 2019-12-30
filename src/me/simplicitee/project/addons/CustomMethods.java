@@ -2,11 +2,16 @@ package me.simplicitee.project.addons;
 
 import java.util.Random;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.Player;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.util.ParticleEffect;
+
+import me.simplicitee.project.addons.util.HexColor;
 
 public class CustomMethods {
 
@@ -29,9 +34,11 @@ public class CustomMethods {
             int i = r.nextInt(blueFire.length);
             
             String hexVal = blueFire[d < i ? d : i];
-            GeneralMethods.displayColoredParticle(hexVal, loc, amount, xOff, yOff, zOff);
+            HexColor hex = new HexColor(hexVal);
+            Color color = Color.fromRGB(hex.toRGB()[0], hex.toRGB()[1], hex.toRGB()[2]);
+            loc.getWorld().spawnParticle(Particle.REDSTONE, loc, amount, xOff, yOff, zOff, 0.02, new DustOptions(color, (float) ( 1 + (i / blueFire.length))));
         } else {
-        	ParticleEffect.FLAME.display(loc, amount, xOff, yOff, zOff);
+        	ParticleEffect.FLAME.display(loc, amount, xOff, yOff, zOff, 0.02);
         }
 		
 		if (r.nextInt(100) < 20) {

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Location;
@@ -41,11 +40,11 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	
 	private enum Color {
 		RED("#ff0000"),
-		GREEN("#00ff00"),
-		BLUE("#0000ff"),
-		YELLOW("#ffff00"),
 		ORANGE("#ff6600"),
+		YELLOW("#ffff00"),
+		GREEN("#00ff00"),
 		CYAN("#00ffff"),
+		BLUE("#0000ff"),
 		PURPLE("#ff00ff");
 		
 		private String hex;
@@ -80,7 +79,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		duration = ProjectAddons.instance.getConfig().getLong("Combos.FlameBreath.Duration");
 		breaths = new HashSet<>();
 		
-		int turnsPerColor = 4;
+		int turnsPerColor = 8;
 		int amount = Color.values().length * turnsPerColor;
 		colors = new LinkedList<>();
 		for (int i = 0; i < amount; i++) {
@@ -155,12 +154,12 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		
 		for (Breath breath : breaths) {
 			if (breath.advanceLocation()) {
-				float offset = (float) (0.2 * breath.getLocation().distance(player.getEyeLocation()));
+				double offset = 0.1 * breath.getLocation().distance(player.getEyeLocation());
 				int amount = (int) Math.ceil(breath.getLocation().distance(player.getEyeLocation()));
 				if (rainbow && player.hasPermission("bending.ability.FlameBreath.rainbow")) {
-					displayColoredParticles(breath.getLocation(), amount, offset, breath.getColor().getHex());
+					GeneralMethods.displayColoredParticle(breath.getColor().getHex(), breath.getLocation(), amount, offset, offset, offset);
 				} else {
-					playFirebendingParticles(breath.getLocation(), amount, offset/2, offset/2, offset/2);
+					ProjectAddons.instance.getMethods().playDynamicFireParticles(player, breath.getLocation(), amount, offset, offset, offset);
 				}
 				
 				if (Math.random() > 0.6) {
@@ -193,21 +192,6 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		}
 		
 		breaths.removeAll(removal);
-	}
-	
-	public void displayColoredParticles(Location loc, int amount, float offset, String hexVal) {
-		Random r = new Random();
-		for (int i = 0; i < amount; i++) {
-			double x = Math.cos(r.nextDouble() * Math.PI * 2) * r.nextDouble() * offset;
-			double y = Math.sin(r.nextDouble() * Math.PI * 2) * r.nextDouble() * offset;
-			double z = Math.sin(r.nextDouble() * Math.PI * 2) * r.nextDouble() * offset;
-			
-			loc.add(x, y, z);
-			
-			GeneralMethods.displayColoredParticle(hexVal, loc);
-			
-			loc.subtract(x, y, z);
-		}
 	}
 
 	@Override

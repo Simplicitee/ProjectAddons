@@ -39,6 +39,7 @@ import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
+import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerCooldownChangeEvent;
@@ -445,6 +446,12 @@ public class MainListener implements Listener {
 				event.setCancelled(true);
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onReload(BendingReloadEvent event) {
+		ProjectAddons.instance.config().reload();
+		event.getSender().sendMessage(ProjectAddons.instance.prefix() + " Config reloaded");
 	}
 	
 	@EventHandler

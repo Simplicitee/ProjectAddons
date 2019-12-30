@@ -107,11 +107,11 @@ public class ProjectAddons extends JavaPlugin {
 		// LavaSurge
 		c.addDefault("Abilities.LavaSurge.Enabled", true);
 		c.addDefault("Abilities.LavaSurge.Cooldown", 4000);
-		c.addDefault("Abilities.LavaSurge.Damage", 2);
-		c.addDefault("Abilities.LavaSurge.Speed", 1.25);
+		c.addDefault("Abilities.LavaSurge.Damage", 0.5);
+		c.addDefault("Abilities.LavaSurge.Speed", 1.14);
 		c.addDefault("Abilities.LavaSurge.SelectRange", 5);
 		c.addDefault("Abilities.LavaSurge.SourceRadius", 3);
-		c.addDefault("Abilities.LavaSurge.MaxBlocks", 12);
+		c.addDefault("Abilities.LavaSurge.MaxBlocks", 10);
 		c.addDefault("Abilities.LavaSurge.Burn.Enabled", true);
 		c.addDefault("Abilities.LavaSurge.Burn.Duration", 3000);
 		
@@ -329,13 +329,6 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Crumble.SelectRange", 9);
 		c.addDefault("Abilities.Crumble.RevertTime", 60);
 		
-		// Incinerate
-		c.addDefault("Combos.Incinerate.Enabled", true);
-		c.addDefault("Combos.Incinerate.Cooldown", 8000);
-		c.addDefault("Combos.Incinerate.Duration", 6000);
-		c.addDefault("Combos.Incinerate.FireTicks", 30);
-		c.addDefault("Combos.Incinerate.MaxLength", 6);
-		
 		// LandLaunch
 		c.addDefault("Passives.LandLaunch.Enabled", true);
 		c.addDefault("Passives.LandLaunch.Power", 3);
@@ -360,7 +353,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.CombustBeam.Minimum.Power", 1);
 		c.addDefault("Abilities.CombustBeam.Minimum.Angle", 1);
 		c.addDefault("Abilities.CombustBeam.Minimum.ChargeTime", 2000);
-		c.addDefault("Abilities.CombustBeam.Maximum.Power", 3);
+		c.addDefault("Abilities.CombustBeam.Maximum.Power", 2.2);
 		c.addDefault("Abilities.CombustBeam.Maximum.Angle", 50);
 		c.addDefault("Abilities.CombustBeam.Maximum.ChargeTime", 5000);
 		c.addDefault("Abilities.CombustBeam.InterruptedDamage", 3);
@@ -383,8 +376,8 @@ public class ProjectAddons extends JavaPlugin {
 		
 		// TurboJet
 		c.addDefault("Combos.TurboJet.Enabled", true);
-		c.addDefault("Combos.TurboJet.Cooldown", 8000);
-		c.addDefault("Combos.TurboJet.Speed", 2.85);
+		c.addDefault("Combos.TurboJet.Cooldown", 12000);
+		c.addDefault("Combos.TurboJet.Speed", 2.15);
 		
 		// Bulwark
 		c.addDefault("Abilities.Bulwark.Enabled", true);

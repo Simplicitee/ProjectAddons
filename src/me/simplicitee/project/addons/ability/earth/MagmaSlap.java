@@ -141,7 +141,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		tempBlocks.add(new TempBlock(b, Material.AIR));
 		
 		FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.7, 0.5), Material.MAGMA_BLOCK);
-		fb.setVelocity(new Vector(0, Math.random()*0.4, 0));
+		fb.setVelocity(new Vector(0, Math.random()*0.3, 0));
 		fb.setDropItem(false);
 		fb.setMetadata("lavaflux", new FixedMetadataValue(ProjectKorra.plugin, this));
 		
