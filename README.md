@@ -1,3 +1,4 @@
+[![GitHub Pre-Release](https://img.shields.io/github/release-pre/Simplicitee/ProjectAddons.svg)](https://github.com/Simplicitee/ProjectAddons/releases) [![Github All Releases](https://img.shields.io/github/downloads/Simplicitee/ProjectAddons/total.svg)](https://github.com/Simplicitee/ProjectAddons/releases)
 ## Abilities
 ### Avatar
 - EnergyBeam
