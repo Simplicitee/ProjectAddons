@@ -528,11 +528,11 @@ public class MainListener implements Listener {
 		}.runTaskLater(plugin, 5);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onQuit(PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
 		
-		if (!plugin.isBoardEnabled()) {
+		if (plugin.isBoardEnabled()) {
 			plugin.getBoardManager().remove(player);
 		}
 		
