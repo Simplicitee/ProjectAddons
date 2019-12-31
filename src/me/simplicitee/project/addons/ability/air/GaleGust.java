@@ -15,6 +15,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.object.HorizontalVelocityTracker;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
@@ -22,13 +23,19 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class GaleGust extends AirAbility implements AddonAbility {
 
-	private Location current;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
-	private Vector direction;
+	@Attribute(Attribute.KNOCKBACK)
 	private double knockback;
+	@Attribute(Attribute.RADIUS)
 	private double radius;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute(Attribute.RANGE)
 	private double range;
+	
+	private Location current;
+	private Vector direction;
 	private Set<Point> points;
 	
 	public GaleGust(Player player) {

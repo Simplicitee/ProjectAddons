@@ -276,7 +276,7 @@ public class MainListener implements Listener {
 				EarthKick.removeBlock(fb);
 			} else if (MagmaSlap.isBlock(fb)) {
 				event.setCancelled(true);
-				((MagmaSlap) fb.getMetadata("lavaflux").get(0).value()).turnToTempBlock(event.getBlock());
+				((MagmaSlap) fb.getMetadata("magmaslap").get(0).value()).turnToTempBlock(event.getBlock());
 			} else if (fb.hasMetadata("earthring")) {
 				event.setCancelled(true);
 			} else if (fb.hasMetadata("lavasurge")) {

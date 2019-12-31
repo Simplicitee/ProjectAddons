@@ -19,6 +19,7 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.LavaAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -26,9 +27,19 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class MagmaSlap extends LavaAbility implements AddonAbility {
 	
-	private double offset, damage;
-	private int length, maxLength, width;
-	private long next, last, revertTime;
+	@Attribute("Offset")
+	private double offset;
+	@Attribute(Attribute.DAMAGE)
+	private double damage;
+	@Attribute("Length")
+	private int maxLength;
+	@Attribute(Attribute.WIDTH)
+	private int width;
+	@Attribute("RevertTime")
+	private long revertTime;
+	
+	private int length;
+	private long next, last;
 	private Location start, curr;
 	private List<TempBlock> tempBlocks;
 
@@ -143,7 +154,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.7, 0.5), Material.MAGMA_BLOCK);
 		fb.setVelocity(new Vector(0, Math.random()*0.3, 0));
 		fb.setDropItem(false);
-		fb.setMetadata("lavaflux", new FixedMetadataValue(ProjectKorra.plugin, this));
+		fb.setMetadata("magmaslap", new FixedMetadataValue(ProjectKorra.plugin, this));
 		
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 2)) {
 			if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {

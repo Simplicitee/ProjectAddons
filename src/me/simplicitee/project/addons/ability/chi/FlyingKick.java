@@ -14,6 +14,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
@@ -22,8 +23,12 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility{
 	
+	@Attribute("LaunchPower")
 	private double launch;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
 
 	public FlyingKick(Player player) {
 		super(player);
@@ -46,6 +51,7 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 		
 		launch = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.LaunchPower");
 		damage = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.Damage");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Chi.FlyingKick.Cooldown");
 		Vector v = player.getLocation().getDirection().add(new Vector(0, 0.25485, 0)).normalize().multiply(launch);
 		player.setVelocity(v);
 		start();
@@ -53,7 +59,7 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.FlyingKick.Cooldown");
+		return cooldown;
 	}
 
 	@Override

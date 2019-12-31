@@ -20,6 +20,7 @@ import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -30,9 +31,13 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 
 	private static Set<FallingBlock> BLOCKS = new HashSet<>();
 	
+	@Attribute(Attribute.DAMAGE)
 	public double damage;
+	@Attribute("Blocks")
 	public int maxBlocks;
+	@Attribute("LavaMultiplier")
 	public double lavaMult;
+	
 	public List<FallingBlock> kick;
 	public long duration = 2500;
 	

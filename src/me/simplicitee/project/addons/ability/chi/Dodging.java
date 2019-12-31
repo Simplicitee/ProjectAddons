@@ -6,11 +6,13 @@ import org.bukkit.entity.Player;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.ability.PassiveAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class Dodging extends ChiAbility implements AddonAbility, PassiveAbility {
 
+	@Attribute("Chance")
 	private double chance;
 	
 	public Dodging(Player player) {

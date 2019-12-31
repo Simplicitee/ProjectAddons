@@ -13,14 +13,18 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class Zephyr extends AirAbility implements AddonAbility {
 
+	@Attribute(Attribute.RADIUS)
 	private double radius;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
 	private int angle;
 	
 	public Zephyr(Player player) {

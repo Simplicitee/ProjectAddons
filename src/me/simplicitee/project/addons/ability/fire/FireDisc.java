@@ -1,4 +1,4 @@
-		package me.simplicitee.project.addons.ability.fire;
+package me.simplicitee.project.addons.ability.fire;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +12,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.avatar.AvatarState;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -20,12 +21,22 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class FireDisc extends FireAbility implements AddonAbility{
 	
-	private Location loc;
-	private Vector direction;
-	private double damage, range, currRange = 0;
-	private boolean revert, drop, control;
+	@Attribute(Attribute.DAMAGE)
+	private double damage;
+	@Attribute(Attribute.RANGE)
+	private double range;
+	@Attribute("DropCutBlocks")
+	private boolean drop;
+	@Attribute("Controllable")
+	private boolean control;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
 
+	private boolean revert;
+	private double currRange = 0;
+	private Location loc;
+	private Vector direction;
+	
 	public FireDisc(Player player) {
 		super(player);
 		
@@ -39,7 +50,7 @@ public class FireDisc extends FireAbility implements AddonAbility{
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.FireDisc.Cooldown");
 		
 		if (player.hasPermission("bending.fire.bluefire")) {
-			this.damage += (0.5*damage);
+			this.damage *= 1.5;
 		}
 		
 		if (bPlayer.isAvatarState()) {

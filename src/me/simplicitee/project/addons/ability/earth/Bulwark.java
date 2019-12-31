@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.earthbending.Collapse;
 import com.projectkorra.projectkorra.earthbending.RaiseEarth;
 import com.projectkorra.projectkorra.util.DamageHandler;
@@ -27,7 +28,9 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Bulwark extends EarthAbility implements AddonAbility {
 
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
 	private Set<Location> locs;
 	private Set<Block> blocks;
 	private Set<FallingBlock> fbs;

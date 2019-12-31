@@ -20,6 +20,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.LavaAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -27,14 +28,24 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class LavaSurge extends LavaAbility implements AddonAbility {
 	
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute("Burn")
 	private boolean burn;
+	@Attribute("BurnDuration")
 	private long burnTime;
+	@Attribute(Attribute.SPEED)
 	private double speed;
+	@Attribute("SourceRadius")
 	private double sourceRadius;
+	@Attribute(Attribute.SELECT_RANGE)
 	private int selectRange;
-	private int maxBlocks, shotBlocks;
+	@Attribute("Blocks")
+	private int maxBlocks;
+	
+	private int shotBlocks;
 	private Location sourceCenter;
 	private Set<Block> source;
 	private boolean shot, launchedAll;

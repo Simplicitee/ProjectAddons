@@ -11,16 +11,21 @@ import org.bukkit.inventory.meta.Damageable;
 
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.MetalAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class QuickWeld extends MetalAbility implements AddonAbility{
 	
-	private ItemStack item;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute("RepairAmount")
 	private int repairAmount;
+	@Attribute("RepairInterval")
 	private long repairCooldown;
 
+	private ItemStack item;
+	
 	private Material[] metal_tools = new Material[] {
 			Material.IRON_AXE, Material.IRON_BOOTS, Material.IRON_CHESTPLATE,
 			Material.IRON_HELMET, Material.IRON_HOE, Material.IRON_LEGGINGS,

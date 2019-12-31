@@ -8,11 +8,13 @@ import org.bukkit.potion.PotionEffectType;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.PassiveAbility;
 import com.projectkorra.projectkorra.ability.WaterAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbility {
 
+	@Attribute(Attribute.SPEED)
 	private int amp;
 	
 	public Hydrojet(Player player) {

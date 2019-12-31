@@ -6,15 +6,26 @@ import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class Jets extends FireAbility implements AddonAbility {
 	
+	@Attribute("FlySpeed")
+	private double flySpeed;
+	@Attribute("HoverSpeed")
+	private double hoverSpeed;
+	@Attribute("DamageThreshold")
+	private double dmgThreshold;
+	@Attribute(Attribute.DURATION)
+	private long duration;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	
 	private float oSpeed;
-	private double flySpeed, hoverSpeed, health, dmgThreshold;
+	private double health;
 	private boolean hovering, gliding;
-	private long duration, cooldown;
 	private TurboJet source;
 	
 	public Jets(Player player) {

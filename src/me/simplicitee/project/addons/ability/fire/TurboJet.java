@@ -9,6 +9,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -16,8 +17,12 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class TurboJet extends FireAbility implements AddonAbility, ComboAbility {
 
-	private double speed, normal;
+	@Attribute(Attribute.SPEED)
+	private double speed;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
+	private double normal;
 	private Jets jets;
 	
 	public TurboJet(Player player) {
@@ -32,8 +37,8 @@ public class TurboJet extends FireAbility implements AddonAbility, ComboAbility 
 		}
 		
 		this.speed = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.TurboJet.Speed");
-		this.normal = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.FlySpeed");
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Fire.TurboJet.Cooldown");
+		this.normal = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.Jets.FlySpeed");
 		
 		if (!hasAbility(player, Jets.class)) {
 			jets = new Jets(player, this);

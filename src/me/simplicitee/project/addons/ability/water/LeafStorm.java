@@ -16,6 +16,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.PlantAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
@@ -23,10 +24,15 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbility {
 
+	@Attribute(Attribute.RADIUS)
 	private double radius;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute("LeafCount")
 	private int leaves;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute("LeafSpeed")
 	private double angleSpeed;
 	
 	private Set<Leaf> leafTracker;

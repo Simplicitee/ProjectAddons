@@ -9,11 +9,13 @@ import org.bukkit.potion.PotionEffectType;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
 import com.projectkorra.projectkorra.ability.PassiveAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class LandLaunch extends EarthAbility implements AddonAbility, PassiveAbility {
 
+	@Attribute("Power")
 	private int amp;
 	
 	public LandLaunch(Player player) {

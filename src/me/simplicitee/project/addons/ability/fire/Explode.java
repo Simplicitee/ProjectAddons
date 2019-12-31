@@ -11,6 +11,7 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.CombustionAbility;
 import com.projectkorra.projectkorra.ability.ElementalAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -18,11 +19,17 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Explode extends CombustionAbility implements AddonAbility {
 	
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute(Attribute.RADIUS)
 	private double radius;
+	@Attribute(Attribute.KNOCKBACK)
 	private double knockback;
+	@Attribute(Attribute.RANGE)
 	private double range;
+	
 	private Location center;
 
 	public Explode(Player player) {

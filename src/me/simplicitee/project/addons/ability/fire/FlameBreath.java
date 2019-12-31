@@ -22,6 +22,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -30,11 +31,21 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class FlameBreath extends FireAbility implements AddonAbility, ComboAbility, Listener{
 	
+	@Attribute(Attribute.FIRE_TICK)
 	private int fireTick;
+	@Attribute(Attribute.RANGE)
 	private double range;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
-	private boolean burnGround, burnEntities, rainbow;
+	@Attribute("BurnGround")
+	private boolean burnGround;
+	@Attribute("BurnEntities")
+	private boolean burnEntities;
+	@Attribute("EasterEgg")
+	private boolean rainbow;
+	@Attribute(Attribute.DURATION)
 	private long duration;
+	
 	private Set<Breath> breaths;
 	private Queue<Color> colors;
 	

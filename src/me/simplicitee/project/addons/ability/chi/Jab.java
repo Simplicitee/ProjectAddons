@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -18,9 +19,12 @@ public class Jab extends ChiAbility implements AddonAbility{
 		RIGHT, LEFT;
 	}
 	
-	private int uses = 0;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute("MaxUses")
 	private int maxUses;
+	
+	private int uses = 0;
 
 	public Jab(Player player, Entity entity, JabHand hand) {
 		super(player);

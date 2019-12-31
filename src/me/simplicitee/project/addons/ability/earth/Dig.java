@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -18,9 +19,13 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Dig extends EarthAbility implements AddonAbility {
 
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.DURATION)
 	private long duration;
+	@Attribute("RevertTime")
 	private long revertTime;
+	@Attribute(Attribute.SPEED)
 	private double speed;
 	
 	public Dig(Player player) {

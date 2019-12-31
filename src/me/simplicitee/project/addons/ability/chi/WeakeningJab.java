@@ -14,6 +14,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -23,8 +24,12 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 
 	private static Set<Integer> entities = new HashSet<>();
 	
-	public LivingEntity entity = null;
+	@Attribute(Attribute.DURATION)
 	public long duration;
+	@Attribute(Attribute.COOLDOWN)
+	public long cooldown;
+	
+	public LivingEntity entity = null;
 	
 	public WeakeningJab(Player player) {
 		super(player);
@@ -37,6 +42,7 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 		}
 		
 		duration = ProjectAddons.instance.getConfig().getLong("Combos.Chi.WeakeningJab.Duration");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Chi.WeakeningJab.Cooldown");
 		
 		if (entity != null && !entities.contains(entity.getEntityId())) {
 			entities.add(entity.getEntityId());
@@ -46,7 +52,7 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.WeakeningJab.Cooldown");
+		return cooldown;
 	}
 
 	@Override

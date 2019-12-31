@@ -9,17 +9,23 @@ import org.bukkit.potion.PotionEffectType;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class NinjaStance extends ChiAbility implements AddonAbility{
 	
+	@Attribute(Attribute.DURATION)
+	public long stealthDuration;
+	@Attribute("SpeedBoost")
+	public int speedAmp;
+	@Attribute("JumpBoost")
+	public int jumpAmp;
+	
 	public boolean stealth, stealthReady, stealthStarted;
 	public long stealthStart;
 	public long stealthChargeTime;
 	public long stealthReadyStart;
-	public long stealthDuration;
-	public int speedAmp, jumpAmp;
 
 	public NinjaStance(Player player) {
 		super(player);

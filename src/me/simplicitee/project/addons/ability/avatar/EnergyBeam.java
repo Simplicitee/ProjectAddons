@@ -18,6 +18,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AvatarAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -27,30 +28,36 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 	
 	public static Map<UUID, EnergyColor> colors = new HashMap<>();
 	
-	private Map<Location, Vector> map;
-	private Map<Location, Integer> ranges;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute(Attribute.RANGE)
 	private int range;
-	private long cooldown, duration;
-	private EnergyColor color;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	@Attribute(Attribute.DURATION)
+	private long duration;
+	@Attribute("EasterEgg")
 	private boolean effects;
 	
+	private Map<Location, Vector> map;
+	private Map<Location, Integer> ranges;
+	private EnergyColor color;
+	
 	public static enum EnergyColor {
-		WHITE("#ffffff"), 
-		BLACK("#000000"), 
-		RED("#ff5252"), 
-		BLUE("#0111ff"), 
-		GREEN("#229965"), 
-		PURPLE("#c606ff"), 
-		YELLOW("#c6c600"), 
-		ORANGE("#ffa500"),
-		INDIGO("#0a0082"),
-		BROWN("#d2691e"),
-		PINK("#e77aea"),
+		WHITE("ffffff"), 
+		BLACK("000000"), 
+		RED("ff5252"), 
+		BLUE("0111ff"), 
+		GREEN("229965"), 
+		PURPLE("c606ff"), 
+		YELLOW("c6c600"), 
+		ORANGE("ffa500"),
+		INDIGO("0a0082"),
+		BROWN("d2691e"),
+		PINK("e77aea"),
 		AQUA("00FFFF"),
 		GRAY("647687"),
-		
-		RAINBOW("#abcdef");
+		RAINBOW("abcdef");
 		
 		private String hex;
 		private EnergyColor(String hex) {

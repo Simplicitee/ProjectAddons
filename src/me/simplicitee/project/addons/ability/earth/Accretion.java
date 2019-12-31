@@ -22,6 +22,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.util.TempBlock;
@@ -30,14 +31,20 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Accretion extends EarthAbility implements AddonAbility {
 	
-	private boolean shot;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute("Blocks")
 	private int blocks;
+	@Attribute(Attribute.SELECT_RANGE)
 	private int selectRange;
+	@Attribute("RevertTime")
 	private long revertTime;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
 	private Set<FallingBlock> tracker;
 	private Set<TempBlock> temps;
+	private boolean shot;
 
 	public Accretion(Player player) {
 		super(player);

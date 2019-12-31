@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.PlantAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -18,12 +19,17 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class RazorLeaf extends PlantAbility implements AddonAbility {
 	
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	@Attribute(Attribute.DAMAGE)
+	private double damage;
+	@Attribute(Attribute.RADIUS)
+	private double radius;
+	@Attribute(Attribute.RANGE)
+	private double range;
+	
 	private Location center;
 	private int particles;
-	private long cooldown;
-	private double damage;
-	private double radius;
-	private double range;
 	private TempBlock source;
 	private Vector direction;
 

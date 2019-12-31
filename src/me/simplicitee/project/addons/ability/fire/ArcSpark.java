@@ -14,15 +14,25 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.LightningAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
 public class ArcSpark extends LightningAbility implements AddonAbility {
 	
-	private int speed, length;
+	@Attribute(Attribute.SPEED)
+	private int speed;
+	@Attribute("Length")
+	private int length;
+	@Attribute(Attribute.DAMAGE)
 	private double damage;
-	private long duration, cooldown, charge, chargedTill;
+	@Attribute(Attribute.DURATION)
+	private long duration;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	
+	private long charge, chargedTill;
 	private boolean shoot, charged;
 	private List<String> attractive;
 

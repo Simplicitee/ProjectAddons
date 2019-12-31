@@ -34,6 +34,7 @@ import com.projectkorra.projectkorra.ability.MultiAbility;
 import com.projectkorra.projectkorra.ability.PlantAbility;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager.MultiAbilityInfoSub;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.earthbending.EarthArmor;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
@@ -48,52 +49,81 @@ import net.md_5.bungee.api.ChatColor;
 public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbility {
 	
 	// general variables
-	private long duration, cooldown;
-	private int durability, maxDurability, swim, speed, jump;
+	@Attribute(Attribute.DURATION)
+	private long duration;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	@Attribute("Durability")
+	private int maxDurability;
+	@Attribute("SwimBoost")
+	private int swim;
+	@Attribute("SpeedBoost")
+	private int speed;
+	@Attribute("JumpBoost")
+	private int jump;
+	
+	private int durability;
 	private ArmorState state;
 	private ArmorAbility active;
 	private BossBar bar;
 	private ItemStack[] armors;
 	private TempArmor armor;
 	private World origin;
-	
-	// general variables
 	private Location current;
 	private Vector direction;
 	
 	// forming and dispersing variables
+	@Attribute("RequiredPlants")
 	private int requiredPlants;
+	@Attribute(Attribute.SELECT_RANGE)
 	private double selectRange;
 	private Set<TempBlock> sources;
 	
 	// vinewhip variables
-	private boolean forward;
-	private int range, maxRange;
+	@Attribute("VineWhip_Range")
+	private int maxRange;
+	@Attribute("VineWhip_Damage")
 	private double vdmg;
 	
+	private boolean forward;
+	private int range;
+	
 	// leafshield variables
-	private Set<TempBlock> shield;
+	@Attribute("LeafShield_Radius")
 	private int radius;
 	
+	private Set<TempBlock> shield;
+	
 	// tangle variables
+	@Attribute("Tangle_Radius")
 	private double tRadius;
+	@Attribute("Tangle_Duration")
 	private long tDuration;
+	@Attribute("Tangle_Range")
 	private double tRange;
+	
 	private int angle;
 	
 	// grapple variables
-	private Location target;
-	private int gRange, gMax;
-	private boolean pulling;
+	@Attribute("Grapple_Range")
+	private int gMax;
+	@Attribute("Grapple_Speed")
 	private double gSpeed;
 	
+	private Location target;
+	private int gRange;
+	private boolean pulling;
+	
 	// leap variables
+	@Attribute("Leap_Power")
 	private double power;
 	
 	// leafdome variables
+	@Attribute("LeafDome_Radius")
 	private int dRadius;
 	
 	// regenerate variables
+	@Attribute("Regenerate_Amount")
 	private int regen;
 
 	public PlantArmor(Player player, ClickType type) {

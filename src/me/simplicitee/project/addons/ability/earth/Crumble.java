@@ -15,6 +15,7 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.SandAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -22,8 +23,14 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Crumble extends SandAbility implements AddonAbility {
 
-	private int radius, maxRadius, counter, revertTime;
+	@Attribute(Attribute.RADIUS)
+	private int maxRadius;
+	@Attribute("RevertTime")
+	private int revertTime;
+	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
+	private int radius, counter;
 	private Block center;
 	private Map<Block, BlockData> revert;
 	

@@ -18,6 +18,7 @@ import com.projectkorra.projectkorra.BendingPlayer;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.LightningAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
@@ -26,11 +27,20 @@ public class Electrify extends LightningAbility implements AddonAbility {
 	
 	private static Set<Block> electrified = new HashSet<>();
 	
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	@Attribute(Attribute.DURATION)
+	private long duration;
+	@Attribute("DamageInWater")
+	private double waterdmg;
+	@Attribute("Slowness")
+	private int slowness;
+	@Attribute("Weakness")
+	private int weakness;
+	
+	private int spread;
 	private Block block;
 	private Location center;
-	private long cooldown, duration;
-	private double waterdmg;
-	private int slowness, weakness, spread;
 	
 	public Electrify(Player player, Block block, boolean direct) {
 		this(player, block, direct, 3);

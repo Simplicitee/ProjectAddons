@@ -15,6 +15,7 @@ import org.bukkit.util.Vector;
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.CombustionAbility;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.object.HorizontalVelocityTracker;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.DamageHandler;
@@ -26,8 +27,26 @@ import me.simplicitee.project.addons.util.HexColor;
 
 public class CombustBeam extends CombustionAbility implements AddonAbility {
 
-	private long cooldown, minChargeTime, maxChargeTime, chargeTime;
-	private double range, minAngle, maxAngle, angleCheck, rotation, power, minPower, maxPower, health;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	@Attribute("MinChargeTime")
+	private long minChargeTime;
+	@Attribute("MaxChargeTime")
+	private long maxChargeTime;
+	@Attribute(Attribute.RANGE)
+	private double range;
+	@Attribute("MinAngle")
+	private double minAngle;
+	@Attribute("MaxAngle")
+	private double maxAngle;
+	@Attribute("MinPower")
+	private double minPower;
+	@Attribute("MaxPower")
+	private double maxPower;
+	
+	private double power, rotation, angleCheck;
+	private double health;
+	private long chargeTime;
 	private int counter;
 	private boolean charging, charged;
 	private Location curr;

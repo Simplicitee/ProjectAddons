@@ -12,6 +12,7 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
+import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
@@ -19,8 +20,12 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbility{
 	
-	private Player attacked;
+	@Attribute(Attribute.DURATION)
 	private long duration;
+	@Attribute(Attribute.COOLDOWN)
+	private long cooldown;
+	
+	private Player attacked;
 	private BendingPlayer bp;
 
 	public ChiblockJab(Player player) {
@@ -35,6 +40,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 		}
 		
 		duration = ProjectAddons.instance.getConfig().getLong("Combos.Chi.ChiblockJab.Duration");
+		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Chi.ChiblockJab.Cooldown");
 		
 		if (attacked != null) {
 			bp = BendingPlayer.getBendingPlayer(attacked);
@@ -48,7 +54,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Combos.Chi.ChiblockJab.Cooldown");
+		return cooldown;
 	}
 
 	@Override
