@@ -21,6 +21,7 @@
 ### Earthbending
 - Accretion
 - Bulwark
+- Crumble
 - Dig
 - EarthKick
 - LavaSurge
