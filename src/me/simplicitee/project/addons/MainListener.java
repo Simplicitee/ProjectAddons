@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
@@ -47,7 +48,10 @@ import com.projectkorra.projectkorra.object.Preset;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 
+import me.simplicitee.project.addons.ability.air.Deafen;
 import me.simplicitee.project.addons.ability.air.GaleGust;
+import me.simplicitee.project.addons.ability.air.SonicWave;
+import me.simplicitee.project.addons.ability.air.VocalMimicry;
 import me.simplicitee.project.addons.ability.air.Zephyr;
 import me.simplicitee.project.addons.ability.avatar.EnergyBeam;
 import me.simplicitee.project.addons.ability.avatar.EnergyBeam.EnergyColor;
@@ -176,6 +180,8 @@ public class MainListener implements Listener {
 			if (CoreAbility.hasAbility(player, Bulwark.class)) {
 				CoreAbility.getAbility(player, Bulwark.class).clickFunction();
 			}
+		} else if (canBend(player, "SonicWave")) {
+			new SonicWave(player);
 		}
 	}
 	
@@ -247,6 +253,10 @@ public class MainListener implements Listener {
 			new CombustBeam(player);
 		} else if (canBend(player, "Bulwark")) {
 			new Bulwark(player);
+		} else if (canBend(player, "VocalMimicry")) {
+			new VocalMimicry(player);
+		} else if (canBend(player, "Deafen")) {
+			new Deafen(player);
 		}
 	}
 	
@@ -430,21 +440,43 @@ public class MainListener implements Listener {
 		
 		Player player = event.getPlayer();
 		String[] args = event.getMessage().split(" ");
-		if (args.length != 2) {
-			return;
-		}
 		
 		if (args[0].equalsIgnoreCase("@energycolor")) {
-			if (player.hasPermission("bending.ability.energybeam")) {
+			if (!player.hasPermission("bending.ability.energybeam")) {
+				player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " You do not have permission to change color");
+			} else if (args.length != 2) {
+				player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Invalid format, try `@energycolor <color>`");
+			} else {
 				EnergyColor color = EnergyColor.valueOf(args[1].toUpperCase());
+				
 				if (color != null) {
 					EnergyBeam.colors.put(player.getUniqueId(), color);
-					player.sendMessage(ChatColor.GREEN + "Successfully set EnergyBeam color to " + args[1].toLowerCase());	
+					player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.GREEN + " Successfully set EnergyBeam color to " + args[1].toLowerCase());	
 				} else {
-					player.sendMessage(ChatColor.RED + "Unknown color! Try red, blue, yellow, green, purple, orange, indigo, brown, white, or black!");
+					player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Unknown color! Try red, blue, yellow, green, purple, orange, indigo, brown, white, or black!");
 				}
-				event.setCancelled(true);
 			}
+			event.setCancelled(true);
+		} else if (args[0].equalsIgnoreCase("@vocalsound")) {
+			if (!player.hasPermission("bending.ability.VocalMimicry")) {
+				player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " You do not have permission to change vocal noise");
+			} else if (args.length != 2) {
+				player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Invalid format, try `@vocalsound <sound>`");
+			} else {
+				Sound sound = Sound.valueOf(args[1].toUpperCase());
+				
+				if (sound != null) {
+					if (plugin.getConfig().getStringList("Abilities.Air.VocalMimicry.SoundBlacklist").contains(sound.toString())) {
+						player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Cannot use that sound!");
+					} else {
+						VocalMimicry.selectSound(player, sound);
+						player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.GREEN + " Successfully set vocal sound to " + args[1].toLowerCase());
+					}
+				} else {
+					player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Unknown sound!");
+				}
+			}
+			event.setCancelled(true);
 		}
 	}
 	
@@ -452,6 +484,13 @@ public class MainListener implements Listener {
 	public void onReload(BendingReloadEvent event) {
 		ProjectAddons.instance.config().reload();
 		event.getSender().sendMessage(ProjectAddons.instance.prefix() + " Config reloaded");
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				CoreAbility.registerPluginAbilities(plugin, "me.simplicitee.project.addons.ability");
+			}
+		}.runTaskLater(plugin, 1);
 	}
 	
 	@EventHandler
@@ -630,9 +669,15 @@ public class MainListener implements Listener {
 		
 		if (abil == null) {
 			return false;
+		} else if (bPlayer.getBoundAbility() == null) {
+			return false;
 		} else if (!bPlayer.getBoundAbilityName().equals(ability)) {
 			return false;
 		} else if (canbend && !bPlayer.canBend(abil)) {
+			return false;
+		} else if (GeneralMethods.isRegionProtectedFromBuild(player, ability, player.getLocation())) {
+			return false;
+		} else if (GeneralMethods.isRegionProtectedFromBuild(player, ability, player.getEyeLocation())) {
 			return false;
 		}
 		

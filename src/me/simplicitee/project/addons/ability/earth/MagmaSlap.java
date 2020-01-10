@@ -177,7 +177,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	}
 	
 	public static boolean isBlock(FallingBlock fb) {
-		return fb.hasMetadata("lavaflux");
+		return fb.hasMetadata("magmaslap");
 	}
 
 	@Override

@@ -12,6 +12,7 @@ permissions:
   projectaddons.player:
     default: true
     children:
+      bending.air.sound: true
       bending.ability.firedisc: true
       bending.ability.flamebreath: true
       bending.ability.plantarmor: true
@@ -41,6 +42,9 @@ permissions:
       bending.ability.turbojet: true
       bending.ability.bulwark: true
       bending.ability.electrify: true
+      bending.ability.vocalmimicry: true
+      bending.ability.soundwave: true
+      bending.ability.deafen: true
       bending.ability.landlaunch: true
       bending.ability.hydrojet: true
       bending.ability.tailwind: true

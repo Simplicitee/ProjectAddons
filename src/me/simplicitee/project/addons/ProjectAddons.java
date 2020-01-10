@@ -7,6 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.projectkorra.projectkorra.Element;
+import com.projectkorra.projectkorra.Element.ElementType;
+import com.projectkorra.projectkorra.Element.SubElement;
 import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.Collision;
@@ -28,6 +31,7 @@ public class ProjectAddons extends JavaPlugin {
 	private BoardManager boards;
 	private CustomMethods methods;
 	private MainListener listener;
+	private Element soundElement;
 
 	@Override
 	public void onEnable() {
@@ -35,6 +39,12 @@ public class ProjectAddons extends JavaPlugin {
 		
 		this.config = new Config(new File("project_addons.yml"));
 		this.setupConfig();
+		soundElement = new SubElement("Sound", Element.AIR, ElementType.BENDING, this) {
+			@Override
+			public ChatColor getColor() {
+				return Element.AIR.getSubColor();
+			}
+		};
 		
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.project.addons.ability");
 		
@@ -73,6 +83,10 @@ public class ProjectAddons extends JavaPlugin {
 	
 	public String version() {
 		return prefix() + " v." + this.getDescription().getVersion();
+	}
+	
+	public Element getSoundElement() {
+		return soundElement;
 	}
 	
 	@Override
@@ -115,6 +129,12 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Avatar.EnergyBeam.EasterEgg", true);
 		
 		// ---- Airbending ----
+		
+		// Deafen
+		c.addDefault("Abilities.Air.Deafen.Enabled", true);
+		c.addDefault("Abilities.Air.Deafen.Cooldown", 10000);
+		c.addDefault("Abilities.Air.Deafen.Duration", 6000);
+		
 		// GaleGust
 		c.addDefault("Abilities.Air.GaleGust.Enabled", true);
 		c.addDefault("Abilities.Air.GaleGust.Cooldown", 9000);
@@ -122,6 +142,20 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Air.GaleGust.Radius", 1);
 		c.addDefault("Abilities.Air.GaleGust.Range", 18);
 		c.addDefault("Abilities.Air.GaleGust.Knockback", 0.67);
+		
+		// SonicWave
+		c.addDefault("Abilities.Air.SonicWave.Enabled", true);
+		c.addDefault("Abilities.Air.SonicWave.Cooldown", 4000);
+		c.addDefault("Abilities.Air.SonicWave.Range", 25);
+		c.addDefault("Abilities.Air.SonicWave.Width", 10);
+		c.addDefault("Abilities.Air.SonicWave.Nausea.Duration", 120);
+		c.addDefault("Abilities.Air.SonicWave.Nausea.Power", 2);
+		
+		// VocalManipulation
+		c.addDefault("Abilities.Air.VocalMimicry.Enabled", true);
+		c.addDefault("Abilities.Air.VocalMimicry.Volume", 0.7);
+		c.addDefault("Abilities.Air.VocalMimicry.Pitch", 1);
+		c.addDefault("Abilities.Air.VocalMimicry.SoundBlacklist", Arrays.asList("SOUND_NAME_HERE"));
 		
 		// Zephyr
 		c.addDefault("Abilities.Air.Zephyr.Enabled", true);

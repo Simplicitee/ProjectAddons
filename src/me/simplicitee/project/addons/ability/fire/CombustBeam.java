@@ -191,16 +191,20 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	}
 	
 	public void explode() {
-		player.getWorld().createExplosion(curr, (float) power, true);
-		for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
-			if (e instanceof LivingEntity) {
-				double knockback = power / (0.3 + e.getLocation().distance(curr));
-				Vector v = GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback);
-				e.setVelocity(v);
-				new HorizontalVelocityTracker(e, player, 4000, this);
+		if (!charging) {
+			player.getWorld().createExplosion(curr, (float) power, true);
+			
+			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
+				if (e instanceof LivingEntity) {
+					double knockback = power / (0.3 + e.getLocation().distance(curr));
+					Vector v = GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback);
+					e.setVelocity(v);
+					new HorizontalVelocityTracker(e, player, 4000, this);
+				}
 			}
+			
+			remove();
 		}
-		remove();
 	}
 	
 	@Override
