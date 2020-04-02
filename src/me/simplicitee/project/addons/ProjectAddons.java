@@ -242,6 +242,15 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Earth.Shrapnel.Blast.Spread", 24);
 		c.addDefault("Abilities.Earth.Shrapnel.Blast.Speed", 1.7);
 		
+		// RockSlide
+		c.addDefault("Combos.Earth.RockSlide.Enabled", true);
+		c.addDefault("Combos.Earth.RockSlide.Cooldown", 7000);
+		c.addDefault("Combos.Earth.RockSlide.Damage", 1);
+		c.addDefault("Combos.Earth.RockSlide.Knockback", 0.9);
+		c.addDefault("Combos.Earth.RockSlide.Knockup", 0.4);
+		c.addDefault("Combos.Earth.RockSlide.Speed", 1.1);
+		c.addDefault("Combos.Earth.RockSlide.RequiredRockCount", 6);
+		
 		// ---- Firebending ----
 		// ArcSpark
 		c.addDefault("Abilities.Fire.ArcSpark.Enabled", true);
@@ -263,6 +272,16 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Angle", 70);
 		c.addDefault("Abilities.Fire.CombustBeam.Maximum.ChargeTime", 5000);
 		c.addDefault("Abilities.Fire.CombustBeam.InterruptedDamage", 10);
+		
+		// ChargeBolt
+		c.addDefault("Abilities.Fire.ChargeBolt.Enabled", true);
+		c.addDefault("Abilities.Fire.ChargeBolt.Damage", 2);
+		c.addDefault("Abilities.Fire.ChargeBolt.Cooldown", 8000);
+		c.addDefault("Abilities.Fire.ChargeBolt.Speed", 6);
+		c.addDefault("Abilities.Fire.ChargeBolt.ChargeTime", 3000);
+		c.addDefault("Abilities.Fire.ChargeBolt.BoltRange", 26);
+		c.addDefault("Abilities.Fire.ChargeBolt.BlastRadius", 13);
+		c.addDefault("Abilities.Fire.ChargeBolt.DischargeBoltCount", 6);
 		
 		// Electrify
 		c.addDefault("Abilities.Fire.Electrify.Enabled", true);
@@ -318,7 +337,7 @@ public class ProjectAddons extends JavaPlugin {
 		// ---- Waterbending ----
 		// Hydrojet
 		c.addDefault("Passives.Water.Hydrojet.Enabled", true);
-		c.addDefault("Passives.Water.Hydrojet.Power", 8);
+		c.addDefault("Passives.Water.Hydrojet.Speed", 8);
 		
 		// RazorLeaf
 		c.addDefault("Abilities.Water.RazorLeaf.Enabled", true);
@@ -389,10 +408,20 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Water.LeafStorm.Damage", 0.5);
 		c.addDefault("Combos.Water.LeafStorm.Radius", 6);
 		
+		// MistShards
+		c.addDefault("Combos.Water.MistShards.Enabled", true);
+		c.addDefault("Combos.Water.MistShards.Cooldown", 7000);
+		c.addDefault("Combos.Water.MistShards.Damage", 1);
+		c.addDefault("Combos.Water.MistShards.Range", 20);
+		c.addDefault("Combos.Water.MistShards.IcicleCount", 8);
+		
 		// ---- Chiblocking ----
 		// Dodging
 		c.addDefault("Passives.Chi.Dodging.Enabled", true);
 		c.addDefault("Passives.Chi.Dodging.Chance", 18);
+		
+		// Camouflage
+		c.addDefault("Passives.Chi.Camouflage.Enabled", true);
 		
 		// Jab
 		c.addDefault("Abilities.Chi.Jab.Enabled", true);

@@ -1,7 +1,7 @@
 name: ProjectAddons
 author: Simplicitee
-api-version: 1.13
-version: 1.0.5
+api-version: 1.15
+version: 1.0.6
 main: me.simplicitee.project.addons.ProjectAddons
 depend: [ProjectKorra]
 commands:
@@ -47,6 +47,10 @@ permissions:
       bending.ability.deafen: true
       bending.ability.landlaunch: true
       bending.ability.hydrojet: true
+      bending.ability.chargebolt: true
+      bending.ability.mistshards: true
+      bending.ability.camouflage: true
+      bending.ability.rockslide: true
       bending.ability.tailwind: true
   bending.ability.plantarmor:
     children:

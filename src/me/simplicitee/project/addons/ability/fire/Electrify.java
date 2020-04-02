@@ -78,6 +78,11 @@ public class Electrify extends LightningAbility implements AddonAbility {
 			remove();
 			return;
 		}
+		
+		if (!ProjectAddons.instance.getConfig().getStringList("Properties.MetallicBlocks").contains(block.getType().toString()) && block.getType() != Material.WATER) {
+			remove();
+			return;
+		}
 
 		if (spread > 0) {
 			BlockFace[] faces = {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
@@ -110,8 +115,8 @@ public class Electrify extends LightningAbility implements AddonAbility {
 			}
 		}
 		
-		ProjectAddons.instance.getMethods().playLightningParticles(center, 1, 0.5, 0.5, 0.5);
 		if (Math.random() < 0.15) {
+			ProjectAddons.instance.getMethods().playLightningParticles(center, 1, 0.5, 0.5, 0.5);
 			playLightningbendingSound(center);
 		}
 	}

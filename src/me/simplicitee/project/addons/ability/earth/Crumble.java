@@ -105,9 +105,14 @@ public class Crumble extends SandAbility implements AddonAbility {
 			Block block = center.getRelative((int)x, 0, (int)z);
 			block = GeneralMethods.getTopBlock(block.getLocation(), 2);
 			
-			if (block.isPassable() && !block.isLiquid()) {
-				block.breakNaturally();
+			int i = 0;
+			while (block.isPassable() && i < 2) {
+				if (isPlant(block)) {
+					new TempBlock(block, Material.AIR).setRevertTime(revertTime);
+				}
+				
 				block = block.getRelative(BlockFace.DOWN);
+				i++;
 			}
 			
 			if (TempBlock.isTempBlock(block)) {

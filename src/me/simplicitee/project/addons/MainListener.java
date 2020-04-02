@@ -72,11 +72,13 @@ import me.simplicitee.project.addons.ability.earth.QuickWeld;
 import me.simplicitee.project.addons.ability.earth.ShrapnelBlast;
 import me.simplicitee.project.addons.ability.earth.ShrapnelShot;
 import me.simplicitee.project.addons.ability.fire.ArcSpark;
+import me.simplicitee.project.addons.ability.fire.ChargeBolt;
 import me.simplicitee.project.addons.ability.fire.CombustBeam;
 import me.simplicitee.project.addons.ability.fire.Electrify;
 import me.simplicitee.project.addons.ability.fire.Explode;
 import me.simplicitee.project.addons.ability.fire.FireDisc;
 import me.simplicitee.project.addons.ability.fire.Jets;
+import me.simplicitee.project.addons.ability.water.MistShards;
 import me.simplicitee.project.addons.ability.water.PlantArmor;
 import me.simplicitee.project.addons.ability.water.RazorLeaf;
 
@@ -182,6 +184,14 @@ public class MainListener implements Listener {
 			}
 		} else if (canBend(player, "SonicWave")) {
 			new SonicWave(player);
+		} else if (canBend(player, "ChargeBolt")) {
+			if (CoreAbility.hasAbility(player, ChargeBolt.class)) {
+				CoreAbility.getAbility(player, ChargeBolt.class).bolt();
+			}
+		} else if (canBend(player, "IceBlast", false)) {
+			if (CoreAbility.hasAbility(player, MistShards.class)) {
+				CoreAbility.getAbility(player, MistShards.class).clickFunction();
+			}
 		}
 	}
 	
@@ -257,6 +267,8 @@ public class MainListener implements Listener {
 			new VocalMimicry(player);
 		} else if (canBend(player, "Deafen")) {
 			new Deafen(player);
+		} else if (canBend(player, "ChargeBolt")) {
+			new ChargeBolt(player);
 		}
 	}
 	
@@ -298,6 +310,8 @@ public class MainListener implements Listener {
 			} else if (fb.hasMetadata("bulwark")) {
 				event.setCancelled(true);
 				fb.remove();
+			} else if (fb.hasMetadata("rockslide")) {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -354,7 +368,7 @@ public class MainListener implements Listener {
 			
 			Dodging dodge = CoreAbility.getAbility(player, Dodging.class);
 				
-			if (dodge != null && bPlayer.canBendPassive(dodge)) {
+			if (dodge != null && bPlayer.canBendPassive(dodge) && bPlayer.isElementToggled(Element.CHI)) {
 				if (dodge.check()) {
 					event.setCancelled(true);
 					ActionBar.sendActionBar(ChatColor.LIGHT_PURPLE + "!> " + Element.CHI.getColor() + "Dodged" + ChatColor.LIGHT_PURPLE + " <!", player);

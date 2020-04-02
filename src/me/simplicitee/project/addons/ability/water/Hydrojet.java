@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.PassiveAbility;
 import com.projectkorra.projectkorra.ability.WaterAbility;
@@ -21,11 +22,13 @@ public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbili
 		super(player);
 		
 		amp = ProjectAddons.instance.getConfig().getInt("Passives.Water.Hydrojet.Speed");
+		
+		start();
 	}
 
 	@Override
 	public void progress() {
-		if (player.isSwimming()) {
+		if (bPlayer.isElementToggled(Element.WATER) && player.isSwimming()) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 25, amp), true);
 		}
 	}
@@ -37,7 +40,7 @@ public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbili
 
 	@Override
 	public boolean isHarmlessAbility() {
-		return false;
+		return true;
 	}
 
 	@Override

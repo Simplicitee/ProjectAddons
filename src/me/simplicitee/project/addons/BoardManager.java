@@ -148,7 +148,7 @@ public class BoardManager {
 				name = name.substring(0, 15);
 			}
 			
-			String score = prefix + color + format + name;
+			String score = "§" + i + "§r" + prefix + color + format + name;
 			
 			if (!scores.containsKey(-i)) {
 				bendingboard.getScore(score).setScore(-i);

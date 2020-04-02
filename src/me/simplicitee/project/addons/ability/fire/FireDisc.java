@@ -54,8 +54,6 @@ public class FireDisc extends FireAbility implements AddonAbility{
 		}
 		
 		if (bPlayer.isAvatarState()) {
-			this.damage = AvatarState.getValue(damage);
-			this.range = AvatarState.getValue(range);
 			this.control = true;
 			this.cooldown = 0;
 		}

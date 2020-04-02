@@ -129,7 +129,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	public PlantArmor(Player player, ClickType type) {
 		super(player);
 		
-		if (bPlayer.isOnCooldown(this)) {
+		if (!bPlayer.canBendIgnoreBinds(this)) {
 			return;
 		} else if (hasAbility(player, EarthArmor.class)) {
 			return;
@@ -216,6 +216,11 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Override
 	public void progress() {
 		if (!player.isOnline() || player.isDead()) {
+			remove();
+			return;
+		}
+		
+		if (!bPlayer.canBendIgnoreBinds(this)) {
 			remove();
 			return;
 		}
