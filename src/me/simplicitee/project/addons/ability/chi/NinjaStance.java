@@ -103,13 +103,13 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 				if (System.currentTimeMillis() >= stealthReadyStart + stealthDuration) {
 					stopStealth();
 				} else {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 5, 2, true, false), true);
+					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 5, 2, true, false));
 				}
 			}
 		}
 		
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, speedAmp, true, false), true);
-		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 5, jumpAmp, true, false), true);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, speedAmp, true, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 5, jumpAmp, true, false));
 	}
 
 	@Override

@@ -30,6 +30,10 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.DAMAGE)
+	private double damage;
+	@Attribute(Attribute.SPEED)
+	private double throwSpeed;
 	
 	private Set<Location> locs;
 	private Set<Block> blocks;
@@ -52,6 +56,8 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		}
 		
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Bulwark.Cooldown");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Bulwark.Damage");
+		this.throwSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Bulwark.ThrowSpeed");
 		this.locs = new HashSet<>();
 		this.blocks = new HashSet<>();
 		this.fbs = new HashSet<>();
@@ -120,7 +126,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 				
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 0.8)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-						DamageHandler.damageEntity(e, 1, this);
+						DamageHandler.damageEntity(e, damage, this);
 						removal.add(fb);
 						fb.remove();
 						break;
@@ -169,7 +175,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.5, 0.5), data.getMaterial(), data);
 			fb.setDropItem(false);
 			fb.setMetadata("bulwark", new FixedMetadataValue(ProjectAddons.instance, this));
-			fb.setVelocity(player.getEyeLocation().getDirection().setY(0.195).normalize().multiply(0.9));
+			fb.setVelocity(player.getEyeLocation().getDirection().setY(0.195).normalize().multiply(throwSpeed));
 			fbs.add(fb);
 		}
 		

@@ -66,9 +66,9 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		this.next = 50;
 		this.last = 0;
 		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.MagmaSlap.RevertTime");
-		this.start = player.getLocation().clone().subtract(0, 1, 0);
+		this.start = player.getLocation().subtract(0, 1, 0);
 		this.start.setPitch(0);
-		this.start.add(start.getDirection().clone().multiply(offset));
+		this.start.add(start.getDirection().multiply(offset));
 		this.curr = start.clone();
 		this.tempBlocks = new ArrayList<>();
 	}

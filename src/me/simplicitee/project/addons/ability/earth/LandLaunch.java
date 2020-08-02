@@ -28,7 +28,7 @@ public class LandLaunch extends EarthAbility implements AddonAbility, PassiveAbi
 	@Override
 	public void progress() {
 		if (bPlayer.isElementToggled(Element.EARTH) && player.isOnGround() && isEarthbendable(player.getLocation().getBlock().getRelative(BlockFace.DOWN))) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, amp), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, amp));
 		}
 	}
 

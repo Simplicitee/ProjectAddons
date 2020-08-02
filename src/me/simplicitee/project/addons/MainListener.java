@@ -40,6 +40,7 @@ import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
+import com.projectkorra.projectkorra.event.AbilityStartEvent;
 import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
@@ -65,7 +66,6 @@ import me.simplicitee.project.addons.ability.earth.Bulwark;
 import me.simplicitee.project.addons.ability.earth.Crumble;
 import me.simplicitee.project.addons.ability.earth.Dig;
 import me.simplicitee.project.addons.ability.earth.EarthKick;
-import me.simplicitee.project.addons.ability.earth.Geoblast;
 import me.simplicitee.project.addons.ability.earth.LavaSurge;
 import me.simplicitee.project.addons.ability.earth.MagmaSlap;
 import me.simplicitee.project.addons.ability.earth.QuickWeld;
@@ -78,6 +78,7 @@ import me.simplicitee.project.addons.ability.fire.Electrify;
 import me.simplicitee.project.addons.ability.fire.Explode;
 import me.simplicitee.project.addons.ability.fire.FireDisc;
 import me.simplicitee.project.addons.ability.fire.Jets;
+import me.simplicitee.project.addons.ability.water.BloodGrip;
 import me.simplicitee.project.addons.ability.water.MistShards;
 import me.simplicitee.project.addons.ability.water.PlantArmor;
 import me.simplicitee.project.addons.ability.water.RazorLeaf;
@@ -117,9 +118,13 @@ public class MainListener implements Listener {
 		
 		if (ability == null) {
 			if (MultiAbilityManager.hasMultiAbilityBound(player)) {
-				if (MultiAbilityManager.getBoundMultiAbility(player).equalsIgnoreCase("PlantArmor")) {
+				String abil = MultiAbilityManager.getBoundMultiAbility(player);
+				if (abil.equalsIgnoreCase("PlantArmor")) {
 					ComboManager.addComboAbility(player, ClickType.LEFT_CLICK);
 					new PlantArmor(player, ClickType.LEFT_CLICK);
+				} else if (abil.equalsIgnoreCase("BloodGrip")) {
+					ComboManager.addComboAbility(player, ClickType.LEFT_CLICK);
+					new BloodGrip(player, false);
 				}
 			}
 			
@@ -160,10 +165,6 @@ public class MainListener implements Listener {
 			}
 		} else if (canBend(player, "Crumble")) {
 			new Crumble(player, ClickType.LEFT_CLICK);
-		} else if (canBend(player, "Geoblast", false)) {
-			if (CoreAbility.hasAbility(player, Geoblast.class)) {
-				CoreAbility.getAbility(player, Geoblast.class).launch();
-			}
 		} else if (canBend(player, "ArcSpark")) {
 			if (CoreAbility.hasAbility(player, ArcSpark.class)) {
 				CoreAbility.getAbility(player, ArcSpark.class).shoot();
@@ -255,8 +256,6 @@ public class MainListener implements Listener {
 			new Accretion(player);
 		} else if (canBend(player, "Crumble")) {
 			new Crumble(player, ClickType.SHIFT_UP);
-		} else if (canBend(player, "Geoblast")) {
-			new Geoblast(player);
 		} else if (canBend(player, "ArcSpark")) {
 			new ArcSpark(player);
 		} else if (canBend(player, "CombustBeam")) {
@@ -269,6 +268,15 @@ public class MainListener implements Listener {
 			new Deafen(player);
 		} else if (canBend(player, "ChargeBolt")) {
 			new ChargeBolt(player);
+		} else if (canBend(player, "BloodGrip")) {
+			new BloodGrip(player, true);
+		}
+	}
+	
+	@EventHandler
+	public void onAbilityStart(AbilityStartEvent event) {
+		if (BloodGrip.isBloodbent(event.getAbility().getPlayer())) {
+			event.setCancelled(ProjectAddons.instance.getConfig().getStringList("Abilities.Water.BloodGrip.BasicAbilities").contains(event.getAbility().getName()));
 		}
 	}
 	
@@ -316,7 +324,7 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDamage(EntityDamageEvent event) {
 		if (event.isCancelled()) return;
 		
@@ -355,7 +363,7 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onHitDamage(EntityDamageByEntityEvent event) {
 		if (event.isCancelled()) return;
 		

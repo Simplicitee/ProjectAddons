@@ -64,15 +64,12 @@ public class Deafen extends SoundAbility implements AddonAbility {
 			return;
 		}
 		
-		target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.BASS_GUITAR, Note.sharp(0, Tone.F));
-		
-		for (Sound sound : Sound.values()) {
-			if (sound.equals(Sound.BLOCK_NOTE_BLOCK_BASS)) {
-				continue;
-			}
-			
-			target.stopSound(sound);
+		for (int i = 0; i < 2; i++) {
+			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.BASS_GUITAR, Note.sharp(i, Tone.F));
+			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.PLING, Note.sharp(i, Tone.F));
+			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.FLUTE, Note.sharp(i, Tone.F));
 		}
+		
 	}
 
 	@Override

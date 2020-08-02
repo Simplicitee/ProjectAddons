@@ -92,8 +92,7 @@ public class BoardManager {
 		Objective bendingboard = scoreboard.getObjective("projectaddons");
 		
 		if (bendingboard == null) {
-			bendingboard = scoreboard.registerNewObjective("projectaddons", "", "");
-			bendingboard.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
+			bendingboard = scoreboard.registerNewObjective("projectaddons", "dummy", ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Properties.BendingBoard.Title")));
 			bendingboard.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 		

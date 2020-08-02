@@ -57,7 +57,7 @@ public class Dig extends EarthAbility implements AddonAbility {
 		
 		Block b = player.getTargetBlock(getTransparentMaterialSet(), 4);
 		if (!isEarthbendable(b)) {
-			player.setVelocity(player.getEyeLocation().getDirection().clone().normalize().multiply(0.9));
+			player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(0.9));
 			remove();
 			return;
 		}
@@ -72,8 +72,8 @@ public class Dig extends EarthAbility implements AddonAbility {
 		ParticleEffect.CRIT.display(player.getEyeLocation(), 7, 0.6, 0.6, 0.6);
 		
 		player.setGliding(true);
-		player.setVelocity(player.getEyeLocation().getDirection().clone().normalize().multiply(speed));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 5, 1), true);
+		player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(speed));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 5, 1));
 	}
 	
 	@Override

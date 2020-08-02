@@ -16,7 +16,6 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.CombustionAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
-import com.projectkorra.projectkorra.object.HorizontalVelocityTracker;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
@@ -51,6 +50,8 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	private boolean charging, charged;
 	private Location curr;
 	private Vector direction;
+	
+	private ParticleEffect[] flames = { ParticleEffect.FLAME, ParticleEffect.SOUL_FIRE_FLAME };
 	
 	public CombustBeam(Player player) {
 		super(player);
@@ -112,7 +113,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				this.power = maxPower;
 				this.charged = true;
 				GeneralMethods.displayColoredParticle("ff2424", player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
-				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 5), true);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 5));
 
 				ActionBar.sendActionBar(ChatColor.RED + "100%", player);
 			} else if (getStartTime() + minChargeTime <= System.currentTimeMillis()) {
@@ -126,9 +127,9 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				
 				ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
 				
-				HexColor color = new HexColor((int) (255 * percent), 36, 36);
+				HexColor color = new HexColor((int) (255 * percent), 136, 136);
 				GeneralMethods.displayColoredParticle(color.getHexcode(), player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
-				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, (int) (5 * percent)), true);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, (int) (5 * percent)));
 			}
 		} else {
 			if (player.isSneaking()) {
@@ -165,10 +166,18 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				
 				GeneralMethods.displayColoredParticle("fefefe", curr, 3, 0.1, 0.1, 0.1);
 				
-				for (int i = 0; i < 2; i++) {
-					Vector v = GeneralMethods.getOrthogonalVector(direction, rotation + 180 * i, 0.4);
-					Location p = curr.clone().add(v);
-					GeneralMethods.displayColoredParticle("ededed", p);
+				if (player.hasPermission("bending.ability.combustbeam.easteregg")) {
+					for (int i = 0; i < 2; i++) {
+						Vector v = GeneralMethods.getOrthogonalVector(direction, rotation + 180 * i, 0.4);
+						Location p = curr.clone().add(v);
+						flames[i].display(p, 1);
+					}
+				} else {
+					for (int i = 0; i < 2; i++) {
+						Vector v = GeneralMethods.getOrthogonalVector(direction, rotation + 180 * i, 0.4);
+						Location p = curr.clone().add(v);
+						GeneralMethods.displayColoredParticle("ededed", p);
+					}
 				}
 				
 				rotation += 10;
@@ -197,9 +206,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
 				if (e instanceof LivingEntity) {
 					double knockback = power / (0.3 + e.getLocation().distance(curr));
-					Vector v = GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback);
-					e.setVelocity(v);
-					new HorizontalVelocityTracker(e, player, 4000, this);
+					e.setVelocity(GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback));
 				}
 			}
 			

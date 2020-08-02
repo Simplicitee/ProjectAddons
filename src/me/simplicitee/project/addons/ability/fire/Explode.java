@@ -59,7 +59,7 @@ public class Explode extends CombustionAbility implements AddonAbility {
 		} else {
 			if (center != null) {
 				double offset = radius / 2;
-				ProjectAddons.instance.getMethods().playDynamicFireParticles(player, center, 7, offset, offset, offset);
+				playFirebendingParticles(center, 7, offset, offset, offset);
 				ParticleEffect.CRIT.display(center, 6, offset, offset, offset);
 				ParticleEffect.EXPLOSION_HUGE.display(center, 1);
 				player.getWorld().playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 2f, 3f);

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -25,6 +26,7 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.util.AnimationBuilder;
 
 public class LavaSurge extends LavaAbility implements AddonAbility {
 	
@@ -47,7 +49,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	
 	private int shotBlocks;
 	private Location sourceCenter;
-	private Set<Block> source;
+	private Map<Block, Boolean> source;
 	private boolean shot, launchedAll;
 	private Vector direction;
 	private Set<FallingBlock> blocks;
@@ -111,12 +113,6 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 				}
 			}
 			
-			for (Block b2 : list) {
-				if (isEarthbendable(b2)) {
-					new TempBlock(b2, Material.LAVA);
-				}
-			}
-			
 			total.addAll(list);
 		}
 		
@@ -124,7 +120,15 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 			return false;
 		}
 		
-		source = new HashSet<>(total);
+		this.source = new HashMap<>();
+		for (Block block : total) {
+			source.put(block, false);
+			new AnimationBuilder(block)
+			.effect(Particle.LAVA)
+			.addStep(Material.MAGMA_BLOCK, 1000)
+			.addDestroyTask(() -> { new TempBlock(block, GeneralMethods.getLavaData(0)); source.put(block, true); })
+			.start();
+		}
 		
 		return true;
 	}
@@ -197,7 +201,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		for (Block b : source) {
+		for (Block b : source.keySet()) {
 			TempBlock tb = null;
 			
 			if (TempBlock.isTempBlock(b)) {
@@ -256,7 +260,7 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	}
 
 	public void retargetSource() {
-		for (Block b : source) {
+		for (Block b : source.keySet()) {
 			if (TempBlock.isTempBlock(b)) {
 				TempBlock.get(b).revertBlock();
 			}
@@ -271,6 +275,12 @@ public class LavaSurge extends LavaAbility implements AddonAbility {
 	public void shoot() {
 		if (shot) {
 			return;
+		}
+		
+		for (boolean b : source.values()) {
+			if (!b) {
+				return;
+			}
 		}
 		
 		this.direction = player.getEyeLocation().getDirection().clone();

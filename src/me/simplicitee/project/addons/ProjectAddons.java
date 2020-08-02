@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.projectkorra.projectkorra.Element;
@@ -180,10 +181,13 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Earth.Accretion.Blocks", 8);
 		c.addDefault("Abilities.Earth.Accretion.SelectRange", 6);
 		c.addDefault("Abilities.Earth.Accretion.RevertTime", 20000);
+		c.addDefault("Abilities.Earth.Accretion.ThrowSpeed", 1.6);
 
 		// Bulwark
 		c.addDefault("Abilities.Earth.Bulwark.Enabled", true);
 		c.addDefault("Abilities.Earth.Bulwark.Cooldown", 6000);
+		c.addDefault("Abilities.Earth.Bulwark.Damage", 1);
+		c.addDefault("Abilities.Earth.Bulwark.ThrowSpeed", 0.94);
 		
 		// Crumble
 		c.addDefault("Abilities.Earth.Crumble.Enabled", true);
@@ -248,8 +252,10 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Earth.RockSlide.Damage", 1);
 		c.addDefault("Combos.Earth.RockSlide.Knockback", 0.9);
 		c.addDefault("Combos.Earth.RockSlide.Knockup", 0.4);
-		c.addDefault("Combos.Earth.RockSlide.Speed", 1.1);
+		c.addDefault("Combos.Earth.RockSlide.Speed", 0.68);
 		c.addDefault("Combos.Earth.RockSlide.RequiredRockCount", 6);
+		c.addDefault("Combos.Earth.RockSlide.TurningSpeed", 0.086);
+		c.addDefault("Combos.Earth.RockSlide.Duration", -1);
 		
 		// ---- Firebending ----
 		// ArcSpark
@@ -264,12 +270,12 @@ public class ProjectAddons extends JavaPlugin {
 		// CombustBeam
 		c.addDefault("Abilities.Fire.CombustBeam.Enabled", true);
 		c.addDefault("Abilities.Fire.CombustBeam.Range", 50);
-		c.addDefault("Abilities.Fire.CombustBeam.Cooldown", 3750);
-		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Power", 0.5);
-		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Angle", 1);
+		c.addDefault("Abilities.Fire.CombustBeam.Cooldown", 5000);
+		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Power", 0.6);
+		c.addDefault("Abilities.Fire.CombustBeam.Minimum.Angle", 0.2);
 		c.addDefault("Abilities.Fire.CombustBeam.Minimum.ChargeTime", 1000);
-		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Power", 2.2);
-		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Angle", 70);
+		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Power", 2.7);
+		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Angle", 40);
 		c.addDefault("Abilities.Fire.CombustBeam.Maximum.ChargeTime", 5000);
 		c.addDefault("Abilities.Fire.CombustBeam.InterruptedDamage", 10);
 		
@@ -301,9 +307,10 @@ public class ProjectAddons extends JavaPlugin {
 		
 		// FireDisc
 		c.addDefault("Abilities.Fire.FireDisc.Enabled", true);
+		c.addDefault("Abilities.Fire.FireDisc.Cooldown", 1700);
 		c.addDefault("Abilities.Fire.FireDisc.Damage", 1.5);
 		c.addDefault("Abilities.Fire.FireDisc.Range", 32);
-		c.addDefault("Abilities.Fire.FireDisc.Cooldown", 1700);
+		c.addDefault("Abilities.Fire.FireDisc.Knockback", 0.84);
 		c.addDefault("Abilities.Fire.FireDisc.Controllable", true);
 		c.addDefault("Abilities.Fire.FireDisc.RevertCutBlocks", true);
 		c.addDefault("Abilities.Fire.FireDisc.DropCutBlocks", false);
@@ -311,20 +318,23 @@ public class ProjectAddons extends JavaPlugin {
 
 		// Jets
 		c.addDefault("Abilities.Fire.Jets.Enabled", true);
-		c.addDefault("Abilities.Fire.Jets.Cooldown", 8000);
+		c.addDefault("Abilities.Fire.Jets.Cooldown.Minimum", 4000);
+		c.addDefault("Abilities.Fire.Jets.Cooldown.Maximum", 12000);
 		c.addDefault("Abilities.Fire.Jets.Duration", 20000);
 		c.addDefault("Abilities.Fire.Jets.FlySpeed", 0.65);
 		c.addDefault("Abilities.Fire.Jets.HoverSpeed", 0.065);
 		c.addDefault("Abilities.Fire.Jets.SpeedThreshold", 2.4);
 		c.addDefault("Abilities.Fire.Jets.DamageThreshold", 4);
+		c.addDefault("Abilities.Fire.Jets.MaxHeight", -1);
 		
 		// FlameBreath
 		c.addDefault("Combos.Fire.FlameBreath.Enabled", true);
 		c.addDefault("Combos.Fire.FlameBreath.Cooldown", 8000);
-		c.addDefault("Combos.Fire.FlameBreath.Damage", 1.25);
+		c.addDefault("Combos.Fire.FlameBreath.Damage", 0.2);
 		c.addDefault("Combos.Fire.FlameBreath.FireTick", 30);
 		c.addDefault("Combos.Fire.FlameBreath.Range", 5);
 		c.addDefault("Combos.Fire.FlameBreath.Duration", 4000);
+		c.addDefault("Combos.Fire.FlameBreath.Knockback", 0.3);
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Ground", true);
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Entities", true);
 		c.addDefault("Combos.Fire.FlameBreath.Rainbow", true);
@@ -339,6 +349,20 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Passives.Water.Hydrojet.Enabled", true);
 		c.addDefault("Passives.Water.Hydrojet.Speed", 8);
 		
+		// BloodGrip
+		/*
+		c.addDefault("Abilities.Water.BloodGrip.Enabled", true);
+		c.addDefault("Abilities.Water.BloodGrip.Cooldown", 6000);
+		c.addDefault("Abilities.Water.BloodGrip.Range", 8);
+		c.addDefault("Abilities.Water.BloodGrip.DragSpeed", 0.32);
+		c.addDefault("Abilities.Water.BloodGrip.ThrowPower", 1.3);
+		c.addDefault("Abilities.Water.BloodGrip.MangleDamage", 3);
+		c.addDefault("Abilities.Water.BloodGrip.SlamSpeed", 2);
+		c.addDefault("Abilities.Water.BloodGrip.DamageThreshold", 4);
+		c.addDefault("Abilities.Water.BloodGrip.EntityFilter", Arrays.asList(EntityType.ENDER_CRYSTAL.toString(), EntityType.ENDER_DRAGON.toString(), EntityType.ARMOR_STAND.toString(), EntityType.BLAZE.toString(), EntityType.WITHER.toString()));
+		c.addDefault("Abilities.Water.BloodGrip.BasicAbilities", Arrays.asList("AirBlast", "AirSwipe", "EarthBlast", "FireBlast", "FireDisc", "WaterManipulation"));
+		*/
+
 		// RazorLeaf
 		c.addDefault("Abilities.Water.RazorLeaf.Enabled", true);
 		c.addDefault("Abilities.Water.RazorLeaf.Cooldown", 3000);

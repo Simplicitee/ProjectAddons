@@ -79,10 +79,15 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 	public void progress() {
 		ParticleEffect.DAMAGE_INDICATOR.display(entity.getLocation(), 3, 0.2, 1.0, 0.2, 0.0004);
 		if (System.currentTimeMillis() >= getStartTime() + duration) {
-			entities.remove(entity.getEntityId());
 			remove();
-			bPlayer.addCooldown(this);
 		}
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		entities.remove(entity.getEntityId());
+		bPlayer.addCooldown(this);
 	}
 
 	@Override

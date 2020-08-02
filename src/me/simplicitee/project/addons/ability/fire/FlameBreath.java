@@ -2,14 +2,14 @@ package me.simplicitee.project.addons.ability.fire;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -25,7 +25,6 @@ import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformatio
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
-import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
@@ -45,6 +44,8 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	private boolean rainbow;
 	@Attribute(Attribute.DURATION)
 	private long duration;
+	@Attribute(Attribute.KNOCKBACK)
+	private double knockback;
 	
 	private Set<Breath> breaths;
 	private Queue<Color> colors;
@@ -88,6 +89,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		burnEntities = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Burn.Entities");
 		rainbow = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Rainbow");
 		duration = ProjectAddons.instance.getConfig().getLong("Combos.Fire.FlameBreath.Duration");
+		knockback = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.FlameBreath.Knockback");
 		breaths = new HashSet<>();
 		
 		int turnsPerColor = 8;
@@ -106,7 +108,8 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 
 	@Override
 	public Location getLocation() {
-		return player.getEyeLocation();
+		Iterator<Breath> iter = breaths.iterator();
+		return iter.hasNext() ? iter.next().getLocation() : player.getEyeLocation();
 	}
 	
 	@Override
@@ -170,7 +173,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 				if (rainbow && player.hasPermission("bending.ability.FlameBreath.rainbow")) {
 					GeneralMethods.displayColoredParticle(breath.getColor().getHex(), breath.getLocation(), amount, offset, offset, offset);
 				} else {
-					ProjectAddons.instance.getMethods().playDynamicFireParticles(player, breath.getLocation(), amount, offset, offset, offset);
+					playFirebendingParticles(breath.getLocation(), amount, offset, offset, offset);
 				}
 				
 				if (Math.random() > 0.6) {
@@ -180,7 +183,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 				for (Entity entity : GeneralMethods.getEntitiesAroundPoint(breath.getLocation(), offset * 2.5)) {
 					if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
 						DamageHandler.damageEntity(entity, damage, this);
-						entity.setVelocity(breath.getDirection().clone());
+						entity.setVelocity(breath.getDirection().multiply(knockback));
 						
 						if (burnEntities) {
 							entity.setFireTicks(fireTick + 10);
@@ -191,10 +194,9 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 				}
 				
 				if (burnGround) {
-					if (GeneralMethods.isSolid(breath.getLocation().getBlock().getRelative(BlockFace.DOWN))) {
-						if (breath.getLocation().getBlock().getType() != Material.FIRE) {
-							new TempBlock(breath.getLocation().getBlock(), Material.FIRE).setRevertTime((fireTick/20)*1000 + 1000);
-						}
+					Block ignitable = GeneralMethods.getTopBlock(breath.getLocation(), 0, 1);
+					if (ignitable != null && !isAir(ignitable.getType())) {
+						createTempFire(ignitable.getLocation());
 					}
 				}
 			} else {
@@ -290,7 +292,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		}
 		
 		public Vector getDirection() {
-			return dir;
+			return dir.clone();
 		}
 		
 		public Location getLocation() {

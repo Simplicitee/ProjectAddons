@@ -100,18 +100,18 @@ public class Electrify extends LightningAbility implements AddonAbility {
 					continue;
 				}
 				
+				LivingEntity living = (LivingEntity) e;
+				
 				if (e instanceof Player) {
 					BendingPlayer bp = BendingPlayer.getBendingPlayer((Player) e);
-					if (bp != null) {
-						if (!bp.canLightningbend()) {
-							((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness), true);
-							((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness), true);
-						}
+					if (bp != null && bp.canLightningbend()) {
+						continue;
 					}
-				} else {
-					((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness), true);
-					((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness), true);
 				}
+				
+				living.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness));
+				living.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness));
+				living.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, 255));
 			}
 		}
 		

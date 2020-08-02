@@ -2,6 +2,7 @@ package me.simplicitee.project.addons.ability.earth;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -108,15 +109,19 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 
 	@Override
 	public void progress() {
-		List<FallingBlock> removal = new ArrayList<>();
-		for (FallingBlock fb : kick) {
+		Iterator<FallingBlock> iter = kick.iterator();
+		while (iter.hasNext()) {
+			FallingBlock fb = iter.next();
+			
 			if (!BLOCKS.contains(fb)) {
-				removal.add(fb);
+				iter.remove();
+				fb.remove();
 				continue;
 			}
 			
 			if (fb == null || fb.isDead()) {
-				removal.add(fb);
+				BLOCKS.remove(fb);
+				iter.remove();
 				continue;
 			}
 			
@@ -126,20 +131,10 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 				if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
 					DamageHandler.damageEntity(e, player, damage, this);
 					((LivingEntity) e).setNoDamageTicks(0);
-					
-					if (!removal.contains(fb)) {
-						removal.add(fb);
-					}
+					iter.remove();
+					fb.remove();
 				}
 			}
-		}
-		
-		for (FallingBlock fb : removal) {
-			kick.remove(fb);
-			if (BLOCKS.contains(fb)) {
-				BLOCKS.remove(fb);
-			}
-			fb.remove();
 		}
 		
 		if (kick.isEmpty()) {

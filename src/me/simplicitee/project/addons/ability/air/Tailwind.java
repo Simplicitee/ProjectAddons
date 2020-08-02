@@ -58,9 +58,9 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 			return;
 		}
 		
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10, speed, true, false), true);
-		playAirbendingParticles(player.getEyeLocation(), 3, 0.3, 0.4, 0.3);
-		playAirbendingParticles(player.getLocation().clone().add(0, 0.6, 0), 4, 0.2, 0.5, 0.2);
+		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10, speed, true, false));
+		playAirbendingParticles(player.getEyeLocation(), 1, 0.1, 0.1, 0.1);
+		playAirbendingParticles(player.getLocation().add(0, 0.4, 0), 1, 0.06, 0.3, 0.06);
 	}
 	
 	@Override
@@ -120,9 +120,7 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 		ArrayList<AbilityInformation> combo = new ArrayList<>();
 		
 		combo.add(new AbilityInformation("AirBlast", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("AirBlast", ClickType.SHIFT_UP));
-		combo.add(new AbilityInformation("AirBlast", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("AirBlast", ClickType.SHIFT_UP));
+		combo.add(new AbilityInformation("AirBurst", ClickType.SHIFT_UP));
 		
 		return combo;
 	}
@@ -139,6 +137,6 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 	
 	@Override
 	public String getInstructions() {
-		return "AirBlast (Double Tap Sneak)";
+		return "Hold Sneak AirBlast > Release Sneak AirBurst";
 	}
 }

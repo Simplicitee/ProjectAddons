@@ -236,9 +236,9 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 						DamageHandler.damageEntity(e, player, damage, this);
 						damaged = true;
 					} else if (color == EnergyColor.GREEN) { //Healing
-						@SuppressWarnings("deprecation")
-						double health = le.getHealth() == le.getMaxHealth() ? le.getMaxHealth() : le.getHealth() + damage;
-						le.setHealth(health);
+						if (!le.hasPotionEffect(PotionEffectType.HEAL)) {
+							le.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 5, 1));
+						}
 					} else if (color == EnergyColor.ORANGE) { //Burning
 						DamageHandler.damageEntity(e, player, damage, this);
 						le.setFireTicks(90);
@@ -246,7 +246,7 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 					} else if (color == EnergyColor.BLACK) { //Vampirism
 						DamageHandler.damageEntity(e, player, damage, this);
 						if (!player.hasPotionEffect(PotionEffectType.HEAL)) {
-							player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 40, Math.round((float)damage)-1), true);
+							player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 40, Math.round((float)damage)-1));
 						}
 						damaged = true;
 					} else if (color == EnergyColor.RED) { //Stronger
@@ -255,56 +255,56 @@ public class EnergyBeam extends AvatarAbility implements AddonAbility{
 						damaged = true;
 					} else if (color == EnergyColor.PURPLE) { //Witchcraft
 						if (!le.hasPotionEffect(PotionEffectType.SLOW)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1));
 						}
 						
 						if (!le.hasPotionEffect(PotionEffectType.CONFUSION)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30, 1));
 						}
 						
 						if (!le.hasPotionEffect(PotionEffectType.GLOWING)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 80, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 80, 1));
 						}
 					} else if (color == EnergyColor.YELLOW) { //Floater
 						if (!le.hasPotionEffect(PotionEffectType.LEVITATION)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 9), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 9));
 						}
 					} else if (color == EnergyColor.WHITE) { //Telekinesis
 						e.setVelocity(GeneralMethods.getDirection(e.getLocation(), loc).multiply(0.5));
 						damaged = true;
 					} else if (color == EnergyColor.INDIGO) { //Blinding
 						if (!le.hasPotionEffect(PotionEffectType.BLINDNESS)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 6), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 6));
 						}
 						
 						if (!le.hasPotionEffect(PotionEffectType.WITHER)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 80, 2), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 80, 2));
 						}
 					} else if (color == EnergyColor.PINK) {
 						ParticleEffect.HEART.display(le.getEyeLocation(), 8, 0.4, 0.4, 0.4, 0.012);
 					} else if (color == EnergyColor.AQUA) {
 						le.setRemainingAir(le.getRemainingAir() - 1);
 					} else if (color == EnergyColor.GRAY) {
-						le.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,  30, 2), true);
+						le.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,  30, 2));
 					} else if (color == EnergyColor.RAINBOW) {
 						DamageHandler.damageEntity(e, player, damage, this);
 						le.setFireTicks(90);
 						le.setNoDamageTicks(0);
 						e.setVelocity(map.get(loc).clone().multiply(3));
 						if (!le.hasPotionEffect(PotionEffectType.SLOW)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 1));
 						}
 						if (!le.hasPotionEffect(PotionEffectType.CONFUSION)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 30, 1));
 						}
 						if (!le.hasPotionEffect(PotionEffectType.GLOWING)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 80, 1), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 80, 1));
 						}
 						if (!le.hasPotionEffect(PotionEffectType.LEVITATION)) {
-							le.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 9), true);
+							le.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 9));
 						}
 						if (!player.hasPotionEffect(PotionEffectType.HEAL)) {
-							player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 40, Math.round((float)damage)-1), true);
+							player.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 40, Math.round((float)damage)-1));
 						}
 						damaged = true;
 					}

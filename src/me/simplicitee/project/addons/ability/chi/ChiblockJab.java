@@ -59,7 +59,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public Location getLocation() {
-		return attacked.getLocation().clone().add(0, 1, 0);
+		return attacked.getLocation().add(0, 1, 0);
 	}
 
 	@Override
@@ -79,12 +79,17 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public void progress() {
-		ParticleEffect.CRIT.display(attacked.getLocation().clone().add(0, 1, 0), 3, 0.2, 1.0, 0.2, 0.04);
+		ParticleEffect.CRIT.display(attacked.getLocation().add(0, 1, 0), 3, 0.2, 1.0, 0.2, 0.04);
 		if (System.currentTimeMillis() >= getStartTime() + duration) {
 			remove();
-			bPlayer.addCooldown(this);
-			bp.unblockChi();
 		}
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		bPlayer.addCooldown(this);
+		bp.unblockChi();
 	}
 
 	@Override
@@ -103,7 +108,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 	
 	@Override
 	public String getDescription() {
-		return "A special jab that has a much higher chance of blocking the enemy's chi!";
+		return "A special jab that will always chiblock the enemy!";
 	}
 
 	@Override

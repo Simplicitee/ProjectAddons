@@ -16,7 +16,6 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.AirAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
-import com.projectkorra.projectkorra.object.HorizontalVelocityTracker;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
@@ -48,12 +47,12 @@ public class GaleGust extends AirAbility implements AddonAbility {
 		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Air.GaleGust.Range");
 		
 		if (player.getMainHand() == MainHand.LEFT) {
-			current = GeneralMethods.getLeftSide(player.getLocation().clone().add(0, 1.2, 0), 0.55);
+			current = GeneralMethods.getLeftSide(player.getLocation().add(0, 1.2, 0), 0.55);
 		} else {
-			current = GeneralMethods.getRightSide(player.getLocation().clone().add(0, 1.2, 0), 0.55);
+			current = GeneralMethods.getRightSide(player.getLocation().add(0, 1.2, 0), 0.55);
 		}
 		
-		this.direction = player.getEyeLocation().getDirection().clone().normalize();
+		this.direction = player.getEyeLocation().getDirection().normalize();
 		this.points = new HashSet<>();
 		
 		bPlayer.addCooldown(this);
@@ -83,7 +82,7 @@ public class GaleGust extends AirAbility implements AddonAbility {
 			return;
 		}
 		
-		points.add(new Point(current.clone().setDirection(direction.clone())));
+		points.add(new Point(current.clone().setDirection(direction)));
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(current, radius)) {
 			if (e.getEntityId() == player.getEntityId()) {
@@ -95,7 +94,6 @@ public class GaleGust extends AirAbility implements AddonAbility {
 			}
 			
 			e.setVelocity(direction.clone().multiply(knockback));
-			new HorizontalVelocityTracker(e, player, 0, this);
 			e.setFireTicks(0);
 		}
 		

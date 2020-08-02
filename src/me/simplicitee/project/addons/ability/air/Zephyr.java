@@ -46,7 +46,7 @@ public class Zephyr extends AirAbility implements AddonAbility {
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(player.getLocation(), radius)) {
 			if (e instanceof LivingEntity && ((LivingEntity) e).getEyeLocation().getY() >= player.getLocation().getY()) {
-				((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 2), true);
+				((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 2));
 				ParticleEffect.CLOUD.display(e.getLocation(), 2, 0.3, 0.15, 0.3);
 			}
 		}

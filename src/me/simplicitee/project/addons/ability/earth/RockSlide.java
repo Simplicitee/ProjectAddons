@@ -38,6 +38,10 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 	private long cooldown;
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
+	@Attribute("AngularSpeed")
+	private double angular;
+	@Attribute(Attribute.DURATION)
+	private long duration;
 	
 	private Vector direction;
 	private Set<FallingBlock> blocks;
@@ -60,9 +64,11 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 		this.speed = ProjectAddons.instance.getConfig().getDouble("Combos.Earth.RockSlide.Speed");
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Earth.RockSlide.Cooldown");
 		this.damage = ProjectAddons.instance.getConfig().getDouble("Combos.Earth.RockSlide.Damage");
-		this.direction = player.getEyeLocation().getDirection().clone().normalize().multiply(speed);
+		this.direction = player.getEyeLocation().getDirection().normalize().multiply(speed);
 		this.knockback = ProjectAddons.instance.getConfig().getDouble("Combos.Earth.RockSlide.Knockback");
 		this.knockup = ProjectAddons.instance.getConfig().getDouble("Combos.Earth.RockSlide.Knockup");
+		this.angular = ProjectAddons.instance.getConfig().getDouble("Combos.Earth.RockSlide.TurningSpeed");
+		this.duration = ProjectAddons.instance.getConfig().getLong("Combos.Earth.RockSlide.Duration");
 		this.direction.setY(0);
 		this.health = player.getHealth();
 		
@@ -85,6 +91,11 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 			remove();
 			return;
 		}
+		
+		if (duration > 0 && System.currentTimeMillis() > getStartTime() + duration) {
+			remove();
+			return;
+		}
 
 		Block b = getTopBlock(player.getLocation(), 3);
 		if (b == null) {
@@ -102,7 +113,7 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 			return;
 		}
 		
-		direction = direction.add(player.getEyeLocation().getDirection().clone().normalize().multiply(0.086)).normalize().multiply(speed);
+		direction.add(player.getEyeLocation().getDirection().normalize().multiply(angular)).normalize().multiply(speed);
 		
 		double wHeight = b.getY() + 2.1;
 		double pHeight = player.getLocation().getY();
@@ -141,7 +152,7 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 		
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
-				Location loc = player.getLocation().clone().add(i, 0, j);
+				Location loc = player.getLocation().add(i, 0, j);
 				Block b = getTopBlock(loc, 2);
 				
 				if (b == null) {

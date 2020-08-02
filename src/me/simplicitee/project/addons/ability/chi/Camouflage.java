@@ -26,7 +26,7 @@ public class Camouflage extends ChiAbility implements PassiveAbility {
 		}
 		
 		if (player.getLocation().getBlock().getType() == Material.TALL_GRASS && player.getEyeLocation().getBlock().getType() == Material.TALL_GRASS) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10, 10, true, false), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10, 10, true, false));
 		}
 	}
 

@@ -84,7 +84,7 @@ public class SonicWave extends SoundAbility implements AddonAbility {
 				
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc, 0.8)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-						((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration, amp), true);
+						((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, duration, amp));
 					}
 				}
 			}

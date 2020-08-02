@@ -1,7 +1,7 @@
 package me.simplicitee.project.addons.ability.earth;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -41,6 +41,8 @@ public class Accretion extends EarthAbility implements AddonAbility {
 	private long revertTime;
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	@Attribute(Attribute.SPEED)
+	private double throwSpeed;
 	
 	private Set<FallingBlock> tracker;
 	private Set<TempBlock> temps;
@@ -71,6 +73,8 @@ public class Accretion extends EarthAbility implements AddonAbility {
 		this.selectRange = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Accretion.SelectRange");
 		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Accretion.RevertTime");
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Accretion.Cooldown");
+		this.throwSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Accretion.ThrowSpeed");
+		
 		this.tracker = new HashSet<>();
 		this.temps = new HashSet<>();
 		
@@ -119,23 +123,21 @@ public class Accretion extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		List<FallingBlock> remove = new ArrayList<>();
-		
-		loop: for (FallingBlock fb : tracker) {
-			ParticleEffect.BLOCK_CRACK.display(fb.getLocation(), 2, 0.1, 0.1, 0.1, fb.getBlockData());
+		Iterator<FallingBlock> iter = tracker.iterator();
+		loop: while (iter.hasNext()) {
+			FallingBlock fb = iter.next();
+			ParticleEffect.BLOCK_CRACK.display(fb.getLocation(), 1, 0.1, 0.1, 0.1, fb.getBlockData());
 			
 			if (shot) {
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(fb.getLocation(), 1)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
 						entityCollision(fb, (LivingEntity) e);
-						remove.add(fb);
+						iter.remove();
 						continue loop;
 					}
 				}
 			}
 		}
-		
-		tracker.removeAll(remove);
 		
 		if (tracker.isEmpty()) {
 			remove();
@@ -208,7 +210,7 @@ public class Accretion extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		playEarthbendingSound(player.getLocation());
+		
 		
 		for (FallingBlock fb : tracker) {
 			Location target = null;
@@ -220,7 +222,8 @@ public class Accretion extends EarthAbility implements AddonAbility {
 				target = GeneralMethods.getTargetedLocation(player, 30);
 			}
 			
-			fb.setVelocity(GeneralMethods.getDirection(fb.getLocation(), target).normalize().multiply(1.5));
+			fb.setVelocity(GeneralMethods.getDirection(fb.getLocation(), target).add(new Vector(0, 0.185, 0)).normalize().multiply(throwSpeed));
+			playEarthbendingSound(fb.getLocation());
 		}
 		
 		bPlayer.addCooldown(this);

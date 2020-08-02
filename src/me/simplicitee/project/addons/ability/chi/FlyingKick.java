@@ -1,6 +1,7 @@
 package me.simplicitee.project.addons.ability.chi;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,7 +22,7 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
-public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility{
+public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility {
 	
 	@Attribute("LaunchPower")
 	private double launch;
@@ -29,6 +30,8 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 	private double damage;
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
+	
+	private List<Entity> affected;
 
 	public FlyingKick(Player player) {
 		super(player);
@@ -52,8 +55,9 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 		launch = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.LaunchPower");
 		damage = ProjectAddons.instance.getConfig().getDouble("Combos.Chi.FlyingKick.Damage");
 		cooldown = ProjectAddons.instance.getConfig().getLong("Combos.Chi.FlyingKick.Cooldown");
-		Vector v = player.getLocation().getDirection().add(new Vector(0, 0.25485, 0)).normalize().multiply(launch);
-		player.setVelocity(v);
+		affected = new ArrayList<>();
+		
+		player.setVelocity(player.getLocation().getDirection().add(new Vector(0, 0.25485, 0)).normalize().multiply(launch));
 		start();
 	}
 
@@ -101,12 +105,16 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 				return;
 			}
 		}
-	
 		
 		ParticleEffect.CRIT_MAGIC.display(player.getLocation(), 3, 0.2, 0.2, 0.2, 0.02);
 		for (Entity entity : GeneralMethods.getEntitiesAroundPoint(player.getLocation(), 2)) {
+			if (affected.contains(entity)) {
+				continue;
+			}
+			
 			if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
 				DamageHandler.damageEntity(entity, player, damage, this);
+				affected.add(entity);
 			}
 		}
 	}

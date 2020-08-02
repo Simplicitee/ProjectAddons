@@ -29,7 +29,7 @@ public class Hydrojet extends WaterAbility implements AddonAbility, PassiveAbili
 	@Override
 	public void progress() {
 		if (bPlayer.isElementToggled(Element.WATER) && player.isSwimming()) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 25, amp), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 25, amp));
 		}
 	}
 

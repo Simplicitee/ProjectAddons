@@ -21,7 +21,7 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
-public class ShrapnelShot extends MetalAbility implements AddonAbility{
+public class ShrapnelShot extends MetalAbility implements AddonAbility {
 	
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
@@ -57,7 +57,7 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 		
 		nugget = player.getWorld().dropItem(spawn, new ItemStack(m));
 		nugget.setPickupDelay(10);
-		nugget.setVelocity(player.getLocation().getDirection().clone().add(new Vector(0, 0.105, 0)).normalize().multiply(ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Speed")));
+		nugget.setVelocity(player.getLocation().getDirection().add(new Vector(0, 0.105, 0)).normalize().multiply(ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Speed")));
 		
 		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
 		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
@@ -143,12 +143,14 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility{
 		}
 		
 		ParticleEffect.CRIT.display(nugget.getLocation(), 1);
-		player.getWorld().playSound(nugget.getLocation(), Sound.ITEM_TRIDENT_HIT, 0.2f, 1f);
+		player.getWorld().playSound(nugget.getLocation(), Sound.ENTITY_ARROW_HIT, 0.2f, 1f);
+		double dmg = damage * (ProjectAddons.instance.getMethods().clamp(0.5, 4, nugget.getVelocity().length()) / 4);
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(nugget.getLocation(), 1.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
 				player.getWorld().playSound(e.getLocation(), Sound.BLOCK_ANVIL_PLACE, 0.4f, 1f);
-				DamageHandler.damageEntity(e, damage, this);
+				DamageHandler.damageEntity(e, dmg, this);
+				((LivingEntity) e).setNoDamageTicks(0);
 				nugget.remove();
 				remove();
 				return;
