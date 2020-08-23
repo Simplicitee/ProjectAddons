@@ -201,6 +201,10 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	
 	public void explode() {
 		if (!charging) {
+			if (GeneralMethods.isRegionProtectedFromBuild(player, curr)) {
+				return;
+			}
+			
 			player.getWorld().createExplosion(curr, (float) power, true);
 			
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
