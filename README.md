@@ -19,6 +19,7 @@
 - ChiblockingJab (combo)
 - FlyingKick (combo)
 - WeakeningJab (combo)
+- Camouflage (passive)
 - Dodging (passive)
 
 ### Earthbending
@@ -30,11 +31,13 @@
 - LavaSurge
 - MagmaSlap
 - QuickWeld
+- RockSlide
 - Shrapnel
 - LandLaunch (passive)
 
 ### Firebending
 - ArcSpark
+- ChargeBolt
 - CombustBeam
 - Electrify
 - Explode
@@ -47,4 +50,5 @@
 - PlantArmor
 - RazorLeaf
 - LeafStorm (combo)
+- MistShards (combo)
 - Hydrojet (passive)
