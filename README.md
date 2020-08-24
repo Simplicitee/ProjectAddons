@@ -6,7 +6,10 @@
 - EnergyBeam
 
 ### Airbending
+- Deafen
 - GaleGust
+- SonicWave
+- VocalMimicry
 - Zephyr
 - Tailwind (combo)
 
