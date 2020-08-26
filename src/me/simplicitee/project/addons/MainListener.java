@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffectType;
@@ -50,6 +52,7 @@ import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 
 import me.simplicitee.project.addons.ability.air.Deafen;
+import me.simplicitee.project.addons.ability.air.FlightPassive;
 import me.simplicitee.project.addons.ability.air.GaleGust;
 import me.simplicitee.project.addons.ability.air.SonicWave;
 import me.simplicitee.project.addons.ability.air.VocalMimicry;
@@ -276,7 +279,9 @@ public class MainListener implements Listener {
 	@EventHandler
 	public void onAbilityStart(AbilityStartEvent event) {
 		if (BloodGrip.isBloodbent(event.getAbility().getPlayer())) {
-			event.setCancelled(ProjectAddons.instance.getConfig().getStringList("Abilities.Water.BloodGrip.BasicAbilities").contains(event.getAbility().getName()));
+			event.setCancelled(!ProjectAddons.instance.getConfig().getStringList("Abilities.Water.BloodGrip.BasicAbilities").contains(event.getAbility().getName()));
+		} else if (CoreAbility.hasAbility(event.getAbility().getPlayer(), FlightPassive.class)) {
+			event.setCancelled(ProjectAddons.instance.getConfig().getStringList("Passives.Air.Flying.AbilityBlacklist").contains(event.getAbility().getName()));
 		}
 	}
 	
@@ -635,6 +640,25 @@ public class MainListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onFlightToggle(PlayerToggleFlightEvent event) {
+		Player player = event.getPlayer();
+		if (!CoreAbility.hasAbility(player, FlightPassive.class)) {
+			return;
+		}
+		
+		FlightPassive passive = CoreAbility.getAbility(player, FlightPassive.class);
+		
+		if (player.getGameMode() == GameMode.CREATIVE && player.getGameMode() == GameMode.SPECTATOR) {
+			return;
+		} else if (player.getInventory().getContents().length != 0) {
+			event.setCancelled(true);
+			return;
+		}
+		
+		passive.fly(event.isFlying());
+	}
+	
+	@EventHandler
 	public void onOffhandToggle(PlayerSwapHandItemsEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -645,6 +669,14 @@ public class MainListener implements Listener {
 		
 		if (bPlayer == null) { 
 			return;
+		}
+		
+		if (CoreAbility.hasAbility(player, FlightPassive.class)) {
+			FlightPassive passive = CoreAbility.getAbility(player, FlightPassive.class);
+			if (passive.isActive()) {
+				passive.toggleGlide();
+				return;
+			}
 		}
 		
 		if (player.hasPermission("bending.offhandswap")) {

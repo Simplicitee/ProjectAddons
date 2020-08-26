@@ -325,7 +325,9 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		
 		this.sources.clear();
 		this.shield.clear();
-		this.bar.removeAll();
+		if (this.bar != null) {
+			this.bar.removeAll();
+		}
 	}
 	
 	private void reset() {

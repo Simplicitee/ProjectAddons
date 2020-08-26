@@ -130,6 +130,12 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Avatar.EnergyBeam.EasterEgg", true);
 		
 		// ---- Airbending ----
+		// Flying
+		c.addDefault("Passives.Air.Flying.Enabled", true);
+		c.addDefault("Passives.Air.Flying.FlySpeed", 0.05);
+		c.addDefault("Passives.Air.Flying.Glide.StartSpeed", 0.8);
+		c.addDefault("Passives.Air.Flying.Glide.MaxSpeed", 1.6);
+		c.addDefault("Passives.Air.Flying.Acceleration", 0.001);
 		
 		// Deafen
 		c.addDefault("Abilities.Air.Deafen.Enabled", true);

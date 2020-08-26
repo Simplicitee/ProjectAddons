@@ -113,15 +113,15 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 		while (iter.hasNext()) {
 			FallingBlock fb = iter.next();
 			
-			if (!BLOCKS.contains(fb)) {
-				iter.remove();
-				fb.remove();
-				continue;
-			}
-			
 			if (fb == null || fb.isDead()) {
 				BLOCKS.remove(fb);
 				iter.remove();
+				continue;
+			}
+			
+			if (!BLOCKS.contains(fb)) {
+				iter.remove();
+				fb.remove();
 				continue;
 			}
 			
@@ -133,6 +133,8 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 					((LivingEntity) e).setNoDamageTicks(0);
 					iter.remove();
 					fb.remove();
+					BLOCKS.remove(fb);
+					break;
 				}
 			}
 		}

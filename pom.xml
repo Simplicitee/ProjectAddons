@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.simplicitee</groupId>
   <artifactId>projectaddons</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <name>ProjectAddons</name>
   
   <repositories>
@@ -23,7 +23,7 @@
 	<dependency>
 	  <groupId>com.projectkorra</groupId>
 	  <artifactId>projectkorra</artifactId>
-	  <version>1.8.9</version>
+	  <version>1.9.0</version>
 	  <scope>provided</scope>
 	</dependency>
   </dependencies>
