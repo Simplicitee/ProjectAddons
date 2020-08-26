@@ -280,7 +280,7 @@ public class MainListener implements Listener {
 	public void onAbilityStart(AbilityStartEvent event) {
 		if (BloodGrip.isBloodbent(event.getAbility().getPlayer())) {
 			event.setCancelled(!ProjectAddons.instance.getConfig().getStringList("Abilities.Water.BloodGrip.BasicAbilities").contains(event.getAbility().getName()));
-		} else if (CoreAbility.hasAbility(event.getAbility().getPlayer(), FlightPassive.class)) {
+		} else if (CoreAbility.hasAbility(event.getAbility().getPlayer(), FlightPassive.class) && CoreAbility.getAbility(event.getAbility().getPlayer(), FlightPassive.class).isActive()) {
 			event.setCancelled(ProjectAddons.instance.getConfig().getStringList("Passives.Air.Flying.AbilityBlacklist").contains(event.getAbility().getName()));
 		}
 	}

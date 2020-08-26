@@ -136,6 +136,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Passives.Air.Flying.Glide.StartSpeed", 0.8);
 		c.addDefault("Passives.Air.Flying.Glide.MaxSpeed", 1.6);
 		c.addDefault("Passives.Air.Flying.Acceleration", 0.001);
+		c.addDefault("Passives.Air.Flying.AbilityBlacklist", Arrays.asList("Tornado", "EarthSmash", "Surge", "Lightning"));
 		
 		// Deafen
 		c.addDefault("Abilities.Air.Deafen.Enabled", true);
