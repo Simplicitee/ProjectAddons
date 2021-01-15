@@ -3,6 +3,7 @@ package me.simplicitee.project.addons.ability.earth;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -122,7 +123,9 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 		direction.setY(dHeight * 0.2);
 		
 		player.setVelocity(direction);
-		playEarthbendingSound(player.getLocation());
+		if (ThreadLocalRandom.current().nextInt(6) == 0) {
+			playEarthbendingSound(player.getLocation());
+		}
 		
 		this.reloadBlocks();
 		
