@@ -170,7 +170,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		launched = true;
 		for (Block b : blocks) {
 			BlockData data = b.getBlockData();
-			b.setType(Material.AIR);
+			revertBlock(b);
 			
 			FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.5, 0.5), data.getMaterial(), data);
 			fb.setDropItem(false);

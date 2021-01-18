@@ -45,7 +45,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	
 	private double power, rotation, angleCheck;
 	private double health;
-	private long chargeTime;
+	private long chargeTime, revertTime;
 	private int counter;
 	private boolean charging, charged;
 	private Location curr;
@@ -68,6 +68,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 		this.minPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Minimum.Power");
 		this.maxPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Power");
 		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Range");
+		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.CombustBeam.RevertTime");
 		this.health = player.getHealth();
 		this.charging = true;
 		this.charged = false;
@@ -205,7 +206,13 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				return;
 			}
 			
-			player.getWorld().createExplosion(curr, (float) power, true);
+			ParticleEffect.EXPLOSION_HUGE.display(curr, 1);
+			player.getWorld().playSound(curr, Sound.ENTITY_GENERIC_EXPLODE, 1, 0);
+			for (Block block : GeneralMethods.getBlocksAroundPoint(curr, power)) {
+				if (block.getType().getBlastResistance() < power) {
+					new TempBlock(block, Material.AIR).setRevertTime(revertTime);
+				}
+			}
 			
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
 				if (e instanceof LivingEntity) {

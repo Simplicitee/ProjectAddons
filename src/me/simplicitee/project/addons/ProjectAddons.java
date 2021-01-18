@@ -285,6 +285,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Fire.CombustBeam.Maximum.Angle", 40);
 		c.addDefault("Abilities.Fire.CombustBeam.Maximum.ChargeTime", 5000);
 		c.addDefault("Abilities.Fire.CombustBeam.InterruptedDamage", 10);
+		c.addDefault("Abilities.Fire.CombustBeam.RevertTime", 13000);
 		
 		// ChargeBolt
 		c.addDefault("Abilities.Fire.ChargeBolt.Enabled", true);

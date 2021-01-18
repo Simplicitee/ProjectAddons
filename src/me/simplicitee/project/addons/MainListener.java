@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -648,11 +649,15 @@ public class MainListener implements Listener {
 		
 		FlightPassive passive = CoreAbility.getAbility(player, FlightPassive.class);
 		
-		if (player.getGameMode() == GameMode.CREATIVE && player.getGameMode() == GameMode.SPECTATOR) {
+		if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
 			return;
-		} else if (player.getInventory().getContents().length != 0) {
-			event.setCancelled(true);
-			return;
+		} else if (event.isFlying()) {
+			for (ItemStack is : player.getInventory().getContents()) {
+				if (is != null) {
+					event.setCancelled(true);
+					return;
+				}
+			}
 		}
 		
 		passive.fly(event.isFlying());

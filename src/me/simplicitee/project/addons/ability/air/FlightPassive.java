@@ -11,7 +11,7 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class FlightPassive extends FlightAbility implements AddonAbility, PassiveAbility {
 
-	private boolean toggled = false, active = false;
+	private boolean toggled = false, active = false, pickup;
 	private float original = 0.8f, speed, flySpeed, startSpeed, maxSpeed, acceleration;
 	
 	public FlightPassive(Player player) {
@@ -120,9 +120,12 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 		if (flying) {
 			active = true;
 			original = player.getFlySpeed();
+			pickup = player.getCanPickupItems();
 			player.setFlySpeed(flySpeed);
+			player.setCanPickupItems(false);
 		} else {
 			player.setFlySpeed(original);
+			player.setCanPickupItems(pickup);
 			active = false;
 		}
 	}

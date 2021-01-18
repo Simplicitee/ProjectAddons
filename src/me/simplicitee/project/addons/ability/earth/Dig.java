@@ -89,7 +89,7 @@ public class Dig extends EarthAbility implements AddonAbility {
 
 	@Override
 	public boolean isHarmlessAbility() {
-		return true;
+		return false;
 	}
 
 	@Override
