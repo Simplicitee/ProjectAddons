@@ -1,5 +1,8 @@
 package me.simplicitee.project.addons.ability.chi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,16 +19,12 @@ import me.simplicitee.project.addons.ProjectAddons;
 public class NinjaStance extends ChiAbility implements AddonAbility{
 	
 	@Attribute(Attribute.DURATION)
-	public long stealthDuration;
-	@Attribute("SpeedBoost")
-	public int speedAmp;
-	@Attribute("JumpBoost")
-	public int jumpAmp;
+	private long stealthDuration;
 	
-	public boolean stealth, stealthReady, stealthStarted;
-	public long stealthStart;
-	public long stealthChargeTime;
-	public long stealthReadyStart;
+	private boolean stealth, stealthReady, stealthStarted;
+	private long stealthStart, stealthChargeTime, stealthReadyStart, stealthCooldown;
+	private List<PotionEffect> effects = new ArrayList<>();
+	private PotionEffect invis = new PotionEffect(PotionEffectType.INVISIBILITY, 5, 2, true, false);	
 
 	public NinjaStance(Player player) {
 		super(player);
@@ -40,8 +39,9 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 		
 		stealthDuration = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Stealth.Duration");
 		stealthChargeTime = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Stealth.ChargeTime");
-		speedAmp = ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.SpeedAmplifier") + 1;
-		jumpAmp = ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.JumpAmplifier") + 1;
+		stealthCooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Chi.NinjaStance.Stealth.Cooldown");
+		effects.add(new PotionEffect(PotionEffectType.SPEED, 5, ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.SpeedAmplifier") + 1, true, false));
+		effects.add(new PotionEffect(PotionEffectType.JUMP, 5, ProjectAddons.instance.getConfig().getInt("Abilities.Chi.NinjaStance.JumpAmplifier") + 1, true, false));
 		
 		start();
 		bPlayer.setStance(this);
@@ -103,13 +103,12 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 				if (System.currentTimeMillis() >= stealthReadyStart + stealthDuration) {
 					stopStealth();
 				} else {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 5, 2, true, false));
+					player.addPotionEffect(invis);
 				}
 			}
 		}
 		
-		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, speedAmp, true, false));
-		player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 5, jumpAmp, true, false));
+		player.addPotionEffects(effects);
 	}
 
 	@Override
@@ -156,6 +155,11 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 		stealth = false;
 		stealthReady = false;
 		stealthStarted = false;
+		bPlayer.addCooldown("ninjastealth", stealthCooldown);
+	}
+	
+	public boolean isStealthed() {
+		return stealth && stealthStarted;
 	}
 	
 	public static double getDamageModifier() {

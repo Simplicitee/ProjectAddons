@@ -195,6 +195,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Earth.Bulwark.Cooldown", 6000);
 		c.addDefault("Abilities.Earth.Bulwark.Damage", 1);
 		c.addDefault("Abilities.Earth.Bulwark.ThrowSpeed", 0.94);
+		c.addDefault("Abilities.Earth.Bulwark.Height", 2);
 		
 		// Crumble
 		c.addDefault("Abilities.Earth.Crumble.Enabled", true);

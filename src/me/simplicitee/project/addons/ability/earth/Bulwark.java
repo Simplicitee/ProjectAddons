@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -28,20 +29,23 @@ import me.simplicitee.project.addons.ProjectAddons;
 
 public class Bulwark extends EarthAbility implements AddonAbility {
 
+	private static Vector UP = new Vector(0, 1, 0);
+	
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
 	@Attribute(Attribute.DAMAGE)
 	private double damage;
 	@Attribute(Attribute.SPEED)
 	private double throwSpeed;
+	@Attribute(Attribute.HEIGHT)
+	private int height;
 	
-	private Set<Location> locs;
 	private Set<Block> blocks;
 	private Set<FallingBlock> fbs;
-	private Set<RaiseEarth> parts;
 	private Location start;
-	private boolean launched;
+	private boolean launched = false, init = false;
 	private long launchTime;
+	private int step = 0;
 	
 	public Bulwark(Player player) {
 		super(player);
@@ -58,46 +62,50 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Bulwark.Cooldown");
 		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Bulwark.Damage");
 		this.throwSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Bulwark.ThrowSpeed");
-		this.locs = new HashSet<>();
+		this.height = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Bulwark.Height");
 		this.blocks = new HashSet<>();
-		this.fbs = new HashSet<>();
-		this.parts = new HashSet<>();
 		this.launchTime = 0;
-		this.launched = false;
-		
-		Location front = start.clone().add(player.getLocation().getDirection().setY(0).normalize().multiply(2.5));
-		Location left = GeneralMethods.getLeftSide(start, 3);
-		Location right = GeneralMethods.getRightSide(start, 3);
-		Vector toLeft = GeneralMethods.getDirection(front, left);
-		Vector toRight = GeneralMethods.getDirection(front, right);
-		
-		parts.add(new RaiseEarth(player, front, 3));
-		locs.add(front.clone());
-		double leftLength = toLeft.length() + 1;
-		double rightLength = toRight.length() + 1;
-		
-		for (double i = 0.5; i <= leftLength; i += 0.5) {
-			Vector v = toLeft.normalize().multiply(i);
-			front.add(v);
-			parts.add(new RaiseEarth(player, front, Math.min(2, (int) (leftLength - i))));
-			locs.add(front.clone());
-			front.subtract(v);
-		}
-		
-		for (double i = 0.5; i <= rightLength; i += 0.5) {
-			Vector v = toRight.normalize().multiply(i);
-			front.add(v);
-			parts.add(new RaiseEarth(player, front, Math.min(2, (int) (rightLength - i))));
-			locs.add(front.clone());
-			front.subtract(v);
-		}
 		
 		start();
+	}
+	
+	private void loadPillar(Location loc) {
+		Block top = GeneralMethods.getTopBlock(loc, 2);
+		
+		if (!isEarthbendable(top)) {
+			return;
+		}
+		
+		blocks.add(top);
 	}
 
 	@Override
 	public void progress() {
-		if (!launched) {
+		if (!init) {
+			Location front = start.clone().add(player.getLocation().getDirection().setY(0).normalize().multiply(2.5));
+			Vector toLeft = GeneralMethods.getDirection(front, GeneralMethods.getLeftSide(start, 3)).normalize().multiply(0.5);
+			Vector toRight = GeneralMethods.getDirection(front, GeneralMethods.getRightSide(start, 3)).normalize().multiply(0.5);
+			
+			loadPillar(front);
+			
+			for (double i = 0.5; i <= 3; i += 0.5) {
+				loadPillar(front.add(toLeft).clone());
+			}
+			
+			front.add(toLeft.normalize().multiply(-3));
+			
+			for (double i = 0.5; i <= 3; i += 0.5) {
+				loadPillar(front.add(toRight).clone());
+			}
+			init = true;
+		}
+		
+		if (step < 2) {
+			for (Block block : blocks) {
+				moveEarth(block, UP, height);
+			}
+			++step;
+		} else if (!launched) {
 			if (start.distance(player.getLocation().subtract(0, 1, 0)) > 1.5) {
 				remove();
 				return;
@@ -106,10 +114,6 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			if (!player.isSneaking()) {
 				remove();
 				return;
-			}
-			
-			for (RaiseEarth re : parts) {
-				blocks.addAll(re.getAffectedBlocks().values());
 			}
 		} else {
 			if (launchTime + 3000 <= System.currentTimeMillis()) {
@@ -147,17 +151,13 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		for (Location loc : locs) {
-			if (isAir(loc.getBlock().getType())) {
-				loc.add(0, 1, 0);
-			}
-			new Collapse(player, loc);
+		for (Block block : blocks) {
+			new Collapse(player, block.getLocation());
 		}
 		for (FallingBlock fb : fbs) {
 			fb.remove();
 		}
 		fbs.clear();
-		locs.clear();
 		blocks.clear();
 		bPlayer.addCooldown(this);
 	}
@@ -166,6 +166,8 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		if (launched) {
 			return;
 		}
+		
+		fbs = new HashSet<>();
 		
 		launched = true;
 		for (Block b : blocks) {
@@ -180,7 +182,6 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		}
 		
 		launchTime = System.currentTimeMillis();
-		locs.clear();
 		blocks.clear();
 	}
 

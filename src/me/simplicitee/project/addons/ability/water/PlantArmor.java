@@ -39,7 +39,6 @@ import com.projectkorra.projectkorra.earthbending.EarthArmor;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
-import com.projectkorra.projectkorra.util.MovementHandler;
 import com.projectkorra.projectkorra.util.TempArmor;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -66,24 +65,27 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private ArmorState state;
 	private ArmorAbility active;
 	private BossBar bar;
-	private ItemStack[] armors;
+	private ItemStack[] armors = new ItemStack[4];
 	private TempArmor armor;
 	private World origin;
 	private Location current;
 	private Vector direction;
+	private List<PotionEffect> effects = new ArrayList<>();
 	
 	// forming and dispersing variables
 	@Attribute("RequiredPlants")
 	private int requiredPlants;
 	@Attribute(Attribute.SELECT_RANGE)
 	private double selectRange;
-	private Set<TempBlock> sources;
+	private Set<TempBlock> sources = new HashSet<>();
 	
 	// vinewhip variables
 	@Attribute("VineWhip_Range")
 	private int maxRange;
 	@Attribute("VineWhip_Damage")
 	private double vdmg;
+	@Attribute("VineWhip_Speed")
+	private int vSpeed;
 	
 	private boolean forward;
 	private int range;
@@ -91,16 +93,15 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	// leafshield variables
 	@Attribute("LeafShield_Radius")
 	private int radius;
-	
-	private Set<TempBlock> shield;
+	private Set<TempBlock> shield = new HashSet<>();
 	
 	// tangle variables
 	@Attribute("Tangle_Radius")
 	private double tRadius;
-	@Attribute("Tangle_Duration")
-	private long tDuration;
 	@Attribute("Tangle_Range")
 	private double tRange;
+	private long tDuration;
+	private List<PotionEffect> tEffects = new ArrayList<>();
 	
 	private int angle;
 	
@@ -151,51 +152,35 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Jump") - 1;
 			this.armor = null;
 			
-			final ItemStack head = new ItemStack(Material.OAK_LEAVES, 1);
-			final ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
-			final ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
-			final ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
-
-			final LeatherArmorMeta metaChest = (LeatherArmorMeta) chestplate.getItemMeta();
-			final LeatherArmorMeta metaLegs = (LeatherArmorMeta) leggings.getItemMeta();
-			final LeatherArmorMeta metaBottom = (LeatherArmorMeta) boots.getItemMeta();
-
-			metaChest.setColor(Color.fromRGB(61, 153, 112));
-			metaLegs.setColor(Color.fromRGB(61, 153, 112));
-			metaBottom.setColor(Color.fromRGB(61, 153, 112));
-
-			chestplate.setItemMeta(metaChest);
-			leggings.setItemMeta(metaLegs);
-			boots.setItemMeta(metaBottom);
-
-			this.armors = new ItemStack[] { boots, leggings, chestplate, head };
-			
-			if (durability < 1000) {
-				durability = 1000;
-			} else if (durability > 10000) {
-				durability = 10000;
-			}
+			armors[0] = leafLeather(Material.LEATHER_BOOTS);
+			armors[1] = leafLeather(Material.LEATHER_LEGGINGS);
+			armors[2] = leafLeather(Material.LEATHER_CHESTPLATE);
+			armors[3] = new ItemStack(Material.OAK_LEAVES);
 			
 			this.state = ArmorState.FORMING;
-			this.active = ArmorAbility.NONE;
+			this.active = null;
 			this.origin = player.getWorld();
+			
+			this.effects.add(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, swim));
+			this.effects.add(new PotionEffect(PotionEffectType.SPEED, 5, speed));
+			this.effects.add(new PotionEffect(PotionEffectType.JUMP, 5, jump));
 			
 			this.requiredPlants = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.RequiredPlants");
 			this.selectRange = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SelectRange");
-			this.sources = new HashSet<>();
 			
 			this.forward = true;
 			this.range = 0;
 			this.maxRange = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Range");
 			this.vdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Damage");
 			
-			this.shield = new HashSet<>();
 			this.radius = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Radius");
 			
 			this.current = null;
 			this.tRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Radius");
 			this.tRange = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Range");
 			this.tDuration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.SubAbilities.Tangle.Duration");
+			this.tEffects.add(new PotionEffect(PotionEffectType.SLOW, (int) (tDuration / 1000 * 20), ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Tangle.Slowness"), true, false));
+			this.tEffects.add(new PotionEffect(PotionEffectType.JUMP, (int) (tDuration / 1000 * 20), 255, true, false));
 			this.angle = 0;
 			
 			this.gMax = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Grapple.Range");
@@ -211,6 +196,14 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			
 			start();
 		}
+	}
+	
+	private ItemStack leafLeather(Material type) {
+		ItemStack leather = new ItemStack(type);
+		LeatherArmorMeta meta = (LeatherArmorMeta) leather.getItemMeta();
+		meta.setColor(Color.fromRGB(61, 153, 112));
+		leather.setItemMeta(meta);
+		return leather;
 	}
 
 	@Override
@@ -245,23 +238,25 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		} else if (state == ArmorState.FORMED) {
 			bar.setProgress((double) durability / maxDurability);
 			
-			if (bar.getProgress() <= 0.5 && bar.getProgress() > 0.15) {
-				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.YELLOW + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
-				bar.setColor(BarColor.YELLOW);
-			} else if (bar.getProgress() <= 0.15) {
+			if (bar.getProgress() <= 0.15) {
 				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.RED    + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
 				bar.setColor(BarColor.RED);
+			} else if (bar.getProgress() <= 0.5) {
+				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.YELLOW + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
+				bar.setColor(BarColor.YELLOW);
 			} else {
 				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.GREEN  + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
 				bar.setColor(BarColor.GREEN);
 			}
 			
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, swim));
-			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5, speed));
-			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 5, jump));
+			player.addPotionEffects(effects);
 
-			if (active != ArmorAbility.NONE && player.getInventory().getHeldItemSlot() != active.getSlot()) {
+			if (active != null && player.getInventory().getHeldItemSlot() != active.getSlot()) {
 				this.reset();
+				return;
+			}
+			
+			if (active == null) {
 				return;
 			}
 			
@@ -289,7 +284,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 					break;
 				case RAZORLEAF:
 				case DISPERSE:
-				case NONE:
 					break;
 			}
 		} else {
@@ -307,21 +301,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.armor.revert();
 		}
 		
-		if (!sources.isEmpty()) {
-			for (TempBlock tb : sources) {
-				if (tb.getBlock().getType() == Material.AIR) {
-					tb.revertBlock();
-				}
-			}
-		}
-		
-		if (!shield.isEmpty()) {
-			for (TempBlock tb : shield) {
-				if (tb.getBlock().getType() == Material.AIR) {
-					tb.revertBlock();
-				}
-			}
-		}
+		sources.forEach((tb) -> tb.revertBlock());
+		shield.forEach((tb) -> tb.revertBlock());
 		
 		this.sources.clear();
 		this.shield.clear();
@@ -331,10 +312,10 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	private void reset() {
-		if (active != ArmorAbility.NONE) {
+		if (active != null) {
 			bPlayer.addCooldown(active.getName(), ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.SubAbilities." + active.getName() + ".Cooldown"));
 		
-			this.active = ArmorAbility.NONE;
+			this.active = null;
 		}
 		
 		if (active == ArmorAbility.LEAFSHIELD) {
@@ -361,7 +342,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	public void activate(int slot, ClickType type) {
-		if (this.active != ArmorAbility.NONE) {
+		if (this.active != null) {
 			return;
 		}
 		
@@ -393,10 +374,10 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			
 			if (ability == ArmorAbility.GRAPPLE) {
 				this.current = GeneralMethods.getRightSide(player.getLocation(), 0.45).add(0, 1, 0);
-				this.target = player.getTargetBlock(getTransparentMaterialSet(), gMax).getLocation().clone().add(0.5, 0.5, 0.5);
+				this.target = player.getTargetBlock(getTransparentMaterialSet(), gMax).getLocation().add(0.5, 0.5, 0.5);
 			} else {
 				this.current = player.getEyeLocation();
-				this.direction = current.getDirection().clone().normalize();
+				this.direction = current.getDirection().clone();
 			}
 		}
 	}
@@ -429,8 +410,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		if (!sources.isEmpty()) {
-			Location display = player.getLocation().clone();
-			for (int y = 0; y < sources.size(); y++) {
+			Location display = player.getLocation();
+			for (int y = 0; y < sources.size(); ++y) {
 				for (int angle = 0; angle < 360; angle += 15) {
 					double x = 0.5 * Math.cos(Math.toRadians(angle));
 					double z = 0.5 * Math.sin(Math.toRadians(angle));
@@ -454,40 +435,38 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	private void progressVineWhip() {
-		if (forward) {
-			range++;
-			
-			if (range >= maxRange) {
-				forward = false;
-				return;
-			}
-		} else {
-			range--;
-			
-			if (range <= 0) {
-				this.reset();	
-				return;
-			}
-		}
-		
-		Location last = GeneralMethods.getRightSide(player.getLocation().clone().add(0, 1, 0), 0.45);
-		last.getDirection().normalize().multiply(1.2);
-		
-		for (int i = 0; i < range; i++) {
-			last.add(last.getDirection());
-			
-			if (last.getBlock().getType().isSolid()) {
-				forward = false;
-				return;
-			}
-			
-			GeneralMethods.displayColoredParticle("3D9970", last, 3, 0.1, 0.1, 0.1);
-			
-			for (Entity e : GeneralMethods.getEntitiesAroundPoint(last, 1)) {
-				if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-					DamageHandler.damageEntity(e, vdmg, this);
-					this.forward = false;
+		for (int j = 0; j < vSpeed; ++j) {
+			if (forward) {
+				if (++range >= maxRange) {
+					forward = false;
 					return;
+				}
+			} else {
+				if (--range <= 0) {
+					this.reset();	
+					return;
+				}
+			}
+			
+			Location last = GeneralMethods.getRightSide(player.getLocation().add(0, 1, 0), 0.45);
+			last.getDirection().multiply(1.2);
+			
+			for (int i = 0; i < range; ++i) {
+				last.add(last.getDirection());
+				
+				if (last.getBlock().getType().isSolid()) {
+					forward = false;
+					return;
+				}
+				
+				GeneralMethods.displayColoredParticle("3D9970", last, 3, 0.1, 0.1, 0.1);
+				
+				for (Entity e : GeneralMethods.getEntitiesAroundPoint(last, 1)) {
+					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
+						DamageHandler.damageEntity(e, vdmg, this);
+						this.forward = false;
+						return;
+					}
 				}
 			}
 		}
@@ -506,24 +485,24 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			shield.clear();
 		}
 		
-		Vector direction = player.getEyeLocation().getDirection().clone();
-		Location center = player.getEyeLocation().clone().add(direction.normalize().multiply(radius + 1));
-		shield.add(new TempBlock(center.getBlock(), Material.OAK_LEAVES));
+		Vector direction = player.getEyeLocation().getDirection();
+		Location center = player.getEyeLocation().add(direction.multiply(3));
+		addShieldBlock(center.getBlock());
 		
-		for (int i = 1; i <= radius; i++) {
+		for (int i = 1; i <= radius; ++i) {
 			for (double angle = 0; angle < 360; angle += 360 / (i * 9)) {
 				Vector ortho = GeneralMethods.getOrthogonalVector(direction, angle, i);
 				center.add(ortho);
-				
-				Block b = center.getBlock();
-				
-				if (isAir(b.getType()) || b.isPassable()) {
-					if (!TempBlock.isTempBlock(b)) {
-						shield.add(new TempBlock(b, Material.OAK_LEAVES));
-					}
-				}
-				
+				addShieldBlock(center.getBlock());
 				center.subtract(ortho);
+			}
+		}
+	}
+	
+	private void addShieldBlock(Block block) {
+		if (isAir(block.getType()) || block.isPassable()) {
+			if (!TempBlock.isTempBlock(block)) {
+				shield.add(new TempBlock(block, Material.OAK_LEAVES));
 			}
 		}
 	}
@@ -543,31 +522,25 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(current, tRadius + 0.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-				new MovementHandler((LivingEntity) e, this).stopWithDuration(tDuration / 1000 * 20, ChatColor.DARK_AQUA + "* Tangled *");
+				((LivingEntity) e).addPotionEffects(tEffects);
 				new TempBlock(e.getLocation().getBlock(), Material.OAK_LEAVES).setRevertTime(tDuration);
-				new TempBlock(e.getLocation().clone().add(0, e.getHeight(), 0).getBlock(), Material.OAK_LEAVES).setRevertTime(tDuration);
-				
 				this.reset();
-				
 				return;
 			}
 		}
 		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; ++i) {
 			Vector ov = GeneralMethods.getOrthogonalVector(direction, (double) (angle + (120 * i)), tRadius);
-			Location pl = current.clone().add(ov.clone());
-			GeneralMethods.displayColoredParticle("3D9970", pl);
+			current.add(ov);
+			GeneralMethods.displayColoredParticle("3D9970", current);
+			current.subtract(ov);
 		}
 		
 		angle += 30;
-		
-		if (angle == 360) {
-			angle = 0;
-		}
 	}
 	
 	private void leap() {
-		Location ground = player.getLocation().clone();
+		Location ground = player.getLocation();
 		
 		for (double i = 0; i < 1; i += 0.25) {
 			for (int angle = 0; angle < 360; angle += 15) {
@@ -596,9 +569,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		if (!pulling) {
-			gRange++;
 		
-			if (gRange >= gMax) {
+			if (++gRange >= gMax) {
 				this.reset();
 				return;
 			}
@@ -608,7 +580,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		
 		Vector direction = GeneralMethods.getDirection(current, target).normalize();
 		
-		for (int i = 0; i < gRange; i++) {
+		for (int i = 0; i < gRange; ++i) {
 			current.add(direction);
 			
 			GeneralMethods.displayColoredParticle("3D9970", current);
@@ -755,15 +727,9 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	public ArrayList<MultiAbilityInfoSub> getMultiAbilities() {
 		ArrayList<MultiAbilityInfoSub> info = new ArrayList<>();
 		
-		info.add(new MultiAbilityInfoSub(ArmorAbility.VINEWHIP.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.RAZORLEAF.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAFSHIELD.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.TANGLE.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAP.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.GRAPPLE.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.LEAFDOME.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.REGENERATE.getName(), Element.PLANT));
-		info.add(new MultiAbilityInfoSub(ArmorAbility.DISPERSE.getName(), Element.PLANT));
+		for (ArmorAbility ability : ArmorAbility.values()) {
+			info.add(new MultiAbilityInfoSub(ability.getName(), Element.PLANT));
+		}
 		
 		return info;
 	}
@@ -780,7 +746,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 				ChatColor.WHITE + "\n[RazorLeaf] : " + ChatColor.DARK_AQUA + "Control a spinning disc of leaves to damage entities!" +
 				ChatColor.WHITE + "\n[LeafShield] : " + ChatColor.DARK_AQUA + "Hold a circular shield of leaves to block attacks!" +
 				ChatColor.WHITE + "\n[Tangle] : " + ChatColor.DARK_AQUA + "Shoot a bundle of vines to constrict enemies!" +
-				ChatColor.WHITE + "\n[Leap] : " + ChatColor.DARK_AQUA + "Launch yourself really high into the air!" +
+				ChatColor.WHITE + "\n[Leap] : " + ChatColor.DARK_AQUA + "Launch yourself really high into the air from the ground!" +
 				ChatColor.WHITE + "\n[Grapple] : " + ChatColor.DARK_AQUA + "Grapple to a point with your vines!" +
 				ChatColor.WHITE + "\n[LeafDome] : " + ChatColor.DARK_AQUA + "Surround your body in a dome of leaves!" +
 				ChatColor.WHITE + "\n[Regenerate] : " + ChatColor.DARK_AQUA + "Gather more plants to repair armor!" +
@@ -799,7 +765,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	public static enum ArmorAbility {
-		NONE("null", -1, false, ClickType.LEFT_CLICK, null),
 		VINEWHIP("VineWhip", 0, true, ClickType.LEFT_CLICK, null),
 		RAZORLEAF("RazorLeaf", 1, true, ClickType.SHIFT_DOWN, (player -> !CoreAbility.hasAbility(player, RazorLeaf.class))),
 		LEAFSHIELD("LeafShield", 2, true, ClickType.SHIFT_DOWN, null),
@@ -849,13 +814,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		public static ArmorAbility getAbility(int slot) {
-			for (ArmorAbility ability : ArmorAbility.values()) {
-				if (ability.getSlot() == slot) {
-					return ability;
-				}
-			}
-			
-			return NONE;
+			return values()[slot];
 		}
 	}
 	

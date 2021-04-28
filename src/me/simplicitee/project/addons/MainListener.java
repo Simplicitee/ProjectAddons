@@ -32,7 +32,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.projectkorra.projectkorra.BendingPlayer;
@@ -345,10 +344,7 @@ public class MainListener implements Listener {
 			}
 			
 			if (CoreAbility.hasAbility(player, NinjaStance.class)) {
-				NinjaStance ninja = CoreAbility.getAbility(player, NinjaStance.class);
-				if (ninja.stealth && ninja.stealthReady && player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-					ninja.stopStealth();
-				}
+				CoreAbility.getAbility(player, NinjaStance.class).stopStealth();
 			}
 			
 			if (MultiAbilityManager.hasMultiAbilityBound(player, "PlantArmor")) {
@@ -410,11 +406,7 @@ public class MainListener implements Listener {
 			if (GeneralMethods.isWeapon(damager.getInventory().getItemInMainHand().getType())) return;
 			
 			if (CoreAbility.hasAbility(damager, NinjaStance.class)) {
-				NinjaStance ninja = CoreAbility.getAbility(damager, NinjaStance.class);
-				if (ninja.stealth && ninja.stealthReady && damager.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
-					ninja.stopStealth();
-				}
-				
+				CoreAbility.getAbility(damager, NinjaStance.class).stopStealth();
 				event.setDamage(event.getDamage() * NinjaStance.getDamageModifier());
 			}
 			
