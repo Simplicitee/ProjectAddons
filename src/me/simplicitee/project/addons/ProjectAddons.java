@@ -396,6 +396,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Cooldown", 2000);
 		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Damage", 2);
 		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Range", 18);
+		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Speed", 3);
 		
 		// PlantArmor - RazorLeaf
 		c.addDefault("Abilities.Water.PlantArmor.SubAbilities.RazorLeaf.Cost", 150);

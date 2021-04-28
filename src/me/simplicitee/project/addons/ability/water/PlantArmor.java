@@ -143,7 +143,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		if (type == ClickType.SHIFT_DOWN) {
-			MultiAbilityManager.bindMultiAbility(player, "PlantArmor");
 			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
 			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Cooldown");
 			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Durability");
@@ -172,6 +171,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.range = 0;
 			this.maxRange = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Range");
 			this.vdmg = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Damage");
+			this.vSpeed = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.VineWhip.Speed");
 			
 			this.radius = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.LeafShield.Radius");
 			
@@ -401,6 +401,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.bar.setProgress((double) durability / maxDurability);
 			this.bar.addPlayer(player);
 			
+			MultiAbilityManager.bindMultiAbility(player, "PlantArmor");
 			return;
 		}
 		
@@ -459,7 +460,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 					return;
 				}
 				
-				GeneralMethods.displayColoredParticle("3D9970", last, 3, 0.1, 0.1, 0.1);
+				GeneralMethods.displayColoredParticle("3D9970", last, 1, 0.1, 0.1, 0.1);
 				
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(last, 1)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
