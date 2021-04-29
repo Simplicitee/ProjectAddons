@@ -20,6 +20,7 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.ParticleEffect;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.Util;
 
 public class ShrapnelShot extends MetalAbility implements AddonAbility {
 	
@@ -29,6 +30,7 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility {
 	private long cooldown;
 	
 	private Item nugget;
+	private double speed;
 
 	public ShrapnelShot(Player player) {
 		super(player);
@@ -53,14 +55,16 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility {
 		is.setAmount(is.getAmount() - 1);
 		player.getInventory().setItem(slot, is);
 		
+		this.speed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Speed");
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
+		
 		Location spawn = GeneralMethods.getRightSide(player.getLocation(), 0.12).add(0, 1.3, 0);
 		
 		nugget = player.getWorld().dropItem(spawn, new ItemStack(m));
 		nugget.setPickupDelay(10);
-		nugget.setVelocity(player.getLocation().getDirection().add(new Vector(0, 0.105, 0)).normalize().multiply(ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Speed")));
+		nugget.setVelocity(player.getLocation().getDirection().add(new Vector(0, 0.105, 0)).normalize().multiply(speed));
 		
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
 		
 		bPlayer.addCooldown("Shrapnel", cooldown);
 		start();
@@ -87,6 +91,10 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility {
 		is.setAmount(is.getAmount() - 1);
 		player.getInventory().setItem(slot, is);
 		
+		this.speed = speed;
+		this.damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
+		this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
+		
 		Location spawn = GeneralMethods.getRightSide(player.getLocation(), 0.12).add(0, 1.3, 0);
 		
 		nugget = player.getWorld().dropItem(spawn, new ItemStack(m));
@@ -94,8 +102,6 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility {
 		nugget.setPickupDelay(10);
 		nugget.setVelocity(direction.add(new Vector(0, 0.105, 0)).normalize().multiply(speed));
 		
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Shrapnel.Shot.Damage");
-		cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Earth.Shrapnel.Shot.Cooldown");
 		
 		start();
 	}
@@ -144,7 +150,7 @@ public class ShrapnelShot extends MetalAbility implements AddonAbility {
 		
 		ParticleEffect.CRIT.display(nugget.getLocation(), 1);
 		player.getWorld().playSound(nugget.getLocation(), Sound.ENTITY_ARROW_HIT, 0.2f, 1f);
-		double dmg = damage * (ProjectAddons.instance.getMethods().clamp(0.5, 4, nugget.getVelocity().length()) / 4);
+		double dmg = Util.clamp(0, damage, damage * (nugget.getVelocity().length() / speed));
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(nugget.getLocation(), 1.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {

@@ -22,8 +22,8 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.EarthAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.earthbending.Collapse;
-import com.projectkorra.projectkorra.earthbending.RaiseEarth;
 import com.projectkorra.projectkorra.util.DamageHandler;
+import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
@@ -40,7 +40,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 	@Attribute(Attribute.HEIGHT)
 	private int height;
 	
-	private Set<Block> blocks;
+	private Set<Block> blocks, moved, tops;
 	private Set<FallingBlock> fbs;
 	private Location start;
 	private boolean launched = false, init = false;
@@ -54,8 +54,8 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		start = player.getLocation().subtract(0, 1, 0);
-		if (!isEarthbendable(start.getBlock())) {
+		start = player.getLocation();
+		if (!isEarthbendable(start.getBlock().getRelative(BlockFace.DOWN))) {
 			return;
 		}
 		
@@ -64,7 +64,22 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		this.throwSpeed = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.Bulwark.ThrowSpeed");
 		this.height = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.Bulwark.Height");
 		this.blocks = new HashSet<>();
+		this.moved = new HashSet<>();
+		this.tops = new HashSet<>();
+		this.fbs = new HashSet<>();
 		this.launchTime = 0;
+		
+		Location front = start.clone().add(start.getDirection().setY(0).normalize().multiply(2.5));
+		Location copy = front.clone();
+		Vector toLeft = GeneralMethods.getDirection(front, GeneralMethods.getLeftSide(start, 3)).normalize().multiply(0.5);
+		Vector toRight = GeneralMethods.getDirection(front, GeneralMethods.getRightSide(start, 3)).normalize().multiply(0.5);
+		
+		loadPillar(front);
+		
+		for (int i = 0; i <= 5; ++i) {
+			loadPillar(front.add(toLeft));
+			loadPillar(copy.add(toRight));
+		}
 		
 		start();
 	}
@@ -76,37 +91,28 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		blocks.add(top);
+		tops.add(top);
 	}
 
 	@Override
 	public void progress() {
-		if (!init) {
-			Location front = start.clone().add(player.getLocation().getDirection().setY(0).normalize().multiply(2.5));
-			Vector toLeft = GeneralMethods.getDirection(front, GeneralMethods.getLeftSide(start, 3)).normalize().multiply(0.5);
-			Vector toRight = GeneralMethods.getDirection(front, GeneralMethods.getRightSide(start, 3)).normalize().multiply(0.5);
-			
-			loadPillar(front);
-			
-			for (double i = 0.5; i <= 3; i += 0.5) {
-				loadPillar(front.add(toLeft).clone());
+		if (!tops.isEmpty()) {
+			for (Block block : tops) {
+				if (moveEarth(block, UP, height)) {
+					blocks.add(block);
+					moved.add(block.getRelative(BlockFace.UP));
+				}
 			}
 			
-			front.add(toLeft.normalize().multiply(-3));
-			
-			for (double i = 0.5; i <= 3; i += 0.5) {
-				loadPillar(front.add(toRight).clone());
+			tops.clear();
+			if (++step < height) {
+				tops.addAll(moved);
+			} else {
+				blocks.addAll(moved);
 			}
-			init = true;
-		}
-		
-		if (step < 2) {
-			for (Block block : blocks) {
-				moveEarth(block, UP, height);
-			}
-			++step;
+			moved.clear();
 		} else if (!launched) {
-			if (start.distance(player.getLocation().subtract(0, 1, 0)) > 1.5) {
+			if (start.distance(player.getLocation()) > 1.5) {
 				remove();
 				return;
 			}
@@ -151,9 +157,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
-		for (Block block : blocks) {
-			new Collapse(player, block.getLocation());
-		}
+		blocks.forEach((b) -> revertBlock(b));
 		for (FallingBlock fb : fbs) {
 			fb.remove();
 		}
@@ -167,13 +171,10 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 			return;
 		}
 		
-		fbs = new HashSet<>();
-		
 		launched = true;
 		for (Block b : blocks) {
 			BlockData data = b.getBlockData();
 			revertBlock(b);
-			
 			FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.5, 0.5), data.getMaterial(), data);
 			fb.setDropItem(false);
 			fb.setMetadata("bulwark", new FixedMetadataValue(ProjectAddons.instance, this));

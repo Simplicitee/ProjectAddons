@@ -30,7 +30,6 @@ public class ProjectAddons extends JavaPlugin {
 	
 	private Config config;
 	private BoardManager boards;
-	private CustomMethods methods;
 	private MainListener listener;
 	private Element soundElement;
 
@@ -60,7 +59,6 @@ public class ProjectAddons extends JavaPlugin {
 		}
 		
 		this.getCommand("projectaddons").setExecutor(new ProjectCommand());
-		this.methods = new CustomMethods(this);
 	}
 	
 	@Override
@@ -105,10 +103,6 @@ public class ProjectAddons extends JavaPlugin {
 	
 	public BoardManager getBoardManager() {
 		return boards;
-	}
-	
-	public CustomMethods getMethods() {
-		return methods;
 	}
 	
 	private void setupConfig() {
@@ -378,6 +372,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Water.RazorLeaf.Damage", 2);
 		c.addDefault("Abilities.Water.RazorLeaf.Radius", 0.7);
 		c.addDefault("Abilities.Water.RazorLeaf.Range", 24);
+		c.addDefault("Abilities.Water.RazorLeaf.MaxRecalls", 3);
 		c.addDefault("Abilities.Water.RazorLeaf.Particles", 300);
 		
 		// PlantArmor
@@ -467,6 +462,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Chi.NinjaStance.Cooldown", 0);
 		c.addDefault("Abilities.Chi.NinjaStance.Stealth.Duration", 5000);
 		c.addDefault("Abilities.Chi.NinjaStance.Stealth.ChargeTime", 2000);
+		c.addDefault("Abilities.Chi.NinjaStance.Stealth.Cooldown", 8000);
 		c.addDefault("Abilities.Chi.NinjaStance.SpeedAmplifier", 5);
 		c.addDefault("Abilities.Chi.NinjaStance.JumpAmplifier", 5);
 		c.addDefault("Abilities.Chi.NinjaStance.DamageModifier", 0.75);

@@ -39,6 +39,7 @@ import com.projectkorra.projectkorra.earthbending.EarthArmor;
 import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
+import com.projectkorra.projectkorra.util.MovementHandler;
 import com.projectkorra.projectkorra.util.TempArmor;
 import com.projectkorra.projectkorra.util.TempBlock;
 
@@ -62,6 +63,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private int jump;
 	
 	private int durability;
+	private double durabilityDecay;
 	private ArmorState state;
 	private ArmorAbility active;
 	private BossBar bar;
@@ -101,7 +103,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Attribute("Tangle_Range")
 	private double tRange;
 	private long tDuration;
-	private List<PotionEffect> tEffects = new ArrayList<>();
 	
 	private int angle;
 	
@@ -146,6 +147,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
 			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Cooldown");
 			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Durability");
+			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
+			this.durabilityDecay = duration <= 0 ? 0 : durability / duration;
 			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Swim") - 1;
 			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Speed") - 1;
 			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Jump") - 1;
@@ -179,8 +182,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			this.tRadius = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Radius");
 			this.tRange = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.SubAbilities.Tangle.Range");
 			this.tDuration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.SubAbilities.Tangle.Duration");
-			this.tEffects.add(new PotionEffect(PotionEffectType.SLOW, (int) (tDuration / 1000 * 20), ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Tangle.Slowness"), true, false));
-			this.tEffects.add(new PotionEffect(PotionEffectType.JUMP, (int) (tDuration / 1000 * 20), 255, true, false));
 			this.angle = 0;
 			
 			this.gMax = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.SubAbilities.Grapple.Range");
@@ -201,7 +202,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	private ItemStack leafLeather(Material type) {
 		ItemStack leather = new ItemStack(type);
 		LeatherArmorMeta meta = (LeatherArmorMeta) leather.getItemMeta();
-		meta.setColor(Color.fromRGB(61, 153, 112));
+		meta.setColor(Color.fromRGB(72 + (int) (24 * (Math.random() - 0.5)), 181 + (int) (24 * (Math.random() - 0.5)), 24));
 		leather.setItemMeta(meta);
 		return leather;
 	}
@@ -236,6 +237,11 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		if (state == ArmorState.FORMING) {
 			progressForming();
 		} else if (state == ArmorState.FORMED) {
+			this.maxDurability -= durabilityDecay;
+			if (durability > maxDurability) {
+				durability = maxDurability;
+			}
+			
 			bar.setProgress((double) durability / maxDurability);
 			
 			if (bar.getProgress() <= 0.15) {
@@ -523,7 +529,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(current, tRadius + 0.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
-				((LivingEntity) e).addPotionEffects(tEffects);
+				new MovementHandler((LivingEntity) e, this).stopWithDuration(tDuration / 1000 * 20, ChatColor.DARK_AQUA + "* Tangled *");
 				new TempBlock(e.getLocation().getBlock(), Material.OAK_LEAVES).setRevertTime(tDuration);
 				this.reset();
 				return;

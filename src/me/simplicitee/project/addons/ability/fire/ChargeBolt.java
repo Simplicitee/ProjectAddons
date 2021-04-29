@@ -18,6 +18,7 @@ import com.projectkorra.projectkorra.util.ActionBar;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.Util;
 
 public class ChargeBolt extends LightningAbility implements AddonAbility {
 	
@@ -65,7 +66,7 @@ public class ChargeBolt extends LightningAbility implements AddonAbility {
 		}
 		
 		if (player.isSneaking() && System.currentTimeMillis() > getStartTime() + chargeTime) {
-			ProjectAddons.instance.getMethods().playLightningParticles(GeneralMethods.getMainHandLocation(player), 2, 0.1, 0.1, 0.1);
+			Util.playLightningParticles(GeneralMethods.getMainHandLocation(player), 2, 0.1, 0.1, 0.1);
 			if (Math.random() < 0.3) {
 				playLightningbendingSound(player.getEyeLocation());
 			}
@@ -218,7 +219,7 @@ public class ChargeBolt extends LightningAbility implements AddonAbility {
 				return false;
 			}
 			
-			ProjectAddons.instance.getMethods().playLightningParticles(loc, 5, 0.1, 0.1, 0.1);
+			Util.playLightningParticles(loc, 5, 0.1, 0.1, 0.1);
 			playLightningbendingSound(loc);
 			
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc, 0.62)) {

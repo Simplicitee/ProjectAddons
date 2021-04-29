@@ -22,6 +22,7 @@ import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.Util;
 
 public class Electrify extends LightningAbility implements AddonAbility {
 	
@@ -116,7 +117,7 @@ public class Electrify extends LightningAbility implements AddonAbility {
 		}
 		
 		if (Math.random() < 0.15) {
-			ProjectAddons.instance.getMethods().playLightningParticles(center, 1, 0.5, 0.5, 0.5);
+			Util.playLightningParticles(center, 1, 0.5, 0.5, 0.5);
 			playLightningbendingSound(center);
 		}
 	}

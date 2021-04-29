@@ -215,8 +215,8 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
 		ArrayList<AbilityInformation> combo = new ArrayList<>();
-		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_UP));
+		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_UP));
 		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
 		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_UP));
 		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
@@ -251,7 +251,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	
 	@Override
 	public String getInstructions() {
-		return "HeatControl (double tap sneak) > HeatControl (hold sneak)";
+		return "FireBlast (tap sneak) > HeatControl (tap sneak) > HeatControl (hold sneak)";
 	}
 	
 	@Override

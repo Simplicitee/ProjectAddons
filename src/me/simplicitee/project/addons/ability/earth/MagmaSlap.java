@@ -1,7 +1,9 @@
 package me.simplicitee.project.addons.ability.earth;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -42,6 +44,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	private long next, last;
 	private Location start, curr;
 	private List<TempBlock> tempBlocks;
+	private Set<Block> affected;
 
 	public MagmaSlap(Player player) {
 		super(player);
@@ -71,6 +74,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		this.start.add(start.getDirection().multiply(offset));
 		this.curr = start.clone();
 		this.tempBlocks = new ArrayList<>();
+		this.affected = new HashSet<>();
 	}
 
 	@Override
@@ -135,20 +139,17 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	}
 	
 	private void checkBlock(Block b) {
-		if (TempBlock.isTempBlock(b)) {
-			return;
-		}
-		
 		b = GeneralMethods.getTopBlock(b.getLocation(), 2);
 		if (b.isPassable() && !b.isLiquid()) {
-			b.breakNaturally();
+			tempBlocks.add(new TempBlock(b, Material.AIR));
 			b = b.getRelative(BlockFace.DOWN);
 		}
 		
-		if (!isEarthbendable(b.getType(), true, true, true)) {
+		if (affected.contains(b) || affected.contains(b.getRelative(BlockFace.UP)) || TempBlock.isTempBlock(b) || !isEarthbendable(b.getType(), true, true, true)) {
 			return;
 		}
 		
+		affected.add(b);
 		tempBlocks.add(new TempBlock(b, Material.AIR));
 		
 		FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.7, 0.5), Material.MAGMA_BLOCK);

@@ -29,9 +29,10 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 	private double range;
 	
 	private Location center;
-	private int particles;
+	private int particles, uses = 0, maxUses;
 	private TempBlock source;
 	private Vector direction;
+	private boolean counted = true;
 
 	public RazorLeaf(Player player, boolean sourced) {
 		super(player);
@@ -58,6 +59,7 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 		this.radius = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.RazorLeaf.Radius");
 		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.RazorLeaf.Range");
 		this.particles = ProjectAddons.instance.getConfig().getInt("Abilities.Water.RazorLeaf.Particles");
+		this.maxUses = ProjectAddons.instance.getConfig().getInt("Abilities.Water.RazorLeaf.MaxRecalls");
 		
 		start();
 	}
@@ -79,10 +81,16 @@ public class RazorLeaf extends PlantAbility implements AddonAbility {
 			return;
 		}
 		
-		if (player.isSneaking()) {
+		if (player.isSneaking() && uses < maxUses) {
+			counted = true;
 			Location holding = player.getEyeLocation().clone().add(player.getEyeLocation().getDirection().clone().normalize().multiply(1.5));
 			direction = GeneralMethods.getDirection(center, holding);
 		} else {
+			if (counted) {
+				counted = false;
+				++uses;
+			}
+			
 			Location target = null;
 			Entity e = GeneralMethods.getTargetedEntity(player, range);
 			
