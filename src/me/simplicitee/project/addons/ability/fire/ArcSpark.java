@@ -34,7 +34,7 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	private long cooldown;
 	
 	private long charge, chargedTill;
-	private boolean shoot, charged;
+	private boolean shoot, charged, left;
 	private List<String> attractive;
 
 	public ArcSpark(Player player) {
@@ -72,7 +72,7 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 			chargedTill = System.currentTimeMillis();
 			player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.05f, 0.5f);
 		} else if (charged && !shoot) {
-			Util.playLightningParticles(GeneralMethods.getMainHandLocation(player), 1, 0.001, 0.001, 0.001);
+			Util.playLightningParticles(player.getEyeLocation().add(player.getLocation().getDirection().multiply(1.3)), 1, 0.001, 0.001, 0.001);
 			chargedTill = System.currentTimeMillis();
 			player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.05f, 0.5f);
 		} else if (charged && shoot) {
@@ -81,14 +81,87 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 				return;
 			}
 			
-			Location hand = GeneralMethods.getMainHandLocation(player);
+			Location hand = left ? GeneralMethods.getLeftSide(player.getLocation(), 0.55).add(0, 1.2, 0) : GeneralMethods.getRightSide(player.getLocation(), 0.55).add(0, 1.2, 0);
+			left = !left;
 			hand.setDirection(player.getEyeLocation().getDirection());
-			Arc arc = new Arc(hand);	
 			
-			for (int i = 0; i < speed*length; i++) {
-				arc.run(this);
+			boolean persist = true;
+			for (int i = 0; i < speed*length && persist; ++i) {
+				persist = arc(hand);
 			}
 		}
+	}
+	
+	private boolean arc(Location loc) {
+		double shortest = Double.MAX_VALUE;
+		Entity closest = null;
+		Location to = null;
+		for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc, 3)) {
+			if (!(e instanceof LivingEntity) || e.getEntityId() == player.getEntityId()) {
+				continue;
+			}
+			
+			double dist = loc.distance(e.getLocation().clone().add(0, 1, 0));
+			
+			if (dist <= 1) {
+				DamageHandler.damageEntity(e, damage, this);
+				return false;
+			} else {
+				if (dist < shortest || closest == null) {
+					shortest = dist;
+					closest = e;
+					to = e.getLocation().clone().add(0, 1, 0);
+				}
+			}
+		}
+		
+		if (closest == null) {
+			for (Block b : GeneralMethods.getBlocksAroundPoint(loc, 2)) {
+				if (b.isPassable() || !attractive.contains(b.getType().toString())) {
+					continue;
+				}
+				
+				Location center = b.getLocation().add(0.5, 0.5, 0.5);
+				double dist = loc.distance(center);
+				
+				if (dist < shortest) {
+					shortest = dist;
+					to = center;
+				}
+			}
+		}
+		
+		Vector movement = null;
+		
+		if (to != null) {
+			movement = GeneralMethods.getDirection(loc, to);
+		} else {
+			movement = new Vector(Math.random() / 5 - 0.1, Math.random() / 5 - 0.1, Math.random() / 5 - 0.1);
+		}
+		
+		double angle = movement.angle(loc.getDirection());
+		if (angle < 60 && angle > -60) {
+			loc.setDirection(loc.getDirection().add(movement));
+		}
+		
+		loc.getDirection().normalize();
+		loc.add(loc.getDirection().multiply(0.3));
+
+		if (loc.getBlock().getType() == Material.WATER || attractive.contains(loc.getBlock().getType().toString())) {
+			if (Math.random() > 0.55) {
+				new Electrify(player, loc.getBlock(), false);
+			}
+			return false;
+		} else if (!loc.getBlock().isPassable()) {
+			return false;
+		}
+		
+		Util.playLightningParticles(loc, 1, 0, 0, 0);
+		if (Math.random() < 0.15) {
+			playLightningbendingSound(loc);
+		}
+		
+		return true;
 	}
 	
 	@Override
@@ -159,92 +232,5 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	@Override
 	public String getDescription() {
 		return "Shoots arcs of electricity in the direction you are looking, and the arcs are attracted to some blocks and entities! Hitting a metallic block or water will cause it to become electrified!";
-	}
-
-	class Arc {
-		
-		private boolean progressing = true;
-		private Location loc;
-		
-		public Arc(Location loc) {
-			this.loc = loc;
-		}
-		
-		public void run(ArcSpark a) {
-			if (!progressing) {
-				return;
-			}
-			
-			double shortest = Double.MAX_VALUE;
-			Entity closest = null;
-			Location to = null;
-			for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc, 3)) {
-				if (!(e instanceof LivingEntity) || e.getEntityId() == player.getEntityId()) {
-					continue;
-				}
-				
-				double dist = loc.distance(e.getLocation().clone().add(0, 1, 0));
-				
-				if (dist <= 1) {
-					DamageHandler.damageEntity(e, damage, a);
-					progressing = false;
-					return;
-				} else {
-					if (dist < shortest || closest == null) {
-						shortest = dist;
-						closest = e;
-						to = e.getLocation().clone().add(0, 1, 0);
-					}
-				}
-			}
-			
-			if (closest == null) {
-				for (Block b : GeneralMethods.getBlocksAroundPoint(loc, 2)) {
-					if (b.isPassable() || !attractive.contains(b.getType().toString())) {
-						continue;
-					}
-					
-					Location center = b.getLocation().add(0.5, 0.5, 0.5);
-					double dist = loc.distance(center);
-					
-					if (dist < shortest) {
-						shortest = dist;
-						to = center;
-					}
-				}
-			}
-			
-			Vector movement = null;
-			
-			if (to != null) {
-				movement = GeneralMethods.getDirection(loc, to);
-			} else {
-				movement = new Vector(Math.random() / 5 - 0.1, Math.random() / 5 - 0.1, Math.random() / 5 - 0.1);
-			}
-			
-			double angle = movement.angle(loc.getDirection());
-			if (angle < 60 && angle > -60) {
-				loc.setDirection(loc.getDirection().add(movement));
-			}
-			
-			loc.getDirection().normalize();
-			loc.add(loc.getDirection().multiply(0.3));
-
-			if (loc.getBlock().getType() == Material.WATER || attractive.contains(loc.getBlock().getType().toString())) {
-				if (Math.random() > 0.55) {
-					new Electrify(player, loc.getBlock(), false);
-				}
-				progressing = false;
-				return;
-			} else if (!loc.getBlock().isPassable()) {
-				progressing = false;
-				return;
-			}
-			
-			Util.playLightningParticles(loc, 1, 0, 0, 0);
-			if (Math.random() < 0.15) {
-				playLightningbendingSound(loc);
-			}
-		}
 	}
 }

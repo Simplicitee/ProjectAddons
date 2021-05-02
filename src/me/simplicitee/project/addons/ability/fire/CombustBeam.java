@@ -137,7 +137,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				Vector to = player.getEyeLocation().getDirection().clone().normalize().multiply(0.3);
 				
 				if (Math.abs(direction.angle(to)) < angleCheck) {
-					direction.add(to);
+					direction.add(to.multiply(1.0 / 20));
 				}
 			}
 			
@@ -217,6 +217,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
 				if (e instanceof LivingEntity) {
 					double knockback = power / (0.3 + e.getLocation().distance(curr));
+					DamageHandler.damageEntity(e, power, this);
 					e.setVelocity(GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback));
 				}
 			}

@@ -3,7 +3,6 @@ package me.simplicitee.project.addons.ability.air;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Note;
-import org.bukkit.Sound;
 import org.bukkit.Note.Tone;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -66,8 +65,6 @@ public class Deafen extends SoundAbility implements AddonAbility {
 		
 		for (int i = 0; i < 2; i++) {
 			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.BASS_GUITAR, Note.sharp(i, Tone.F));
-			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.PLING, Note.sharp(i, Tone.F));
-			target.playNote(target.getEyeLocation().add(new Vector(Math.random(), Math.random(), Math.random())), Instrument.FLUTE, Note.sharp(i, Tone.F));
 		}
 		
 	}

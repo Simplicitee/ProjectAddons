@@ -44,6 +44,7 @@ import com.projectkorra.projectkorra.util.TempArmor;
 import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.Util;
 import net.md_5.bungee.api.ChatColor;
 
 public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbility {
@@ -426,7 +427,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 					
 					display.add(x, dy, z);
 					
-					GeneralMethods.displayColoredParticle("3D9970", display);
+					GeneralMethods.displayColoredParticle(Util.LEAF_COLOR, display);
 					
 					display.subtract(x, dy, z);
 				}
@@ -466,7 +467,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 					return;
 				}
 				
-				GeneralMethods.displayColoredParticle("3D9970", last, 1, 0.1, 0.1, 0.1);
+				GeneralMethods.displayColoredParticle(Util.LEAF_COLOR, last, 1, 0.1, 0.1, 0.1);
 				
 				for (Entity e : GeneralMethods.getEntitiesAroundPoint(last, 1)) {
 					if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
@@ -493,7 +494,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		Vector direction = player.getEyeLocation().getDirection();
-		Location center = player.getEyeLocation().add(direction.multiply(3));
+		Location center = GeneralMethods.getTargetedLocation(player, 3.5);
 		addShieldBlock(center.getBlock());
 		
 		for (int i = 1; i <= radius; ++i) {
@@ -539,7 +540,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		for (int i = 0; i < 3; ++i) {
 			Vector ov = GeneralMethods.getOrthogonalVector(direction, (double) (angle + (120 * i)), tRadius);
 			current.add(ov);
-			GeneralMethods.displayColoredParticle("3D9970", current);
+			GeneralMethods.displayColoredParticle(Util.LEAF_COLOR, current);
 			current.subtract(ov);
 		}
 		
@@ -556,7 +557,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 				
 				ground.add(x, i, z);
 				
-				GeneralMethods.displayColoredParticle("3D9970", ground);
+				GeneralMethods.displayColoredParticle(Util.LEAF_COLOR, ground);
 				
 				ground.subtract(x, i, z);
 			}
@@ -590,7 +591,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		for (int i = 0; i < gRange; ++i) {
 			current.add(direction);
 			
-			GeneralMethods.displayColoredParticle("3D9970", current);
+			GeneralMethods.displayColoredParticle(Util.LEAF_COLOR, current);
 			
 			if (!current.getBlock().isPassable() && !pulling) {
 				if (current.distance(target) < 1) {
