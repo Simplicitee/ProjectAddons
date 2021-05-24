@@ -19,6 +19,7 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
 import me.simplicitee.project.addons.Util;
+import me.simplicitee.project.addons.util.SoundEffect;
 
 public class ArcSpark extends LightningAbility implements AddonAbility {
 	
@@ -36,6 +37,8 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 	private long charge, chargedTill;
 	private boolean shoot, charged, left;
 	private List<String> attractive;
+	
+	private SoundEffect charging;
 
 	public ArcSpark(Player player) {
 		super(player);
@@ -50,6 +53,8 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 		this.charged = false;
 		this.shoot = false;
 		this.chargedTill = System.currentTimeMillis();
+		
+		this.charging = new SoundEffect(Sound.ENTITY_CREEPER_PRIMED, 0.3f, 0.6f, 30);
 		
 		start();
 	}
@@ -70,11 +75,11 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 			}
 			
 			chargedTill = System.currentTimeMillis();
-			player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.05f, 0.5f);
+			charging.play(player.getEyeLocation());
 		} else if (charged && !shoot) {
 			Util.playLightningParticles(player.getEyeLocation().add(player.getLocation().getDirection().multiply(1.3)), 1, 0.001, 0.001, 0.001);
 			chargedTill = System.currentTimeMillis();
-			player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.05f, 0.5f);
+			charging.play(player.getEyeLocation());
 		} else if (charged && shoot) {
 			if (chargedTill + duration < System.currentTimeMillis()) {
 				remove();
@@ -157,7 +162,7 @@ public class ArcSpark extends LightningAbility implements AddonAbility {
 		}
 		
 		Util.playLightningParticles(loc, 1, 0, 0, 0);
-		if (Math.random() < 0.15) {
+		if (Math.random() < 0.01) {
 			playLightningbendingSound(loc);
 		}
 		

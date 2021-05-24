@@ -219,8 +219,10 @@ public class ChargeBolt extends LightningAbility implements AddonAbility {
 				return false;
 			}
 			
-			Util.playLightningParticles(loc, 5, 0.1, 0.1, 0.1);
-			playLightningbendingSound(loc);
+			Util.playLightningParticles(loc, 1, 0.1, 0.1, 0.1);
+			if (Math.random() > 0.01) {
+				playLightningbendingSound(loc);
+			}
 			
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(loc, 0.62)) {
 				if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {

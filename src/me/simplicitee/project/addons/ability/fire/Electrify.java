@@ -1,10 +1,13 @@
 package me.simplicitee.project.addons.ability.fire;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -23,8 +26,11 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 
 import me.simplicitee.project.addons.ProjectAddons;
 import me.simplicitee.project.addons.Util;
+import me.simplicitee.project.addons.util.SoundEffect;
 
 public class Electrify extends LightningAbility implements AddonAbility {
+	
+	private static final BlockFace[] faces = {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
 	
 	private static Set<Block> electrified = new HashSet<>();
 	
@@ -42,9 +48,11 @@ public class Electrify extends LightningAbility implements AddonAbility {
 	private int spread;
 	private Block block;
 	private Location center;
+	private List<PotionEffect> effects = new ArrayList<>();
+	private SoundEffect sound;
 	
 	public Electrify(Player player, Block block, boolean direct) {
-		this(player, block, direct, 3);
+		this(player, block, direct, 2);
 	}
 
 	public Electrify(Player player, Block block, boolean direct, int spread) {
@@ -66,6 +74,12 @@ public class Electrify extends LightningAbility implements AddonAbility {
 		this.weakness = ProjectAddons.instance.getConfig().getInt("Abilities.Fire.Electrify.Weakness") + 1;
 		this.spread = spread;
 		
+		effects.add(new PotionEffect(PotionEffectType.SLOW, 10, slowness, true, false));
+		effects.add(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness, true, false));
+		effects.add(new PotionEffect(PotionEffectType.JUMP, 10, 128, true, false));
+		
+		sound = new SoundEffect(Sound.ENTITY_CREEPER_PRIMED, 0.3f, 0.6f, 100);
+		
 		if (direct) {
 			bPlayer.addCooldown(this);
 		}
@@ -86,11 +100,11 @@ public class Electrify extends LightningAbility implements AddonAbility {
 		}
 
 		if (spread > 0) {
-			BlockFace[] faces = {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
 			for (BlockFace face : faces) {
 				Block b = block.getRelative(face);
 				new Electrify(player, b, false, spread - 1);
 			}
+			spread = 0;
 		}
 		
 		for (Entity e : GeneralMethods.getEntitiesAroundPoint(center, 1)) {
@@ -110,16 +124,12 @@ public class Electrify extends LightningAbility implements AddonAbility {
 					}
 				}
 				
-				living.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, slowness));
-				living.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 10, weakness));
-				living.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10, 255));
+				living.addPotionEffects(effects);
 			}
 		}
 		
-		if (Math.random() < 0.15) {
-			Util.playLightningParticles(center, 1, 0.5, 0.5, 0.5);
-			playLightningbendingSound(center);
-		}
+		Util.playLightningParticles(center, 1, 0.5, 0.5, 0.5);
+		sound.play(center);
 	}
 	
 	@Override

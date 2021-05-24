@@ -3,6 +3,8 @@ package me.simplicitee.project.addons.ability.chi;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.event.DocumentEvent.ElementChange;
+
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,8 +15,10 @@ import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ChiAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
+import com.projectkorra.projectkorra.util.ActionBar;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import net.md_5.bungee.api.ChatColor;
 
 public class NinjaStance extends ChiAbility implements AddonAbility{
 	
@@ -92,16 +96,14 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 					stealthStarted = true;
 				} else if (!player.isSneaking()) {
 					stopStealth();
-				} else if (stealthReady && player.isSneaking()) {
-					Location play = player.getEyeLocation().clone().add(player.getEyeLocation().getDirection().normalize());
-					GeneralMethods.displayColoredParticle("#00ee00", play);
-				} else {
-					Location play = player.getEyeLocation().clone().add(player.getEyeLocation().getDirection().normalize());
-					GeneralMethods.displayColoredParticle("#000000", play);
+					return;
 				}
+				
+				GeneralMethods.displayColoredParticle(stealthReady && player.isSneaking() ? "00ee00" : "000000", player.getEyeLocation().add(player.getEyeLocation().getDirection()));
 			} else {
 				if (System.currentTimeMillis() >= stealthReadyStart + stealthDuration) {
 					stopStealth();
+					bPlayer.addCooldown("ninjastealth", stealthCooldown);
 				} else {
 					player.addPotionEffect(invis);
 				}
@@ -144,7 +146,10 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 
 	public void beginStealth() {
 		if (stealth) {
-			player.sendMessage("Already cloaked!");
+			ActionBar.sendActionBar(ChatColor.RED + "!> already cloaked <!", player);
+			return;
+		} else if (bPlayer.isOnCooldown("ninjastealth")) {
+			ActionBar.sendActionBar(ChatColor.RED + "!> cooldown <!", player);
 			return;
 		}
 		stealth = true;
@@ -155,7 +160,6 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 		stealth = false;
 		stealthReady = false;
 		stealthStarted = false;
-		bPlayer.addCooldown("ninjastealth", stealthCooldown);
 	}
 	
 	public boolean isStealthed() {

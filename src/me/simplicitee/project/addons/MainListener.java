@@ -85,6 +85,7 @@ import me.simplicitee.project.addons.ability.water.BloodGrip;
 import me.simplicitee.project.addons.ability.water.MistShards;
 import me.simplicitee.project.addons.ability.water.PlantArmor;
 import me.simplicitee.project.addons.ability.water.RazorLeaf;
+import me.simplicitee.project.addons.util.BendingPredicate;
 
 public class MainListener implements Listener {
 	
@@ -718,20 +719,10 @@ public class MainListener implements Listener {
 		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 		CoreAbility abil = CoreAbility.getAbility(ability);
 		
-		if (abil == null) {
-			return false;
-		} else if (bPlayer.getBoundAbility() == null) {
-			return false;
-		} else if (!bPlayer.getBoundAbilityName().equals(ability)) {
-			return false;
-		} else if (canbend && !bPlayer.canBend(abil)) {
-			return false;
-		} else if (GeneralMethods.isRegionProtectedFromBuild(player, ability, player.getLocation())) {
-			return false;
-		} else if (GeneralMethods.isRegionProtectedFromBuild(player, ability, player.getEyeLocation())) {
+		if (canbend && !bPlayer.canBend(abil)) {
 			return false;
 		}
 		
-		return true;
+		return BendingPredicate.canBend(bPlayer, abil);
 	}
 }

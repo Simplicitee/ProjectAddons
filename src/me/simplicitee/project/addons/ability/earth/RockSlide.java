@@ -123,7 +123,7 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 		direction.setY(dHeight * 0.2);
 		
 		player.setVelocity(direction);
-		if (ThreadLocalRandom.current().nextInt(6) == 0) {
+		if (ThreadLocalRandom.current().nextInt(20) == 0) {
 			playEarthbendingSound(player.getLocation());
 		}
 		

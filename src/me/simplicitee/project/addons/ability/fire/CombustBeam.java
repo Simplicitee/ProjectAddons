@@ -23,6 +23,7 @@ import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
 import me.simplicitee.project.addons.util.HexColor;
+import me.simplicitee.project.addons.util.SoundEffect;
 
 public class CombustBeam extends CombustionAbility implements AddonAbility {
 
@@ -50,6 +51,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	private boolean charging, charged;
 	private Location curr;
 	private Vector direction;
+	private SoundEffect sound;
 	
 	private ParticleEffect[] flames = { ParticleEffect.FLAME, ParticleEffect.SOUL_FIRE_FLAME };
 	
@@ -74,6 +76,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 		this.charged = false;
 		this.rotation = 0;
 		this.counter = 0;
+		this.sound = new SoundEffect(Sound.ENTITY_WITHER_AMBIENT, 0.01f, 0.6f, 30);
 		
 		start();
 	}
@@ -106,7 +109,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				return;
 			}
 
-			player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WITHER_AMBIENT, 0.01f, 0.6f);
+			sound.play(player.getEyeLocation());
 			
 			if (getStartTime() + maxChargeTime <= System.currentTimeMillis()) {
 				this.chargeTime = maxChargeTime;
@@ -183,7 +186,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				
 				rotation += 10;
 				
-				if (counter % 6 == 0) {
+				if (counter % 10 == 0) {
 					ParticleEffect.EXPLOSION_LARGE.display(curr, 1);
 					playCombustionSound(curr);
 				}

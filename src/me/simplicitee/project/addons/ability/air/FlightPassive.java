@@ -3,6 +3,7 @@ package me.simplicitee.project.addons.ability.air;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.projectkorra.projectkorra.Element;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.FlightAbility;
 import com.projectkorra.projectkorra.ability.PassiveAbility;
@@ -21,10 +22,18 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 		speed = startSpeed = (float) ProjectAddons.instance.getConfig().getDouble("Passives.Air.Flying.Glide.StartSpeed");
 		maxSpeed = (float) ProjectAddons.instance.getConfig().getDouble("Passives.Air.Flying.Glide.MaxSpeed");
 		acceleration = (float) ProjectAddons.instance.getConfig().getDouble("Passives.Air.Flying.Acceleration");
+		
+		flightHandler.createInstance(player, "FlightPassive");
 	}
 
 	@Override
 	public void progress() {
+		if (!bPlayer.isElementToggled(Element.AIR)) {
+			player.setAllowFlight(false);
+			clear();
+			return;
+		}
+		
 		if (player.getLocation().getBlock().isLiquid()) {
 			clear();
 			return;
@@ -32,7 +41,7 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 		
 		player.setAllowFlight(true);
 		
-		if (active && toggled) {
+		if (active && toggled) {	
 			player.setGliding(true);
 			
 			if (player.isSneaking() && player.getFlySpeed() < maxSpeed) {
@@ -51,6 +60,13 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 		toggled = false;
 		player.setFlying(false);
 		player.setGliding(false);
+	}
+	
+	@Override
+	public void remove() {
+		super.remove();
+		clear();
+		flightHandler.removeInstance(player, "FlightPassive");
 	}
 
 	@Override
@@ -128,6 +144,7 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 			player.setCanPickupItems(pickup);
 			active = false;
 		}
+		toggled = false;
 	}
 	
 	public boolean isActive() {
@@ -145,7 +162,7 @@ public class FlightPassive extends FlightAbility implements AddonAbility, Passiv
 	
 	@Override
 	public String getDescription() {
-		return "A very rare ability for airbenders is being able to fly freely, without the need of any glider. The only airbenders known to have this ability were Guru Laghima and Zaheer";
+		return "A very rare ability for airbenders is being able to fly freely, without the need of any glider. The only airbenders known to have this ability were Guru Laghima and Zaheer.";
 	}
 	
 	@Override

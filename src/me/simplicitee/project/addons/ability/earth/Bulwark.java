@@ -175,7 +175,7 @@ public class Bulwark extends EarthAbility implements AddonAbility {
 		for (Block b : blocks) {
 			BlockData data = b.getBlockData();
 			revertBlock(b);
-			FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.5, 0.5), data.getMaterial(), data);
+			FallingBlock fb = GeneralMethods.spawnFallingBlock(b.getLocation().add(0.5, 0.75, 0.5), data.getMaterial(), data);
 			fb.setDropItem(false);
 			fb.setMetadata("bulwark", new FixedMetadataValue(ProjectAddons.instance, this));
 			fb.setVelocity(player.getEyeLocation().getDirection().setY(0.195).normalize().multiply(throwSpeed));

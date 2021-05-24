@@ -26,6 +26,7 @@ import com.projectkorra.projectkorra.util.DamageHandler;
 import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
+import me.simplicitee.project.addons.util.SoundEffect;
 
 public class MagmaSlap extends LavaAbility implements AddonAbility {
 	
@@ -45,6 +46,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 	private Location start, curr;
 	private List<TempBlock> tempBlocks;
 	private Set<Block> affected;
+	private SoundEffect effect;
 
 	public MagmaSlap(Player player) {
 		super(player);
@@ -75,6 +77,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 		this.curr = start.clone();
 		this.tempBlocks = new ArrayList<>();
 		this.affected = new HashSet<>();
+		this.effect = new SoundEffect(Sound.ENTITY_CREEPER_PRIMED, 0.9f, 1f);
 	}
 
 	@Override
@@ -164,7 +167,7 @@ public class MagmaSlap extends LavaAbility implements AddonAbility {
 			}
 		}
 		
-		player.getWorld().playSound(fb.getLocation(), Sound.ENTITY_CREEPER_PRIMED, 0.4f, 1f);
+		effect.play(fb.getLocation());
 	}
 	
 	public void turnToTempBlock(Block b) {

@@ -55,7 +55,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Attribute(Attribute.COOLDOWN)
 	private long cooldown;
 	@Attribute("Durability")
-	private int maxDurability;
+	private double maxDurability;
 	@Attribute("SwimBoost")
 	private int swim;
 	@Attribute("SpeedBoost")
@@ -63,7 +63,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	@Attribute("JumpBoost")
 	private int jump;
 	
-	private int durability;
+	private double durability;
 	private double durabilityDecay;
 	private ArmorState state;
 	private ArmorAbility active;
@@ -147,9 +147,9 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		if (type == ClickType.SHIFT_DOWN) {
 			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
 			this.cooldown = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Cooldown");
-			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Durability");
+			this.durability = this.maxDurability = ProjectAddons.instance.getConfig().getDouble("Abilities.Water.PlantArmor.Durability");
 			this.duration = ProjectAddons.instance.getConfig().getLong("Abilities.Water.PlantArmor.Duration");
-			this.durabilityDecay = duration <= 0 ? 0 : durability / duration;
+			this.durabilityDecay = duration <= 0 ? 0 : maxDurability / (20.0 * duration / 1000.0);
 			this.swim = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Swim") - 1;
 			this.speed = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Speed") - 1;
 			this.jump = ProjectAddons.instance.getConfig().getInt("Abilities.Water.PlantArmor.Boost.Jump") - 1;
@@ -246,19 +246,19 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			bar.setProgress((double) durability / maxDurability);
 			
 			if (bar.getProgress() <= 0.15) {
-				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.RED    + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
+				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.RED    + (int) durability + ChatColor.DARK_AQUA + " / " + (int) maxDurability + "]");
 				bar.setColor(BarColor.RED);
 			} else if (bar.getProgress() <= 0.5) {
-				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.YELLOW + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
+				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.YELLOW + (int) durability + ChatColor.DARK_AQUA + " / " + (int) maxDurability + "]");
 				bar.setColor(BarColor.YELLOW);
 			} else {
-				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.GREEN  + durability + ChatColor.DARK_AQUA + " / " + maxDurability + "]");
+				bar.setTitle(ChatColor.DARK_AQUA + "Durability [" + ChatColor.GREEN  + (int) durability + ChatColor.DARK_AQUA + " / " + (int) maxDurability + "]");
 				bar.setColor(BarColor.GREEN);
 			}
 			
 			player.addPotionEffects(effects);
 
-			if (active != null && player.getInventory().getHeldItemSlot() != active.getSlot()) {
+			if (active != null && player.getInventory().getHeldItemSlot() != active.ordinal()) {
 				this.reset();
 				return;
 			}
@@ -390,7 +390,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	public boolean damage(int amount) {
-		int diff = this.durability - amount;
+		double diff = this.durability - amount;
 		if (diff < 0) {
 			return false;
 		}
@@ -577,7 +577,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		}
 		
 		if (!pulling) {
-		
 			if (++gRange >= gMax) {
 				this.reset();
 				return;
@@ -773,25 +772,23 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 	}
 	
 	public static enum ArmorAbility {
-		VINEWHIP("VineWhip", 0, true, ClickType.LEFT_CLICK, null),
-		RAZORLEAF("RazorLeaf", 1, true, ClickType.SHIFT_DOWN, (player -> !CoreAbility.hasAbility(player, RazorLeaf.class))),
-		LEAFSHIELD("LeafShield", 2, true, ClickType.SHIFT_DOWN, null),
-		TANGLE("Tangle", 3, true, ClickType.LEFT_CLICK, null),
-		LEAP("Leap", 4, true, ClickType.LEFT_CLICK, (player -> player.isOnGround())),
-		GRAPPLE("Grapple", 5, true, ClickType.LEFT_CLICK, null),
-		LEAFDOME("LeafDome", 6, true, ClickType.SHIFT_DOWN, null),
-		REGENERATE("Regenerate", 7, false, ClickType.SHIFT_DOWN, null),
-		DISPERSE("Disperse", 8, false, ClickType.LEFT_CLICK, null);
+		VINEWHIP("VineWhip", true, ClickType.LEFT_CLICK, null),
+		RAZORLEAF("RazorLeaf", true, ClickType.SHIFT_DOWN, (player -> !CoreAbility.hasAbility(player, RazorLeaf.class))),
+		TANGLE("Tangle", true, ClickType.LEFT_CLICK, null),
+		GRAPPLE("Grapple", true, ClickType.LEFT_CLICK, null),
+		LEAP("Leap", true, ClickType.LEFT_CLICK, (player -> player.isOnGround())),
+		LEAFSHIELD("LeafShield", true, ClickType.SHIFT_DOWN, null),
+		LEAFDOME("LeafDome", true, ClickType.SHIFT_DOWN, null),
+		REGENERATE("Regenerate", false, ClickType.SHIFT_DOWN, null),
+		DISPERSE("Disperse", false, ClickType.LEFT_CLICK, null);
 		
 		private String name;
-		private int slot;
 		private boolean cost;
 		private ClickType type;
 		private Predicate<Player> pred;
 		
-		private ArmorAbility(String name, int slot, boolean cost, ClickType type, Predicate<Player> pred) {
+		private ArmorAbility(String name, boolean cost, ClickType type, Predicate<Player> pred) {
 			this.name = name;
-			this.slot = slot;
 			this.cost = cost;
 			this.type = type;
 			this.pred = pred;
@@ -801,12 +798,8 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 			return name;
 		}
 		
-		public int getSlot() {
-			return slot;
-		}
-		
 		public int getDisplaySlot() {
-			return slot + 1;
+			return ordinal() + 1;
 		}
 		
 		public boolean hasCost() {
