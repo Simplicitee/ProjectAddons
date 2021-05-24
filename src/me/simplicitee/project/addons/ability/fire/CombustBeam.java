@@ -43,9 +43,12 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	private double minPower;
 	@Attribute("MaxPower")
 	private double maxPower;
+	@Attribute("MaxDamage")
+	private double maxDamage;
+	@Attribute("MinDamage")
+	private double minDamage;
 	
-	private double power, rotation, angleCheck;
-	private double health;
+	private double power, rotation, angleCheck, damage, health;
 	private long chargeTime, revertTime;
 	private int counter;
 	private boolean charging, charged;
@@ -69,6 +72,8 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 		this.maxAngle = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Angle");
 		this.minPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Minimum.Power");
 		this.maxPower = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Power");
+		this.minDamage = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Minimum.Damage");
+		this.maxDamage = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Maximum.Damage");
 		this.range = ProjectAddons.instance.getConfig().getDouble("Abilities.Fire.CombustBeam.Range");
 		this.revertTime = ProjectAddons.instance.getConfig().getLong("Abilities.Fire.CombustBeam.RevertTime");
 		this.health = player.getHealth();
@@ -115,6 +120,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				this.chargeTime = maxChargeTime;
 				this.angleCheck = minAngle;
 				this.power = maxPower;
+				this.damage = maxDamage;
 				this.charged = true;
 				GeneralMethods.displayColoredParticle("ff2424", player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 5));
@@ -127,6 +133,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				
 				this.angleCheck = maxAngle - (maxAngle - minAngle) * percent;
 				this.power = minPower + (maxPower - minPower) * percent;
+				this.damage = minDamage + (maxDamage - minDamage) * percent;
 				this.charged = true;
 				
 				ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
@@ -220,7 +227,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 			for (Entity e : GeneralMethods.getEntitiesAroundPoint(curr, power)) {
 				if (e instanceof LivingEntity) {
 					double knockback = power / (0.3 + e.getLocation().distance(curr));
-					DamageHandler.damageEntity(e, power, this);
+					DamageHandler.damageEntity(e, damage, this);
 					e.setVelocity(GeneralMethods.getDirection(curr, e.getLocation().add(0, 1, 0)).normalize().multiply(knockback));
 				}
 			}
