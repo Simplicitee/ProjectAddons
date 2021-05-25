@@ -3,8 +3,6 @@ package me.simplicitee.project.addons.ability.chi;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent.ElementChange;
-
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -32,6 +30,11 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 
 	public NinjaStance(Player player) {
 		super(player);
+		
+		if (bPlayer.isOnCooldown(this)) {
+			return;
+		}
+		
 		ChiAbility stance = bPlayer.getStance();
 		if (stance != null) {
 			stance.remove();
@@ -113,6 +116,12 @@ public class NinjaStance extends ChiAbility implements AddonAbility{
 		player.addPotionEffects(effects);
 	}
 
+	@Override
+	public void remove() {
+		super.remove();
+		bPlayer.addCooldown(this);
+	}
+	
 	@Override
 	public String getAuthor() {
 		return "Simplicitee";
