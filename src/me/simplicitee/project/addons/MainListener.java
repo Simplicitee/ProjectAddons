@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
@@ -42,6 +43,7 @@ import com.projectkorra.projectkorra.ProjectKorra;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager;
 import com.projectkorra.projectkorra.ability.util.MultiAbilityManager;
+import com.projectkorra.projectkorra.board.BendingBoardManager;
 import com.projectkorra.projectkorra.event.AbilityStartEvent;
 import com.projectkorra.projectkorra.event.BendingReloadEvent;
 import com.projectkorra.projectkorra.event.PlayerBindChangeEvent;
@@ -530,109 +532,6 @@ public class MainListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onAbilityChange(PlayerBindChangeEvent event) {
-		if (event.isCancelled() || !plugin.isBoardEnabled()) {
-			return;
-		}
-		
-		final Player player = event.getPlayer();
-
-		new BukkitRunnable() {
-
-			@Override
-			public void run() {
-				plugin.getBoardManager().update(player);
-			}
-			
-		}.runTaskLater(plugin, 1);
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onCooldown(PlayerCooldownChangeEvent event) {
-		if (event.isCancelled() || !plugin.isBoardEnabled()) {
-			return;
-		}
-		
-		final Player player = event.getPlayer();
-
-		if (player == null) {
-			return;
-		}
-		
-		new BukkitRunnable() {
-
-			@Override
-			public void run() {
-				plugin.getBoardManager().update(player);
-			}
-			
-		}.runTaskLater(plugin, 1);
-	}
-	
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		if (!plugin.isBoardEnabled()) {
-			return;
-		}
-		
-		final Player player = event.getPlayer();
-
-		new BukkitRunnable() {
-
-			@Override
-			public void run() {
-				plugin.getBoardManager().update(player);
-			}
-			
-		}.runTaskLater(plugin, 5);
-	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onQuit(PlayerQuitEvent event) {
-		final Player player = event.getPlayer();
-		
-		if (plugin.isBoardEnabled()) {
-			plugin.getBoardManager().remove(player);
-		}
-		
-		if (swapped.containsKey(player)) {
-			BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
-			if (bPlayer != null) {
-				bPlayer.setAbilities(swapped.get(player));
-			}
-			swapped.remove(player);
-		}
-	}
-	
-	@EventHandler
-	public void onElementChangeEvent(PlayerChangeElementEvent event) {
-		if (!plugin.isBoardEnabled()) {
-			return;
-		}
-		
-		final Player player = event.getTarget();
-		
-		new BukkitRunnable() {
-
-			@Override
-			public void run() {
-				plugin.getBoardManager().update(player);
-			}
-			
-		}.runTaskLater(plugin, 1);
-	}
-	
-	@EventHandler
-	public void onSlotChangeEvent(PlayerItemHeldEvent event) {
-		if (event.isCancelled() || !plugin.isBoardEnabled()) {
-			return;
-		}
-		
-		Player player = event.getPlayer();
-		plugin.getBoardManager().update(player, event.getNewSlot());
-	}
-	
 	@EventHandler
 	public void onFlightToggle(PlayerToggleFlightEvent event) {
 		Player player = event.getPlayer();
@@ -658,7 +557,7 @@ public class MainListener implements Listener {
 	
 	@EventHandler
 	public void onOffhandToggle(PlayerSwapHandItemsEvent event) {
-		if (event.isCancelled()) {
+		if (event.isCancelled() || event.getMainHandItem().getType() != Material.AIR || event.getOffHandItem().getType() != Material.AIR) {
 			return;
 		}
 		
@@ -686,14 +585,12 @@ public class MainListener implements Listener {
 				bPlayer.setAbilities(swapped.get(player));
 				swapped.remove(player);
 				ActionBar.sendActionBar(ChatColor.YELLOW + "Swapped to original binds", player);
+				BendingBoardManager.updateAllSlots(player);
 			} else if (Preset.presetExists(player, "offhand_swap")) {
 				swapped.put(player, new HashMap<>(bPlayer.getAbilities()));
 				Preset.bindPreset(player, Preset.getPreset(player, "offhand_swap"));
 				ActionBar.sendActionBar(ChatColor.YELLOW + "Swapped to offhand preset", player);
-			}
-			
-			if (plugin.isBoardEnabled()) {
-				plugin.getBoardManager().update(player);
+				BendingBoardManager.updateAllSlots(player);
 			}
 		}
 	}

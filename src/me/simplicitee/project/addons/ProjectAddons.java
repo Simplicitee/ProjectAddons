@@ -29,7 +29,6 @@ public class ProjectAddons extends JavaPlugin {
 	public static ProjectAddons instance;
 	
 	private Config config;
-	private BoardManager boards;
 	private MainListener listener;
 	private Element soundElement;
 
@@ -52,21 +51,11 @@ public class ProjectAddons extends JavaPlugin {
 		
 		this.listener = new MainListener(this);
 		
-		if (config.get().getBoolean("Properties.BendingBoard.Enabled")) {
-			this.boards = new BoardManager(this);
-		} else {
-			this.boards = null;
-		}
-		
 		this.getCommand("projectaddons").setExecutor(new ProjectCommand());
 	}
 	
 	@Override
 	public void onDisable() {
-		if (boards != null) {
-			boards.disable();
-		}
-		
 		listener.revertSwappedBinds();
 		
 		if (CoreAbility.getAbility(Crumble.class) != null) {
@@ -97,21 +86,9 @@ public class ProjectAddons extends JavaPlugin {
 		return config;
 	}
 	
-	public boolean isBoardEnabled() {
-		return boards != null;
-	}
-	
-	public BoardManager getBoardManager() {
-		return boards;
-	}
-	
 	private void setupConfig() {
 		FileConfiguration c = config.get();
 		
-		c.addDefault("Properties.BendingBoard.Enabled", true);
-		c.addDefault("Properties.BendingBoard.Title", "Binds");
-		c.addDefault("Properties.BendingBoard.EmptySlot", "&o~ Slot %d ~");
-		c.addDefault("Properties.BendingBoard.IndicatorMode", "bold");
 		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK"));
 
 		// ---- Avatar ----
@@ -338,8 +315,8 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Fire.FlameBreath.Damage", 0.2);
 		c.addDefault("Combos.Fire.FlameBreath.FireTick", 30);
 		c.addDefault("Combos.Fire.FlameBreath.Range", 5);
+		c.addDefault("Combos.Fire.FlameBreath.Speed", 0.65);
 		c.addDefault("Combos.Fire.FlameBreath.Duration", 4000);
-		c.addDefault("Combos.Fire.FlameBreath.Knockback", 0.3);
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Ground", true);
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Entities", true);
 		c.addDefault("Combos.Fire.FlameBreath.Rainbow", true);

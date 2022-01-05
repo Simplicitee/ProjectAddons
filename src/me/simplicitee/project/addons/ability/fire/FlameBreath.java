@@ -1,21 +1,8 @@
 package me.simplicitee.project.addons.ability.fire;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
-import java.util.Set;
-
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-import org.bukkit.util.Vector;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
@@ -25,6 +12,15 @@ import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformatio
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
+
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.util.Vector;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
@@ -44,20 +40,20 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	private boolean rainbow;
 	@Attribute(Attribute.DURATION)
 	private long duration;
-	@Attribute(Attribute.KNOCKBACK)
-	private double knockback;
-	
-	private Set<Breath> breaths;
-	private Queue<Color> colors;
+	@Attribute(Attribute.SPEED)
+	private double speed;
+
+	private double currentRange = 0;
+	private Queue<Color> colors = new LinkedList<>();
 	
 	private enum Color {
-		RED("#ff0000"),
-		ORANGE("#ff6600"),
-		YELLOW("#ffff00"),
-		GREEN("#00ff00"),
+		RED("#ff0900"),
+		ORANGE("#ff7f00"),
+		YELLOW("#ffef00"),
+		GREEN("#00f11d"),
 		CYAN("#00ffff"),
-		BLUE("#0000ff"),
-		PURPLE("#ff00ff");
+		BLUE("#0079ff"),
+		PURPLE("#a800ff");
 		
 		private String hex;
 		
@@ -89,15 +85,12 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		burnEntities = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Burn.Entities");
 		rainbow = ProjectAddons.instance.getConfig().getBoolean("Combos.Fire.FlameBreath.Rainbow");
 		duration = ProjectAddons.instance.getConfig().getLong("Combos.Fire.FlameBreath.Duration");
-		knockback = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.FlameBreath.Knockback");
-		breaths = new HashSet<>();
+		speed = ProjectAddons.instance.getConfig().getDouble("Combos.Fire.FlameBreath.Speed");
 		
-		int turnsPerColor = 8;
-		int amount = Color.values().length * turnsPerColor;
-		colors = new LinkedList<>();
-		for (int i = 0; i < amount; i++) {
-			int index = (int) Math.floor(i/turnsPerColor);
-			colors.add(Color.values()[index]);
+		for (Color color : Color.values()) {
+			for (int i = 0; i < 8; ++i) {
+				colors.add(color);
+			}
 		}
 	}
 
@@ -108,17 +101,7 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 
 	@Override
 	public Location getLocation() {
-		Iterator<Breath> iter = breaths.iterator();
-		return iter.hasNext() ? iter.next().getLocation() : player.getEyeLocation();
-	}
-	
-	@Override
-	public List<Location> getLocations() {
-		List<Location> locList = new ArrayList<>();
-		for (Breath b : breaths) {
-			locList.add(b.getLocation());
-		}
-		return locList;
+		return player.getEyeLocation().add(player.getLocation().getDirection().multiply(currentRange));
 	}
 
 	@Override
@@ -160,51 +143,54 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		
 		Color c = colors.poll();
 		colors.add(c);
+
+		Location breath = player.getEyeLocation();
+		Vector direction = breath.getDirection().multiply(speed);
+		breath.add(direction);
 		
-		Breath b = new Breath(player, c);
-		breaths.add(b);
-		
-		List<Breath> removal = new ArrayList<>();
-		
-		for (Breath breath : breaths) {
-			if (breath.advanceLocation()) {
-				double offset = 0.1 * breath.getLocation().distance(player.getEyeLocation());
-				int amount = (int) Math.ceil(breath.getLocation().distance(player.getEyeLocation()));
-				if (rainbow && player.hasPermission("bending.ability.FlameBreath.rainbow")) {
-					GeneralMethods.displayColoredParticle(breath.getColor().getHex(), breath.getLocation(), amount, offset, offset, offset);
-				} else {
-					playFirebendingParticles(breath.getLocation(), amount, offset, offset, offset);
-				}
-				
-				if (Math.random() > 0.6) {
-					playFirebendingSound(breath.getLocation());
-				}
-				
-				for (Entity entity : GeneralMethods.getEntitiesAroundPoint(breath.getLocation(), offset * 2.5)) {
-					if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
-						DamageHandler.damageEntity(entity, damage, this);
-						entity.setVelocity(breath.getDirection().multiply(knockback));
-						
-						if (burnEntities) {
-							entity.setFireTicks(fireTick + 10);
-						}
-					} else if (entity instanceof Item) {
-						entity.setFireTicks(fireTick + 40);
-					}
-				}
-				
-				if (burnGround) {
-					Block ignitable = GeneralMethods.getTopBlock(breath.getLocation(), 0, 1);
-					if (ignitable != null && !isAir(ignitable.getType())) {
-						createTempFire(ignitable.getLocation());
-					}
-				}
-			} else {
-				removal.add(breath);
+		for (double d = 0; d <= currentRange; d += speed) {
+			double offset = 0.1 * d;
+			int amount = (int) Math.ceil(d);
+
+			if (!breath.getBlock().isPassable()) {
+				break;
 			}
+
+			if (rainbow && player.hasPermission("bending.ability.FlameBreath.rainbow")) {
+				GeneralMethods.displayColoredParticle(c.getHex(), breath, amount, offset, offset, offset);
+			} else {
+				playFirebendingParticles(breath, amount, offset, offset, offset);
+			}
+			
+			if (Math.random() > 0.9) {
+				playFirebendingSound(breath);
+			}
+			
+			for (Entity entity : GeneralMethods.getEntitiesAroundPoint(breath, offset * 2.5)) {
+				if (entity instanceof LivingEntity && entity.getEntityId() != player.getEntityId()) {
+					DamageHandler.damageEntity(entity, damage, this);
+					
+					if (burnEntities) {
+						entity.setFireTicks(fireTick + 10);
+					}
+				} else if (entity instanceof Item) {
+					entity.setFireTicks(fireTick + 40);
+				}
+			}
+			
+			if (burnGround) {
+				Block ignitable = GeneralMethods.getTopBlock(breath, 0, (int) Math.round(amount / range));
+				if (ignitable != null && !isAir(ignitable.getType())) {
+					createTempFire(ignitable.getLocation());
+				}
+			}
+			
+			breath.add(direction);
 		}
-		
-		breaths.removeAll(removal);
+
+		if (currentRange < range) {
+			currentRange += speed;
+		}
 	}
 
 	@Override
@@ -217,8 +203,6 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 		ArrayList<AbilityInformation> combo = new ArrayList<>();
 		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_DOWN));
 		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_UP));
-		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_UP));
 		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
 		return combo;
 	}
@@ -251,60 +235,12 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 	
 	@Override
 	public String getInstructions() {
-		return "FireBlast (tap sneak) > HeatControl (tap sneak) > HeatControl (hold sneak)";
+		return "FireBlast (tap sneak) > HeatControl (hold sneak)";
 	}
 	
 	@Override
 	public void remove() {
 		super.remove();
 		bPlayer.addCooldown(this);
-	}
-
-	public class Breath {
-		
-		protected Player player;
-		protected Vector dir;
-		protected Location start, loc;
-		protected Color color;
-		
-		public Breath(Player player, Color color) {
-			this.player = player;
-			this.start = player.getEyeLocation().clone();
-			this.dir = start.getDirection().clone().normalize().multiply(0.5);
-			this.loc = start.clone();
-			this.color = color;
-		}
-		
-		public boolean advanceLocation() {
-			loc = loc.add(dir);
-			
-			if (GeneralMethods.isSolid(loc.getBlock())) {
-				return false;
-			} else if (isWater(loc.getBlock())) {
-				return false;
-			} else if (GeneralMethods.isRegionProtectedFromBuild(player, loc)) {
-				return false;
-			} else if (start.distance(loc) > range) {
-				return false;
-			}
-			
-			return true;
-		}
-		
-		public Vector getDirection() {
-			return dir.clone();
-		}
-		
-		public Location getLocation() {
-			return loc;
-		}
-		
-		public Location getStart() {
-			return start;
-		}
-		
-		public Color getColor() {
-			return color;
-		}
 	}
 }

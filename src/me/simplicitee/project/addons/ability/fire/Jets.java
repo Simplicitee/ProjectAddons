@@ -2,12 +2,9 @@ package me.simplicitee.project.addons.ability.fire;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
 import com.projectkorra.projectkorra.attribute.Attribute;
@@ -165,7 +162,7 @@ public class Jets extends FireAbility implements AddonAbility {
 	}
 	
 	public boolean checkHeight() {
-		return maxHeight <= 0 || player.getWorld().rayTraceBlocks(player.getLocation(), new Vector(0, -1, 0), maxHeight, FluidCollisionMode.ALWAYS, false).getHitBlock() != null;
+		return maxHeight <= 0 || player.getWorld().rayTraceBlocks(player.getLocation(), new Vector(0, -1, 0), maxHeight, FluidCollisionMode.ALWAYS, false) != null;
 	}
 	
 	public void setFlySpeed(double speed) {

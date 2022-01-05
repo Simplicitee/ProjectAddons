@@ -210,11 +210,6 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 
 	@Override
 	public void progress() {
-		if (!player.isOnline() || player.isDead()) {
-			remove();
-			return;
-		}
-		
 		if (!bPlayer.canBendIgnoreBinds(this)) {
 			remove();
 			return;
@@ -304,7 +299,7 @@ public class PlantArmor extends PlantAbility implements AddonAbility, MultiAbili
 		super.remove();
 		bPlayer.addCooldown(this);
 		MultiAbilityManager.unbindMultiAbility(player);
-		if (player != null && player.isOnline() && !player.isDead() && armor != null) {
+		if (TempArmor.getTempArmorList(this.player).contains(this.armor)) {
 			this.armor.revert();
 		}
 		
