@@ -486,16 +486,16 @@ public class MainListener implements Listener {
 			} else if (args.length != 2) {
 				player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Invalid format, try `@vocalsound <sound>`");
 			} else {
-				Sound sound = Sound.valueOf(args[1].toUpperCase());
-				
-				if (sound != null) {
+				try {
+					Sound sound = Sound.valueOf(args[1].toUpperCase());
+
 					if (plugin.getConfig().getStringList("Abilities.Air.VocalMimicry.SoundBlacklist").contains(sound.toString())) {
 						player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Cannot use that sound!");
 					} else {
 						VocalMimicry.selectSound(player, sound);
 						player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.GREEN + " Successfully set vocal sound to " + args[1].toLowerCase());
 					}
-				} else {
+				} catch (IllegalArgumentException e) {
 					player.sendMessage(ProjectAddons.instance.prefix() + ChatColor.RED + " Unknown sound!");
 				}
 			}
