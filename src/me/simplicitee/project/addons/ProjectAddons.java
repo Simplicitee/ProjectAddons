@@ -3,6 +3,7 @@ package me.simplicitee.project.addons;
 import java.io.File;
 import java.util.Arrays;
 
+import com.projectkorra.projectkorra.configuration.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -38,13 +39,7 @@ public class ProjectAddons extends JavaPlugin {
 		
 		this.config = new Config(new File("project_addons.yml"));
 		this.setupConfig();
-		soundElement = new SubElement("Sound", Element.AIR, ElementType.BENDING, this) {
-			@Override
-			public ChatColor getColor() {
-				return Element.AIR.getSubColor();
-			}
-		};
-		
+		soundElement = new SubElement("Sound", Element.AIR, ElementType.BENDING, this);
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.project.addons.ability");
 		
 		this.setupCollisions();
@@ -89,7 +84,9 @@ public class ProjectAddons extends JavaPlugin {
 	private void setupConfig() {
 		FileConfiguration c = config.get();
 		
-		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK"));
+		c.addDefault("Chat.Colors.Sound", "#3e4d52"); //Make soundbending have a color
+
+		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK", "NETHERITE_BLOCK"));
 
 		// ---- Avatar ----
 		// EnergyBeam
@@ -146,6 +143,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Air.Tailwind.Cooldown", 7000);
 		c.addDefault("Combos.Air.Tailwind.Duration", 22000);
 		c.addDefault("Combos.Air.Tailwind.Speed", 9);
+		c.addDefault("Combos.Air.Tailwind.Combination", Arrays.asList("AirBurst:SNEAK_DOWN", "AirBurst:SNEAK_UP"));
 		
 		// ---- Earthbending ----
 		// LandLaunch
@@ -235,6 +233,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Earth.RockSlide.RequiredRockCount", 6);
 		c.addDefault("Combos.Earth.RockSlide.TurningSpeed", 0.086);
 		c.addDefault("Combos.Earth.RockSlide.Duration", -1);
+		c.addDefault("Combos.Earth.RockSlide.Combination", Arrays.asList("Shockwave:SNEAK_DOWN", "Shockwave:RIGHT_CLICK_BLOCK", "EarthSmash:SNEAK_UP"));
 		
 		// ---- Firebending ----
 		// ArcSpark
@@ -320,11 +319,13 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Ground", true);
 		c.addDefault("Combos.Fire.FlameBreath.Burn.Entities", true);
 		c.addDefault("Combos.Fire.FlameBreath.Rainbow", true);
+		c.addDefault("Combos.Fire.FlameBreath.Combination", Arrays.asList("FireBlast:SNEAK_DOWN", "FireBlast:SNEAK_UP", "HeatControl:SNEAK_DOWN"));
 
 		// TurboJet
 		c.addDefault("Combos.Fire.TurboJet.Enabled", true);
 		c.addDefault("Combos.Fire.TurboJet.Cooldown", 12000);
 		c.addDefault("Combos.Fire.TurboJet.Speed", 1.95);
+		c.addDefault("Combos.Fire.TurboJet.Combination", Arrays.asList("HeatControl:SNEAK_DOWN", "Jets:SNEAK_UP"));
 		
 		// ---- Waterbending ----
 		// Hydrojet
@@ -415,6 +416,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Water.LeafStorm.LeafSpeed", 14);
 		c.addDefault("Combos.Water.LeafStorm.Damage", 0.5);
 		c.addDefault("Combos.Water.LeafStorm.Radius", 6);
+		c.addDefault("Combos.Water.LeafStorm.Combination", Arrays.asList("RazorLeaf:LEFT_CLICK", "RazorLeaf:LEFT_CLICK", "VineWhip:SNEAK_DOWN"));
 		
 		// MistShards
 		c.addDefault("Combos.Water.MistShards.Enabled", true);
@@ -422,6 +424,7 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Water.MistShards.Damage", 1);
 		c.addDefault("Combos.Water.MistShards.Range", 20);
 		c.addDefault("Combos.Water.MistShards.IcicleCount", 8);
+		c.addDefault("Combos.Water.MistShards.Combination", Arrays.asList("WaterManipulation:SNEAK_DOWN", "PhaseChange:SNEAK_UP", "IceBlast:SNEAK_DOWN"));
 		
 		// ---- Chiblocking ----
 		// Dodging
@@ -450,18 +453,21 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Combos.Chi.ChiblockJab.Enabled", true);
 		c.addDefault("Combos.Chi.ChiblockJab.Cooldown", 5000);
 		c.addDefault("Combos.Chi.ChiblockJab.Duration", 2000);
+		c.addDefault("Combos.Chi.ChiblockJab.Combination", Arrays.asList("Jab:RIGHT_CLICK_ENTITY", "Jab:LEFT_CLICK_ENTITY", "Jab:RIGHT_CLICK_ENTITY"));
 		
 		// FlyingKick
 		c.addDefault("Combos.Chi.FlyingKick.Enabled", true);
 		c.addDefault("Combos.Chi.FlyingKick.Cooldown", 4000);
 		c.addDefault("Combos.Chi.FlyingKick.Damage", 2.0);
 		c.addDefault("Combos.Chi.FlyingKick.LaunchPower", 1.85);
+		c.addDefault("Combos.Chi.FlyingKick.Combination", Arrays.asList("SwiftKick:SNEAK_DOWN", "SwiftKick:LEFT_CLICK"));
 		
 		// WeakeningJab
 		c.addDefault("Combos.Chi.WeakeningJab.Enabled", true);
 		c.addDefault("Combos.Chi.WeakeningJab.Cooldown", 6000);
 		c.addDefault("Combos.Chi.WeakeningJab.Duration", 4000);
 		c.addDefault("Combos.Chi.WeakeningJab.Modifier", 1.5);
+		c.addDefault("Combos.Chi.WeakeningJab.Combination", Arrays.asList("Jab:LEFT_CLICK_ENTITY", "Jab:LEFT_CLICK_ENTITY", "Jab:RIGHT_CLICK_ENTITY"));
 		
 		config.save();
 	}

@@ -2,6 +2,7 @@ package me.simplicitee.project.addons.ability.fire;
 
 import java.util.ArrayList;
 
+import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -94,10 +95,7 @@ public class TurboJet extends FireAbility implements AddonAbility, ComboAbility 
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		ArrayList<AbilityInformation> combo = new ArrayList<>();
-		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("Jets", ClickType.SHIFT_UP));
-		return combo;
+		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Fire.TurboJet.Combination"));
 	}
 
 	@Override

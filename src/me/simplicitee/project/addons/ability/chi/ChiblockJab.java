@@ -2,6 +2,7 @@ package me.simplicitee.project.addons.ability.chi;
 
 import java.util.ArrayList;
 
+import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -99,11 +100,7 @@ public class ChiblockJab extends ChiAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		ArrayList<AbilityInformation> combo = new ArrayList<>();
-		combo.add(new AbilityInformation("Jab", ClickType.RIGHT_CLICK_ENTITY));
-		combo.add(new AbilityInformation("Jab", ClickType.LEFT_CLICK_ENTITY));
-		combo.add(new AbilityInformation("Jab", ClickType.RIGHT_CLICK_ENTITY));
-		return combo;
+		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Chi.ChiblockJab.Combination"));
 	}
 	
 	@Override

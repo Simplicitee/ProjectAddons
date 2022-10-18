@@ -3,6 +3,7 @@ package me.simplicitee.project.addons.ability.chi;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -126,10 +127,7 @@ public class FlyingKick extends ChiAbility implements ComboAbility, AddonAbility
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		ArrayList<AbilityInformation> combo = new ArrayList<>();
-		combo.add(new AbilityInformation("SwiftKick", ClickType.SHIFT_DOWN));
-		combo.add(new AbilityInformation("SwiftKick", ClickType.LEFT_CLICK));
-		return combo;
+		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Chi.FlyingKick.Combination"));
 	}
 	
 	@Override
