@@ -2,7 +2,6 @@ package me.simplicitee.project.addons.ability.air;
 
 import java.util.ArrayList;
 
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -118,7 +117,12 @@ public class Tailwind extends AirAbility implements ComboAbility, AddonAbility {
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Air.Tailwind.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		
+		combo.add(new AbilityInformation("AirBlast", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation("AirBurst", ClickType.SHIFT_UP));
+		
+		return combo;
 	}
 
 	@Override

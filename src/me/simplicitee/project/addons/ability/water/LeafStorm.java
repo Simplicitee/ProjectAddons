@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -175,7 +174,13 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Water.LeafStorm.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "RazorLeaf", ClickType.LEFT_CLICK));
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "RazorLeaf", ClickType.LEFT_CLICK));
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "VineWhip", ClickType.SHIFT_DOWN));
+		
+		return combo;
 	}
 	
 	@Override

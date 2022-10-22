@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -238,7 +237,11 @@ public class RockSlide extends EarthAbility implements AddonAbility, ComboAbilit
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Earth.RockSlide.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		combo.add(new AbilityInformation("Shockwave", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation("Shockwave", ClickType.RIGHT_CLICK_BLOCK));
+		combo.add(new AbilityInformation("EarthSmash", ClickType.SHIFT_UP));
+		return combo;
 	}
 
 	@Override

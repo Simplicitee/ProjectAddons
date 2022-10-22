@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -114,7 +113,11 @@ public class WeakeningJab extends ChiAbility implements ComboAbility, AddonAbili
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Chi.WeakeningJab.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		combo.add(new AbilityInformation("Jab", ClickType.LEFT_CLICK_ENTITY));
+		combo.add(new AbilityInformation("Jab", ClickType.LEFT_CLICK_ENTITY));
+		combo.add(new AbilityInformation("Jab", ClickType.RIGHT_CLICK_ENTITY));
+		return combo;
 	}
 	
 	@Override

@@ -9,7 +9,6 @@ import com.projectkorra.projectkorra.ability.AddonAbility;
 import com.projectkorra.projectkorra.ability.ComboAbility;
 import com.projectkorra.projectkorra.ability.FireAbility;
 import com.projectkorra.projectkorra.ability.util.ComboManager.AbilityInformation;
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import com.projectkorra.projectkorra.attribute.Attribute;
 import com.projectkorra.projectkorra.util.ClickType;
 import com.projectkorra.projectkorra.util.DamageHandler;
@@ -201,7 +200,11 @@ public class FlameBreath extends FireAbility implements AddonAbility, ComboAbili
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Fire.FlameBreath.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation("FireBlast", ClickType.SHIFT_UP));
+		combo.add(new AbilityInformation("HeatControl", ClickType.SHIFT_DOWN));
+		return combo;
 	}
 
 	@Override

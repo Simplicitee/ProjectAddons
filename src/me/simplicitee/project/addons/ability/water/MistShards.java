@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.projectkorra.projectkorra.ability.util.ComboUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -165,7 +164,11 @@ public class MistShards extends IceAbility implements AddonAbility, ComboAbility
 
 	@Override
 	public ArrayList<AbilityInformation> getCombination() {
-		return ComboUtil.generateCombinationFromList(this, ProjectAddons.instance.getConfig().getStringList("Combos.Water.MistShards.Combination"));
+		ArrayList<AbilityInformation> combo = new ArrayList<>();
+		combo.add(new AbilityInformation("WaterManipulation", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation("PhaseChange", ClickType.SHIFT_UP));
+		combo.add(new AbilityInformation("IceBlast", ClickType.SHIFT_DOWN));
+		return combo;
 	}
 
 	@Override
