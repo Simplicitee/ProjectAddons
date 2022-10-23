@@ -176,9 +176,9 @@ public class LeafStorm extends PlantAbility implements ComboAbility, AddonAbilit
 	public ArrayList<AbilityInformation> getCombination() {
 		ArrayList<AbilityInformation> combo = new ArrayList<>();
 		
-		combo.add(new AbilityInformation(Element.WATER.getSubColor() + "RazorLeaf", ClickType.LEFT_CLICK));
-		combo.add(new AbilityInformation(Element.WATER.getSubColor() + "RazorLeaf", ClickType.LEFT_CLICK));
-		combo.add(new AbilityInformation(Element.WATER.getSubColor() + "VineWhip", ClickType.SHIFT_DOWN));
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "RazorLeaf", ClickType.LEFT_CLICK));
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "RazorLeaf", ClickType.LEFT_CLICK));
+		combo.add(new AbilityInformation(Element.PLANT.getColor() + "VineWhip", ClickType.SHIFT_DOWN));
 		
 		return combo;
 	}

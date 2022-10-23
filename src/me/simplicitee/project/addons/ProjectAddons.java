@@ -3,6 +3,7 @@ package me.simplicitee.project.addons;
 import java.io.File;
 import java.util.Arrays;
 
+import com.projectkorra.projectkorra.configuration.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -38,13 +39,7 @@ public class ProjectAddons extends JavaPlugin {
 		
 		this.config = new Config(new File("project_addons.yml"));
 		this.setupConfig();
-		soundElement = new SubElement("Sound", Element.AIR, ElementType.BENDING, this) {
-			@Override
-			public ChatColor getColor() {
-				return Element.AIR.getSubColor();
-			}
-		};
-		
+		soundElement = new SubElement("Sound", Element.AIR, ElementType.BENDING, this);
 		CoreAbility.registerPluginAbilities(this, "me.simplicitee.project.addons.ability");
 		
 		this.setupCollisions();
@@ -89,7 +84,9 @@ public class ProjectAddons extends JavaPlugin {
 	private void setupConfig() {
 		FileConfiguration c = config.get();
 		
-		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK"));
+		c.addDefault("Chat.Colors.Sound", "#3e4d52"); //Make soundbending have a color
+
+		c.addDefault("Properties.MetallicBlocks", Arrays.asList("GOLD_BLOCK", "IRON_BLOCK", "NETHERITE_BLOCK"));
 
 		// ---- Avatar ----
 		// EnergyBeam
