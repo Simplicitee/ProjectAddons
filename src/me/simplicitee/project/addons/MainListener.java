@@ -557,9 +557,6 @@ public class MainListener implements Listener {
 	
 	@EventHandler
 	public void onOffhandToggle(PlayerSwapHandItemsEvent event) {
-		if (event.isCancelled() || event.getMainHandItem().getType() != Material.AIR || event.getOffHandItem().getType() != Material.AIR) {
-			return;
-		}
 		
 		Player player = event.getPlayer();
 		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
