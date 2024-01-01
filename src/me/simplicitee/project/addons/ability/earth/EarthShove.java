@@ -28,7 +28,7 @@ import com.projectkorra.projectkorra.util.TempBlock;
 
 import me.simplicitee.project.addons.ProjectAddons;
 
-public class EarthKick extends EarthAbility implements AddonAbility, Listener{
+public class EarthShove extends EarthAbility implements AddonAbility, Listener{
 
 	private static Set<FallingBlock> BLOCKS = new HashSet<>();
 	
@@ -42,7 +42,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	public List<FallingBlock> kick;
 	public long duration = 2500;
 	
-	public EarthKick(Player player) {
+	public EarthShove(Player player) {
 		super(player);
 		
 		if (getAbility(this.getClass()) == null) {
@@ -57,9 +57,9 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	}
 	
 	public void setFields() {
-		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthKick.Damage");
-		maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.EarthKick.MaxBlocks");
-		lavaMult = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthKick.LavaMultiplier");
+		damage = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthShove.Damage");
+		maxBlocks = ProjectAddons.instance.getConfig().getInt("Abilities.Earth.EarthShove.MaxBlocks");
+		lavaMult = ProjectAddons.instance.getConfig().getDouble("Abilities.Earth.EarthShove.LavaMultiplier");
 		kick = new ArrayList<>();
 	}
 
@@ -84,7 +84,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 
 	@Override
 	public String getName() {
-		return "EarthKick";
+		return "EarthShove";
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 
 	@Override
 	public long getCooldown() {
-		return ProjectAddons.instance.getConfig().getLong("Abilities.Earth.EarthKick.Cooldown");
+		return ProjectAddons.instance.getConfig().getLong("Abilities.Earth.EarthShove.Cooldown");
 	}
 
 	@Override
@@ -246,6 +246,6 @@ public class EarthKick extends EarthAbility implements AddonAbility, Listener{
 	
 	@Override
 	public boolean isEnabled() {
-		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.EarthKick.Enabled");
+		return ProjectAddons.instance.getConfig().getBoolean("Abilities.Earth.EarthShove.Enabled");
 	}
 }

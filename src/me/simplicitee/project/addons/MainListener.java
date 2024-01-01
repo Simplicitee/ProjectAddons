@@ -70,7 +70,7 @@ import me.simplicitee.project.addons.ability.earth.Accretion;
 import me.simplicitee.project.addons.ability.earth.Bulwark;
 import me.simplicitee.project.addons.ability.earth.Crumble;
 import me.simplicitee.project.addons.ability.earth.Dig;
-import me.simplicitee.project.addons.ability.earth.EarthKick;
+import me.simplicitee.project.addons.ability.earth.EarthShove;
 import me.simplicitee.project.addons.ability.earth.LavaSurge;
 import me.simplicitee.project.addons.ability.earth.MagmaSlap;
 import me.simplicitee.project.addons.ability.earth.QuickWeld;
@@ -236,8 +236,8 @@ public class MainListener implements Listener {
 			return;
 		}
 		
-		if (canBend(player, "EarthKick")) {
-			new EarthKick(player);
+		if (canBend(player, "EarthShove")) {
+			new EarthShove(player);
 		} else if (canBend(player, "NinjaStance")) {
 			if (CoreAbility.hasAbility(player, NinjaStance.class)) {
 				CoreAbility.getAbility(player, NinjaStance.class).beginStealth();
@@ -309,9 +309,9 @@ public class MainListener implements Listener {
 		if (e instanceof FallingBlock) {
 			FallingBlock fb = (FallingBlock)e;
 			
-			if (EarthKick.isBlock(fb)) {
+			if (EarthShove.isBlock(fb)) {
 				event.setCancelled(true);
-				EarthKick.removeBlock(fb);
+				EarthShove.removeBlock(fb);
 			} else if (MagmaSlap.isBlock(fb)) {
 				event.setCancelled(true);
 				((MagmaSlap) fb.getMetadata("magmaslap").get(0).value()).turnToTempBlock(event.getBlock());

@@ -1,5 +1,6 @@
 package me.simplicitee.project.addons.ability.fire;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 
 import com.projectkorra.projectkorra.GeneralMethods;
 import com.projectkorra.projectkorra.ability.AddonAbility;
@@ -48,6 +52,8 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	@Attribute("MinDamage")
 	private double minDamage;
 	
+    private BossBar chargeBar;
+    
 	private double power, rotation, angleCheck, damage, health;
 	private long chargeTime, revertTime;
 	private int counter;
@@ -61,6 +67,12 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	public CombustBeam(Player player) {
 		super(player);
 		
+		
+        this.chargeBar = Bukkit.getServer().createBossBar("CombustBeam Charging...", BarColor.WHITE, BarStyle.SEGMENTED_6);
+        this.chargeBar.setProgress(0);
+        this.chargeBar.addPlayer(player);
+        
+        
 		if (hasAbility(player, CombustBeam.class)) {
 			return;
 		}
@@ -85,6 +97,19 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 		
 		start();
 	}
+	
+    private void UpdateChargeBar() {
+        double spendMs = System.currentTimeMillis() - this.getStartTime();
+        double subtract = spendMs / (maxChargeTime);
+        double progress = Math.min(1, subtract);
+        if(chargeBar.getColor()==BarColor.WHITE&&getStartTime() + maxChargeTime <= System.currentTimeMillis()) {
+            this.chargeBar.setColor(BarColor.RED);
+            this.chargeBar.setTitle("CombustionBeam Ready");
+        }
+
+        this.chargeBar.setProgress(progress);
+        //ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
+    }
 
 	@Override
 	public void progress() {
@@ -124,7 +149,8 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				this.charged = true;
 				GeneralMethods.displayColoredParticle("ff2424", player.getEyeLocation().add(player.getEyeLocation().getDirection().normalize()), 1, 0.4, 0.4, 0.4);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10, 5));
-
+				
+				UpdateChargeBar();
 				ActionBar.sendActionBar(ChatColor.RED + "100%", player);
 			} else if (getStartTime() + minChargeTime <= System.currentTimeMillis()) {
 				this.chargeTime = System.currentTimeMillis() - getStartTime() - minChargeTime;
@@ -135,7 +161,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 				this.power = minPower + (maxPower - minPower) * percent;
 				this.damage = minDamage + (maxDamage - minDamage) * percent;
 				this.charged = true;
-				
+				UpdateChargeBar();
 				ActionBar.sendActionBar(ChatColor.RED + (Math.round(percent * 100) + "%"), player);
 				
 				HexColor color = new HexColor((int) (255 * percent), 136, 136);
@@ -239,6 +265,7 @@ public class CombustBeam extends CombustionAbility implements AddonAbility {
 	@Override
 	public void remove() {
 		super.remove();
+		this.chargeBar.removePlayer(this.player);
 		bPlayer.addCooldown(this);
 	}
 
