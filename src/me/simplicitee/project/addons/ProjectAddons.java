@@ -179,12 +179,12 @@ public class ProjectAddons extends JavaPlugin {
 		c.addDefault("Abilities.Earth.Dig.RevertTime", 3500);
 		c.addDefault("Abilities.Earth.Dig.Speed", 0.51);
 		
-		// EarthKick
-		c.addDefault("Abilities.Earth.EarthKick.Enabled", true);
-		c.addDefault("Abilities.Earth.EarthKick.Cooldown", 4000);
-		c.addDefault("Abilities.Earth.EarthKick.Damage", 0.5);
-		c.addDefault("Abilities.Earth.EarthKick.MaxBlocks", 9);
-		c.addDefault("Abilities.Earth.EarthKick.LavaMultiplier", 1.5);
+		// EarthShove
+		c.addDefault("Abilities.Earth.EarthShove.Enabled", true);
+		c.addDefault("Abilities.Earth.EarthShove.Cooldown", 4000);
+		c.addDefault("Abilities.Earth.EarthShove.Damage", 0.5);
+		c.addDefault("Abilities.Earth.EarthShove.MaxBlocks", 9);
+		c.addDefault("Abilities.Earth.EarthShove.LavaMultiplier", 1.5);
 		
 		// LavaSurge
 		c.addDefault("Abilities.Earth.LavaSurge.Enabled", true);
